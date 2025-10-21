@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "42283865115",
+    "project_id": "rawaa-bd3e1",
+    "storage_bucket": "rawaa-bd3e1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:42283865115:android:88167a4e774bd4c07494be",
+        "android_client_info": {
+          "package_name": "com.dz.rawaa"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6HJJafE40O9bM4Cv3H7j1ZguaeIij1kA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
