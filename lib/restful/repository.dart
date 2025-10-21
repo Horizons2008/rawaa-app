@@ -17,6 +17,14 @@ class Repository {
     return await Constants.ws.post("register", data);
   }
 
+  Future<dynamic> repCheckUsername(var data) async {
+    return await Constants.ws.get("checkUsername", data);
+  }
+
+  Future<dynamic> repCheckPhone(var data) async {
+    return await Constants.ws.get("checkUsername", data);
+  }
+
   //******************************************************* */
   Future checkLogin(String username, String password) async {
     return await ws.post("login", {"username": username, "password": password});

@@ -102,9 +102,86 @@ class ScreenRegistration extends StatelessWidget {
                             return "N° mobile est obligatoire";
                           } else if (p0.length < 10) {
                             return "N° mobile non valide";
-                          } else {
-                            return null;
+                          } else if (!RegExp(r'^[0-9+\-\s]+$').hasMatch(p0)) {
+                            return "Format de numéro invalide";
                           }
+                          return null;
+                        },
+                        onChange: (value) {
+                          // Trigger async phone validation when user stops typing
+                          if (value.isNotEmpty && value.length >= 10) {
+                            Future.delayed(Duration(milliseconds: 500), () {
+                              if (controller.phoneController.text == value) {
+                                controller.validatePhoneAsync(value);
+                              }
+                            });
+                          }
+                        },
+                      ),
+                      SpaceV(h: 5),
+
+                      // Phone validation status indicator
+                      GetBuilder<RegistrationController>(
+                        builder: (controller) {
+                          if (controller.statusPhone == ListeStatus.loading) {
+                            return Row(
+                              children: [
+                                SizedBox(
+                                  width: 16,
+                                  height: 16,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.blue,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 8),
+                                Text(
+                                  "Vérification du numéro de téléphone...",
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.blue,
+                                  ),
+                                ),
+                              ],
+                            );
+                          } else if (controller.statusPhone ==
+                              ListeStatus.success) {
+                            return Row(
+                              children: [
+                                Icon(
+                                  Icons.check_circle,
+                                  color: Colors.green,
+                                  size: 16,
+                                ),
+                                SizedBox(width: 8),
+                                Text(
+                                  "Numéro de téléphone disponible",
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.green,
+                                  ),
+                                ),
+                              ],
+                            );
+                          } else if (controller.statusPhone ==
+                              ListeStatus.error) {
+                            return Row(
+                              children: [
+                                Icon(Icons.error, color: Colors.red, size: 16),
+                                SizedBox(width: 8),
+                                Text(
+                                  "Numéro de téléphone déjà utilisé",
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ],
+                            );
+                          }
+                          return Container();
                         },
                       ),
                       SpaceV(h: 15),
@@ -129,19 +206,98 @@ class ScreenRegistration extends StatelessWidget {
                       SpaceV(h: 15),
                       OutlinedEdit(
                         hint: "Username",
-                        label: "Commune",
-                        iconDroite: Icon(Icons.phone),
+                        label: "Nom d'utilisateur",
+                        iconDroite: Icon(Icons.person),
                         controller: controller.usernameController,
-                        dataType: TextInputType.phone,
+                        dataType: TextInputType.text,
                         validation: (p0) {
                           if (p0!.isEmpty) {
-                            return "L'adresse est obligatoire";
-                            ;
-                          } else if (p0.length < 4) {
-                            return "Le nom doit contenir au moins 6 caractères";
-                          } else {
-                            return null;
+                            return "Nom utilisateur est obligatoire";
                           }
+                          if (p0.length < 3) {
+                            return "Le nom d'utilisateur doit contenir au moins 3 caractères";
+                          }
+                          if (!RegExp(r'^[a-zA-Z0-9_]+$').hasMatch(p0)) {
+                            return "Le nom d'utilisateur ne peut contenir que des lettres, chiffres et underscores";
+                          }
+                          return null;
+                        },
+                        onChange: (value) {
+                          // Trigger async username validation when user stops typing
+                          if (value.isNotEmpty && value.length >= 3) {
+                            Future.delayed(Duration(milliseconds: 500), () {
+                              if (controller.usernameController.text == value) {
+                                controller.validateUsernameAsync(value);
+                              }
+                            });
+                          }
+                        },
+                      ),
+                      SpaceV(h: 5),
+
+                      // Username validation status indicator
+                      GetBuilder<RegistrationController>(
+                        builder: (controller) {
+                          if (controller.statusUsername ==
+                              ListeStatus.loading) {
+                            return Row(
+                              children: [
+                                SizedBox(
+                                  width: 16,
+                                  height: 16,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.blue,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 8),
+                                Text(
+                                  "Vérification du nom d'utilisateur...",
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.blue,
+                                  ),
+                                ),
+                              ],
+                            );
+                          } else if (controller.statusUsername ==
+                              ListeStatus.success) {
+                            return Row(
+                              children: [
+                                Icon(
+                                  Icons.check_circle,
+                                  color: Colors.green,
+                                  size: 16,
+                                ),
+                                SizedBox(width: 8),
+                                Text(
+                                  "Nom d'utilisateur disponible",
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.green,
+                                  ),
+                                ),
+                              ],
+                            );
+                          } else if (controller.statusUsername ==
+                              ListeStatus.error) {
+                            return Row(
+                              children: [
+                                Icon(Icons.error, color: Colors.red, size: 16),
+                                SizedBox(width: 8),
+                                Text(
+                                  "Nom d'utilisateur déjà pris",
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ],
+                            );
+                          }
+                          return Container();
                         },
                       ),
                       SpaceV(h: 15),
@@ -153,10 +309,10 @@ class ScreenRegistration extends StatelessWidget {
                         dataType: TextInputType.text,
                         validation: (p0) {
                           if (p0!.isEmpty) {
-                            return "L'adresse est obligatoire";
+                            return "Mot de passe est obligatoire";
                             ;
                           } else if (p0.length < 4) {
-                            return "Le nom doit contenir au moins 6 caractères";
+                            return "Le mot de passe  doit contenir au moins 4 caractères";
                           } else {
                             return null;
                           }
@@ -254,11 +410,10 @@ class ScreenRegistration extends StatelessWidget {
                           ),
                           IconButton(
                             onPressed: () {
-                              controller.locationPermissionGranted.value
-                                  ? controller.getCurrentLocation
-                                  : controller.checkLocationPermission;
+                              controller.openLocationPicker();
                             },
                             icon: Icon(Icons.refresh, color: Colors.blue),
+                            tooltip: 'Sélectionner sur la carte',
                           ),
                         ],
                       ),

@@ -4,8 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:rawaa_app/model/model_commune.dart';
 import 'package:rawaa_app/model/model_wilaya.dart';
-
 import 'package:rawaa_app/styles/constants.dart';
+import 'package:rawaa_app/views/location_picker_screen.dart';
 
 class RegistrationController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -16,6 +16,8 @@ class RegistrationController extends GetxController {
   ListeStatus statusWilaya = ListeStatus.none;
   ListeStatus statusCommune = ListeStatus.none;
   ListeStatus statusLocation = ListeStatus.none;
+  ListeStatus statusUsername = ListeStatus.none;
+  ListeStatus statusPhone = ListeStatus.none;
 
   // Form controllers
   final nameController = TextEditingController(text: "");
@@ -45,6 +47,72 @@ class RegistrationController extends GetxController {
     super.onInit();
     getWilaya();
     checkLocationPermission();
+  }
+
+  Future<bool> checkUsername(String username) async {
+    bool result = false;
+    await Constants.reposit.repCheckUsername({"username": username}).then((
+      value,
+    ) {
+      print("********************** $value");
+      if (value['status'] == 'success') {
+        result = true;
+      } else {
+        result = false;
+      }
+    });
+    return result;
+  }
+
+  // Async username validation for real-time checking
+  Future<void> validateUsernameAsync(String username) async {
+    if (username.isEmpty || username.length < 3) return;
+
+    statusUsername = ListeStatus.loading;
+    update();
+
+    try {
+      bool isAvailable = await checkUsername(username);
+      if (isAvailable) {
+        statusUsername = ListeStatus.success;
+      } else {
+        statusUsername = ListeStatus.error;
+      }
+    } catch (e) {
+      statusUsername = ListeStatus.error;
+      print('Error validating username: $e');
+    }
+
+    update();
+  }
+
+  checkPhone(String phone) async {
+    var result = await Constants.reposit.repCheckPhone(phone);
+    return result;
+  }
+
+  // Async phone validation for real-time checking
+  Future<void> validatePhoneAsync(String phone) async {
+    if (phone.isEmpty || phone.length < 10) return;
+
+    statusPhone = ListeStatus.loading;
+    update();
+
+    try {
+      var result = await checkPhone(phone);
+      print("Phone check result: $result");
+
+      if (result != null && result['status'] == 'success') {
+        statusPhone = ListeStatus.success;
+      } else {
+        statusPhone = ListeStatus.error;
+      }
+    } catch (e) {
+      statusPhone = ListeStatus.error;
+      print('Error validating phone: $e');
+    }
+
+    update();
   }
 
   getWilaya() async {
@@ -102,6 +170,18 @@ class RegistrationController extends GetxController {
         return;
       } else if (selectedCommune == null) {
         Get.snackbar("Erreur", "Veuillez choisir la commune");
+        return;
+      } else if (statusUsername != ListeStatus.success) {
+        Get.snackbar(
+          "Erreur",
+          "Veuillez vérifier que le nom d'utilisateur est disponible",
+        );
+        return;
+      } else if (statusPhone != ListeStatus.success) {
+        Get.snackbar(
+          "Erreur",
+          "Veuillez vérifier que le numéro de téléphone est disponible",
+        );
         return;
       } else {
         try {
@@ -195,6 +275,42 @@ class RegistrationController extends GetxController {
     } catch (e) {
       print('Error checking location permission: $e');
       locationPermissionGranted.value = false;
+    }
+  }
+
+  // Open location picker with Google Maps
+  Future<void> openLocationPicker() async {
+    try {
+      final result = await Get.to(
+        () => LocationPickerScreen(
+          initialLatitude: latitude.value != 0.0 ? latitude.value : null,
+          initialLongitude: longitude.value != 0.0 ? longitude.value : null,
+        ),
+      );
+
+      if (result != null) {
+        latitude.value = result['latitude'];
+        longitude.value = result['longitude'];
+        currentLocation.value = result['address'];
+
+        Get.snackbar(
+          'Location Updated',
+          'Localisation mise à jour avec succès',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          duration: Duration(seconds: 2),
+        );
+      }
+    } catch (e) {
+      print('Error opening location picker: $e');
+      Get.snackbar(
+        'Error',
+        'Impossible d\'ouvrir le sélecteur de localisation',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     }
   }
 
