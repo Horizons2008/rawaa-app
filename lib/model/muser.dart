@@ -1,38 +1,33 @@
-import 'package:hive/hive.dart';
+class Muser {
+  late String name;
+  late String id;
 
+  late String role;
+  late String phone;
+  late String username;
 
-part 'muser.g.dart';
+  late String wilayaTitle;
+  late String communeTitle;
+  String token = "";
 
-@HiveType(typeId: 1)
-class MUser extends HiveObject {
-  @HiveField(0)
-  int position;
+  Muser({
+    required this.id,
 
-  @HiveField(1)
-  String username;
-  @HiveField(2)
-  String password;
-
-  @HiveField(3)
-  String role;
-
-  @HiveField(4)
-  String status;
-  @HiveField(5)
-  bool uploaded;
-  @HiveField(6)
-  int updatetAt;
-  @HiveField(7)
-  int userId;
-  @HiveField(8)
-  MUser({
-    required this.password,
+    required this.name,
     required this.role,
-    required this.status,
-    required this.uploaded,
+    required this.phone,
     required this.username,
-    required this.updatetAt,
-    required this.userId,
-    required this.position,
+    required this.wilayaTitle,
+    required this.communeTitle,
+    required this.token,
   });
+  Muser.fromJson(Map<String, dynamic> json) {
+    name = json['name'];
+    role = json['role'];
+    phone = json['phone'];
+    username = json['username'];
+    wilayaTitle = json['wilaya_title'];
+    communeTitle = json['commune_title'];
+    id = json['id'].toString();
+  }
 }

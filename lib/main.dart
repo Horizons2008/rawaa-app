@@ -12,7 +12,8 @@ import 'package:rawaa_app/services/notification/local_notification.dart';
 import 'package:rawaa_app/services/notification/push_notification.dart';
 import 'package:rawaa_app/styles/constants.dart';
 import 'package:rawaa_app/styles/my_theme.dart';
-import 'package:rawaa_app/views/registration/screen_registration.dart';
+import 'package:rawaa_app/translations/messages.dart';
+import 'package:rawaa_app/controller/language_controller.dart';
 import 'package:rawaa_app/views/splash/screen_splash.dart';
 
 void main() async {
@@ -32,6 +33,7 @@ void main() async {
     LocalNotificationService.init(),
     LocalNotificationService().createNotificationChannel(),
   ]);
+  debugPrint("bbbbbbbbbbbbbbbbbbbbbbbbbb ${Constants.baseUrl}");
   runApp(MyApp());
 }
 
@@ -40,11 +42,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Initialize language controller
+    Get.put(LanguageController());
+
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Orders Screen',
+      title: 'app_name'.tr,
       theme: MyTheme.customTheme(),
-      home: ScreenRegistration(),
+
+      // Internationalization
+      translations: Messages(),
+      locale: Get.find<LanguageController>().currentLocale.value,
+      fallbackLocale: Locale('fr', ''),
+
+      home: ScreenSplash(),
     );
   }
 }

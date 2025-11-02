@@ -31,7 +31,7 @@ class ScreenRegistration extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       CustomText(
-                        text: "Inscription",
+                        text: "registration".tr,
                         size: 25,
                         weight: FontWeight.bold,
                         coul: Colors.black,
@@ -39,58 +39,45 @@ class ScreenRegistration extends StatelessWidget {
                       SpaceV(h: 20),
 
                       // Name Field
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Radio<int>(
-                            value: 0,
-                            groupValue: controller.typeCompte,
-                            onChanged: (val) {
-                              controller.typeCompte = val!;
-                              controller.update();
-                            },
-                          ),
-                          Text('Client'),
-                          SizedBox(width: 5),
-                          Radio<int>(
-                            value: 1,
-                            groupValue: controller.typeCompte,
-                            onChanged: (val) {
-                              controller.typeCompte = val!;
-                              controller.update();
-                            },
-                          ),
-                          Text('Fournisseur'),
-                          SizedBox(width: 5),
-                          Radio<int>(
-                            value: 2,
-                            groupValue: controller.typeCompte,
-                            onChanged: (val) {
-                              controller.typeCompte = val!;
-                              controller.update();
-                            },
-                          ),
-                          Text('Transporter'),
-                        ],
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Radio<int>(
+                              value: 0,
+                              groupValue: controller.typeCompte,
+                              onChanged: (val) {
+                                controller.typeCompte = val!;
+                                controller.update();
+                              },
+                            ),
+                            Text('Client'),
+                            SizedBox(width: 5),
+                            Radio<int>(
+                              value: 1,
+                              groupValue: controller.typeCompte,
+                              onChanged: (val) {
+                                controller.typeCompte = val!;
+                                controller.update();
+                              },
+                            ),
+                            Text('Fournisseur'),
+                            SizedBox(width: 5),
+                            Radio<int>(
+                              value: 2,
+                              groupValue: controller.typeCompte,
+                              onChanged: (val) {
+                                controller.typeCompte = val!;
+                                controller.update();
+                              },
+                            ),
+                            Text('Transporter'),
+                          ],
+                        ),
                       ),
                       SpaceV(h: 15),
-                      OutlinedEdit(
-                        hint: "Entrez votre nom",
-                        label: "Nom",
-                        validation: (p0) {
-                          if (p0!.isEmpty) {
-                            return "Le nom est obligatoire";
-                          } else if (p0.length < 3) {
-                            return "Le nom doit contenir au moins 3 caractères";
-                          } else {
-                            return null;
-                          }
-                        },
-                        iconDroite: Icon(Icons.person),
-                        controller: controller.nameController,
-                      ),
 
-                      SpaceV(h: 15),
                       OutlinedEdit(
                         hint: "Numero de téléphone",
                         label: "Numéro de téléphone",
@@ -182,24 +169,6 @@ class ScreenRegistration extends StatelessWidget {
                             );
                           }
                           return Container();
-                        },
-                      ),
-                      SpaceV(h: 15),
-                      OutlinedEdit(
-                        hint: "Adresse",
-                        label: "Adresse",
-                        iconDroite: Icon(Icons.phone),
-                        controller: controller.adresseController,
-                        dataType: TextInputType.text,
-                        validation: (p0) {
-                          if (p0!.isEmpty) {
-                            return "L'adresse est obligatoire";
-                            ;
-                          } else if (p0.length < 6) {
-                            return "Le nom doit contenir au moins 6 caractères";
-                          } else {
-                            return null;
-                          }
                         },
                       ),
 
@@ -304,20 +273,22 @@ class ScreenRegistration extends StatelessWidget {
                       OutlinedEdit(
                         hint: "Mot de passe",
 
-                        iconDroite: Icon(Icons.phone),
+                        iconDroite: Icon(Icons.lock),
                         controller: controller.passwordController,
                         dataType: TextInputType.text,
                         validation: (p0) {
                           if (p0!.isEmpty) {
                             return "Mot de passe est obligatoire";
                             ;
-                          } else if (p0.length < 4) {
-                            return "Le mot de passe  doit contenir au moins 4 caractères";
+                          } else if (p0.length < 6) {
+                            return "Le mot de passe  doit contenir au moins 6 caractères";
                           } else {
                             return null;
                           }
                         },
                       ),
+                      SpaceV(h: 15),
+
                       DropdownButtonFormField<MWilaya>(
                         value: controller.selectedWilaya,
                         decoration: InputDecoration(
@@ -417,7 +388,7 @@ class ScreenRegistration extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SpaceV(h: 10),
+                      SpaceV(h: 45),
 
                       // Refresh Location Button
 

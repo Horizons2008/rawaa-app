@@ -8,23 +8,20 @@ class Intercepteur extends Interceptor {
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
-    String token =
-        await Hive.box(Constants.boxConfig).get("current_user") != null
-        ? await Hive.box(Constants.boxConfig).get("current_user")["token"] ?? ""
-        : "";
-    print(token);
+    String token = Constants.currentUser?.token ?? "12";
+
     options.headers["Authorization"] = "Bearer $token";
 
     /*  int typeRequest = 1;
 typeRequest == 1
         ? options.headers["Content-Type"] = "multipart/form-data"
-        : options.headers["Content-Type"] = "application/json";
+        : options.headers["Content-Type"] = "application/json";*/
 
     if (options.data is FormData) {
       options.headers["Content-Type"] = "multipart/form-data";
     } else {
       options.headers["Content-Type"] = "application/json";
-    }*/
+    }
 
     options.headers["Accept"] = "application/json";
 

@@ -37,15 +37,34 @@ class WebService {
   }
 
   //************************************************************* */
+  delete(String endPoint) async {
+    String url = "${Constants.baseUrl}/${Constants.prefixe}/$endPoint";
+    print("*********************************url $url");
+    try {
+      Response response = await dio.delete(url);
+      // print("responde data ${response.data}");
+      return response.data;
+    } on DioException catch (e) {
+      print("error catch webservice ${DioExceptions.fromDioError(e).message}");
+      return (<String, String>{
+        "status": "ERROR",
+        "error": DioExceptions.fromDioError(e).message,
+      });
+    }
+  }
+
+  //************************************************************* */
   post(String endPoint, dynamic data) async {
     String url = "${Constants.baseUrl}/${Constants.prefixe}/$endPoint";
     print("*********************************url $url");
+
     try {
       Response response = await dio.post(url, data: data);
       // print("responde data ${response.data}");
       return response.data;
     } on DioException catch (e) {
       print("error catch webservice ${DioExceptions.fromDioError(e).message}");
+
       return (<String, String>{
         "status": "ERROR",
         "error": DioExceptions.fromDioError(e).message,
@@ -68,7 +87,9 @@ class WebService {
 
       //return response.data;
     } on DioException catch (e) {
-      debugPrint("catch web servicie ${DioExceptions.fromDioError(e).message}");
+      debugPrint(
+        "catch web servicie ${DioExceptions.fromDioError(e).toString()}",
+      );
       if (e.response != null) {
         print('Response data: ${e.response?.data}');
         print('Response status: ${e.response?.statusCode}');

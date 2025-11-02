@@ -8,6 +8,8 @@ class OutlinedEdit extends StatelessWidget {
     this.onChange,
     this.controller,
     this.iconDroite,
+    this.iconGauche,
+
     this.showPass,
     this.dataType,
     this.validation,
@@ -30,6 +32,8 @@ class OutlinedEdit extends StatelessWidget {
   final String? errorText;
 
   final Widget? iconDroite;
+  final Widget? iconGauche;
+
   final bool? showPass;
 
   @override
@@ -63,6 +67,7 @@ class OutlinedEdit extends StatelessWidget {
           ),
           labelText: hint,
           suffixIcon: iconDroite,
+          prefixIcon: iconGauche,
         ),
         onChanged: onChange,
         controller: controller,

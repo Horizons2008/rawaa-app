@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:rawaa_app/model/muser.dart';
 
 import 'package:rawaa_app/my_widgets/custom_text.dart';
@@ -17,7 +19,7 @@ abstract class Constants {
   static final String boxConfig = "piscine_boxConfig";
   static final String boxUser = "piscine_boxUsers";
   static final Box boxUsers = Hive.box(boxUser);
-  static late MUser currentUser;
+  static Muser? currentUser;
 
   static final String boxHoraire = "piscine_boxHoraire";
   static final Box boxHoraires = Hive.box(boxHoraire);
@@ -34,8 +36,11 @@ abstract class Constants {
 
   Color secondaryColor = Colors.green.shade400;
 
-  static final String baseUrl = "http://192.168.1.8:8000";
-  //static final String baseUrl = "https://app.rawaa_app.net";
+  static final String baseUrl = "http://10.126.94.224:8000";
+  static final String photoUrl = "http://10.126.94.224:8000/storage/";
+  // static final String baseUrl = "https://boutique.tassiliweb.com";
+  // static final String photoUrl = "https://boutique.tassiliweb.com/storage/";
+
   static final String prefixe = "api";
   static WebService ws = WebService();
   static Repository reposit = Repository(ws);
@@ -83,5 +88,28 @@ abstract class Constants {
         ),
       ),
     );
+  }
+
+  static String getTitle(String title, String lang) {
+    // Convert the input string `s` to JSON and return the value of 'fr'
+    try {
+      final Map<String, dynamic> jsonMap = json.decode(title);
+      switch (lang) {
+        case "fr":
+          return jsonMap['fr'];
+
+        case "en":
+          return jsonMap['en'];
+
+        case "ar":
+          return jsonMap['ar'];
+
+        default:
+          return jsonMap['ar'];
+      }
+    } catch (e) {
+      print("eeeeeeeeeeeeeeeeeeeeeeeeeeeeee $e");
+      return title;
+    }
   }
 }

@@ -1,7 +1,10 @@
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
+import 'package:rawaa_app/model/muser.dart';
 import 'package:rawaa_app/styles/constants.dart';
-import 'package:rawaa_app/views/dashboard/dashboard.dart';
+import 'package:rawaa_app/views/dashboard/dashboard_admin.dart';
+import 'package:rawaa_app/views/dashboard/dashboard_client.dart';
+import 'package:rawaa_app/views/dashboard/dashboard_vendeur.dart';
 import 'package:rawaa_app/views/login/screen_login.dart';
 
 class ContSplash extends GetxController {
@@ -31,7 +34,41 @@ class ContSplash extends GetxController {
 
         if (logged) {
           //  await Constants.reposit.repRestoreAllData1();
-          Get.offAll(() => ScreenDashboard());
+          var rr = await Hive.box(
+            Constants.boxConfig,
+          ).get("current_user")['user'];
+          String tok =
+              await Hive.box(
+                Constants.boxConfig,
+              ).get("current_user")['access_token'] ??
+              "ttookkeenn";
+          Constants.currentUser = Muser(
+            id: rr['id'].toString(),
+            name: rr['name'],
+            role: rr['role'],
+            phone: rr['phone'],
+            username: rr['username'],
+            wilayaTitle: rr['wilaya_title'],
+            communeTitle: rr['commune_title'],
+            token: tok,
+          );
+          switch (Constants.currentUser!.role) {
+            case 'admin':
+              Get.offAll(() => DashboardAdmin());
+              break;
+            case 'client':
+              Get.offAll(() => DashboardClient());
+              break;
+            case 'vendeur':
+              Get.offAll(() => DashboardVendeur());
+              break;
+            case 'livreur':
+              Get.offAll(() => DashboardAdmin());
+              break;
+            
+           
+          }
+         
         } else {
           Get.offAll(() => ScreenLogin());
         }

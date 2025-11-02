@@ -20,11 +20,11 @@ class RegistrationController extends GetxController {
   ListeStatus statusPhone = ListeStatus.none;
 
   // Form controllers
-  final nameController = TextEditingController(text: "");
+  final nameController = TextEditingController(text: "458");
   final phoneController = TextEditingController(text: "");
   final usernameController = TextEditingController(text: "");
   final passwordController = TextEditingController(text: "");
-  final adresseController = TextEditingController(text: "");
+  final adresseController = TextEditingController(text: "124");
   int typeCompte = -1;
   MWilaya? selectedWilaya;
   MCommune? selectedCommune;
@@ -87,7 +87,7 @@ class RegistrationController extends GetxController {
   }
 
   checkPhone(String phone) async {
-    var result = await Constants.reposit.repCheckPhone(phone);
+    var result = await Constants.reposit.repCheckPhone({"phone": phone});
     return result;
   }
 
@@ -100,7 +100,7 @@ class RegistrationController extends GetxController {
 
     try {
       var result = await checkPhone(phone);
-      print("Phone check result: $result");
+     
 
       if (result != null && result['status'] == 'success') {
         statusPhone = ListeStatus.success;
@@ -111,6 +111,7 @@ class RegistrationController extends GetxController {
       statusPhone = ListeStatus.error;
       print('Error validating phone: $e');
     }
+    
 
     update();
   }
@@ -191,16 +192,14 @@ class RegistrationController extends GetxController {
               tt = "client";
               break;
             case 1:
-              tt = "fournisseur";
+              tt = "vendeur";
               break;
             case 2:
-              tt = "transporter";
+              tt = "livreur";
               break;
             default:
           }
 
-          print("*********** $tt");
-          print("*********** $typeCompte");
           statusStore = ListeStatus.loading;
           update();
           await Constants.reposit
@@ -220,9 +219,18 @@ class RegistrationController extends GetxController {
                 "confirmed_compte": 0,
               })
               .then((value) {
-                print("*********** $value");
+                print("vvvvvvvvvvvvvvvvvvvvv $value");
                 if (value['status'] != null && value['status'] == "success") {
                   statusStore = ListeStatus.success;
+                  Get.back();
+                  Get.snackbar(
+                    "Success",
+                    "Votre compte a été créé avec succès",
+                    colorText: Colors.white,
+                    backgroundColor: Colors.black,
+                    borderRadius: 25,
+                    snackPosition: SnackPosition.BOTTOM,
+                  );
                   update();
                 } else {
                   statusStore = ListeStatus.error;
