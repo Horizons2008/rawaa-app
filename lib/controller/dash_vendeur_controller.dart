@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rawaa_app/views/client/screen_order.dart';
 import 'package:rawaa_app/views/settings/screen_settings.dart';
 import 'package:rawaa_app/views/vendeur/my_stock.dart';
 
 class DashVendeurController extends GetxController {
   int indexPage = 0;
-  Widget page = Container();
+  Widget page = MyStock();
 
   changePage(int index) {
     indexPage = index;
@@ -14,11 +15,11 @@ class DashVendeurController extends GetxController {
         page = MyStock();
         break;
       case 1:
-        page = Center(child: Text("Page 2"));
+        page = Center(child: Text("Page 3"));
 
         break;
       case 2:
-        page = Center(child: Text("Page 3"));
+        page = ScreenOrder();
         break;
       case 3:
         page = ScreenSettings();

@@ -46,10 +46,7 @@ class ContSplash extends GetxController {
             id: rr['id'].toString(),
             name: rr['name'],
             role: rr['role'],
-            phone: rr['phone'],
             username: rr['username'],
-            wilayaTitle: rr['wilaya_title'],
-            communeTitle: rr['commune_title'],
             token: tok,
           );
           switch (Constants.currentUser!.role) {
@@ -65,10 +62,7 @@ class ContSplash extends GetxController {
             case 'livreur':
               Get.offAll(() => DashboardAdmin());
               break;
-            
-           
           }
-         
         } else {
           Get.offAll(() => ScreenLogin());
         }

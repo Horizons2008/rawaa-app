@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rawaa_app/views/client/screen_cart.dart';
+import 'package:rawaa_app/views/client/screen_order.dart';
 import 'package:rawaa_app/views/client/welcome.dart';
 import 'package:rawaa_app/views/settings/screen_settings.dart';
 
 class DashClientController extends GetxController {
   int indexPage = 0;
-  Widget page = Container();
+  Widget page = ScreenWelcomClient();
 
   void changePage(int index) {
     indexPage = index;
@@ -14,10 +16,10 @@ class DashClientController extends GetxController {
         page = ScreenWelcomClient();
         break;
       case 1:
-        page = Center(child: Text("Page 2 Client"));
+        page = ScreenCart();
         break;
       case 2:
-        page = Center(child: Text("Page 3 Client"));
+        page = ScreenOrder();
         break;
       case 3:
         page = ScreenSettings();

@@ -6,6 +6,8 @@ class MStock {
   late final int id;
   late final String productTitle;
   late final String productId;
+  late final String catTitle;
+  late final String catId;
   late final String vendeurId;
   late final String vendeurName;
   late final double qte;
@@ -14,6 +16,9 @@ class MStock {
     required this.id,
     required this.productTitle,
     required this.productId,
+    required this.catTitle,
+    required this.catId,
+
     required this.vendeurId,
     required this.vendeurName,
     required this.qte,
@@ -24,6 +29,9 @@ class MStock {
     id = json['id'];
     productTitle = getTitle(json['product_title']);
     productId = json['product_id'].toString();
+    catTitle = getTitle(json['categorie_title']);
+    catId = json['categorie_id'].toString();
+
     vendeurId = json['vendeur_id'].toString();
     vendeurName = json['vendeur_name'];
     qte = json['qte'] * 1.0;

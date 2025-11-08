@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:rawaa_app/model/model_categorie.dart';
 import 'package:rawaa_app/model/model_product.dart';
 import 'package:rawaa_app/model/model_stock.dart';
@@ -10,18 +13,22 @@ class ControllerStock extends GetxController {
   ListeStatus status = ListeStatus.none;
   ListeStatus statusProd = ListeStatus.none;
   ListeStatus statusStore = ListeStatus.none;
+  File? selectedImage;
+  final ImagePicker _picker = ImagePicker();
 
   List<MStock> listeStock = <MStock>[];
   List<MStock> filteredList = <MStock>[];
   final TextEditingController searchController = TextEditingController();
-  final TextEditingController priceController = TextEditingController();
-  final TextEditingController qteController = TextEditingController();
+  final TextEditingController priceController = TextEditingController(
+    text: "1500",
+  );
+  final TextEditingController qteController = TextEditingController(text: "85");
   MCat? selectedCat;
   MProduct? selectedProd;
 
   List<MCat> listeCat = <MCat>[];
   List<MProduct> listeProd = <MProduct>[];
-  List<String> images = [];
+  List<File> images = [];
 
   getCat() async {
     await Constants.reposit.repGetCategorie().then((value) {
@@ -49,6 +56,31 @@ class ControllerStock extends GetxController {
         update();
       }
     });
+  }
+
+  Future<void> pickImageFromGallery() async {
+    try {
+      final XFile? image = await _picker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 800,
+        maxHeight: 600,
+        imageQuality: 80,
+      );
+
+      if (image != null) {
+        selectedImage = File(image.path);
+        images.add(selectedImage!);
+        update();
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Failed to pick image: ${e.toString()}',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
   }
 
   // getStock() async {
@@ -84,11 +116,11 @@ class ControllerStock extends GetxController {
           "price": priceController.text,
           "qte": qteController.text,
           "promo": "0",
-        })
+        }, images)
         .then((value) {
           print("store stooooooooooooooooooooooooooooooock $value");
           if (value['status'] == "success") {
-            statusStore = ListeStatus.success;
+                        statusStore = ListeStatus.success;
             Get.back();
             getStock();
             Constants.showSnackBar(

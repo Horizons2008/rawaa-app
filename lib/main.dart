@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:rawaa_app/firebase_options.dart';
+import 'package:rawaa_app/model/model_pannier.dart';
 import 'package:rawaa_app/services/notification/local_notification.dart';
 import 'package:rawaa_app/services/notification/push_notification.dart';
 import 'package:rawaa_app/styles/constants.dart';
@@ -21,6 +22,9 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await FirebaseMessaging.instance.getToken().then((onValue) {
     log("token: $onValue");
+    Constants.reposit.repUpdateFcmToken({"fcmToken": "azerty"}).then((onValue) {
+      print('uuuuuuuuuuuuupdate $onValue');
+    });
   });
 
   // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
@@ -28,6 +32,13 @@ void main() async {
   await Hive.initFlutter();
   await Hive.openBox('userBox');
   await Hive.openBox(Constants.boxConfig);
+
+  // Register adapter
+  Hive.registerAdapter(CartItemAdapter());
+
+  // Open the box
+  await Hive.openBox<CartItem>('cartBox');
+
   Future.wait([
     PushNotificationServices.init(),
     LocalNotificationService.init(),

@@ -1,7 +1,7 @@
 import 'package:rawaa_app/styles/constants.dart';
 import 'package:flutter/material.dart';
 
-Widget WidgetStatus(ReceptionStatus status) {
+Widget WidgetStatus(int status) {
   return Container(
     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
     decoration: BoxDecoration(

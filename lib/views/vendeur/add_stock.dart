@@ -1,12 +1,16 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:rawaa_app/controller/controller_stock.dart';
 import 'package:rawaa_app/model/model_categorie.dart';
 import 'package:rawaa_app/model/model_product.dart';
+import 'package:rawaa_app/model/model_stock.dart';
 import 'package:rawaa_app/styles/constants.dart';
 
 class AddStock extends StatelessWidget {
-  const AddStock({super.key});
+  const AddStock({super.key, this.selectedStock});
+  final MStock? selectedStock;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +36,7 @@ class AddStock extends StatelessWidget {
                 items: ctrl.listeCat.map((cat) {
                   return DropdownMenuItem<MCat>(
                     value: cat,
-                    child: Text(cat.title),
+                    child: Text(Constants.getTitle(cat.title, Constants.lang)),
                   );
                 }).toList(),
                 onChanged: (val) {
@@ -99,19 +103,19 @@ class AddStock extends StatelessWidget {
               ),
               SizedBox(height: 8),
 
-              /* SizedBox(
+              SizedBox(
                 height: 90,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
-                  itemCount: images.length + 1,
+                  itemCount: ctrl.images.length + 1,
                   separatorBuilder: (_, __) => SizedBox(width: 10),
                   itemBuilder: (context, index) {
-                    if (index == images.length) {
+                    if (index == ctrl.images.length) {
                       return GestureDetector(
                         onTap: () async {
                           // Use image picker logic here
-                        //  selectImages();
-                        //  setState(() {});
+                          ctrl.pickImageFromGallery();
+                          //  setState(() {});
                         },
                         child: Container(
                           width: 75,
@@ -129,8 +133,9 @@ class AddStock extends StatelessWidget {
                         children: [
                           ClipRRect(
                             borderRadius: BorderRadius.circular(10),
-                            child: Image.asset(
-                              images[index],
+                            child: Image.file(
+                              ctrl.images[index],
+
                               width: 75,
                               height: 75,
                               fit: BoxFit.cover,
@@ -141,8 +146,8 @@ class AddStock extends StatelessWidget {
                             right: 0,
                             child: GestureDetector(
                               onTap: () {
-                                images.removeAt(index);
-                                setState(() {});
+                                ctrl.images.removeAt(index);
+                                ctrl.update();
                               },
                               child: Container(
                                 decoration: BoxDecoration(
@@ -163,7 +168,7 @@ class AddStock extends StatelessWidget {
                   },
                 ),
               ),
-              SizedBox(height: 20),*/
+              SizedBox(height: 20),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -178,13 +183,12 @@ class AddStock extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child:ctrl.statusStore == ListeStatus.loading
+                  child: ctrl.statusStore == ListeStatus.loading
                       ? const CircularProgressIndicator()
-                      : 
-Text(
-                    "Store",
-                    style: TextStyle(color: Colors.white, fontSize: 16),
-                  ),
+                      : Text(
+                          "Store",
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
                 ),
               ),
               SizedBox(height: 24),

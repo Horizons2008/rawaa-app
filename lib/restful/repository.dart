@@ -38,16 +38,66 @@ class Repository {
     return await Constants.ws.get("checkPhone", data);
   }
 
+  Future<dynamic> repUpdateFcmToken(var data) async {
+    return await Constants.ws.post("updateToken", data);
+  }
+
   Future<dynamic> repGetProfile() async {
     return await Constants.ws.get("getProfile", null);
+  }
+
+  Future<dynamic> repGetOrderById() async {
+    return await Constants.ws.get("orderById", null);
   }
 
   Future<dynamic> repGetStock(String id) async {
     return await Constants.ws.get("getStockByVendeur/$id", null);
   }
 
-  Future<dynamic> repStoreStock(var data) async {
-    return await Constants.ws.post("stock", data);
+  Future<dynamic> repGetDetailByOrderId(int id) async {
+    return await Constants.ws.get("detailByOrderId/$id", null);
+  }
+
+  Future<dynamic> repChangeStatus(int id, int status) async {
+    return await Constants.ws.get("changeStatus/$id/$status", null);
+  }
+
+  Future<dynamic> repGetAllStock() async {
+    return await Constants.ws.get("stock", null);
+  }
+
+  Future<dynamic> repStoreOrder(dynamic data) async {
+    return await Constants.ws.post("order", data);
+  }
+
+  Future<dynamic> repStoreStock(var data, List<File> imageList) async {
+    List<MultipartFile> multipartFiles = [];
+
+    for (int i = 0; i < imageList.length; i++) {
+      multipartFiles.add(
+        await MultipartFile.fromFile(
+          imageList[i].path,
+          filename: 'image$i.jpg',
+          contentType: DioMediaType(
+            'image',
+            'jpeg',
+          ), // Use MediaType instead of DioMediaType
+        ),
+      );
+    }
+    FormData formData = FormData();
+    for (int i = 0; i < multipartFiles.length; i++) {
+      formData.files.add(MapEntry('images[]', multipartFiles[i]));
+    }
+
+    if (data is Map<String, dynamic>) {
+      data.forEach((key, value) {
+        if (key != 'images') {
+          formData.fields.add(MapEntry(key, value.toString()));
+        }
+      });
+    }
+    return await Constants.ws.post("stock", formData);
   }
 
   Future<dynamic> repUpdateProfile(var data, File image) async {
@@ -120,6 +170,10 @@ class Repository {
     return await Constants.ws.delete("categorie/$id");
   }
 
+  Future<dynamic> repDeleteStock(int id) async {
+    return await Constants.ws.delete("stock/$id");
+  }
+
   //******************************************************* */
   Future checkLogin(String username, String password) async {
     return await ws.post("login", {"username": username, "password": password});
@@ -143,13 +197,6 @@ class Repository {
 
   Future repgetPackagingList() async {
     return await Constants.ws.get("packaging", {"warehouse_id": "1"});
-  }
-
-  Future repUpdateFcmToken(String fcm_token) async {
-    return await Constants.ws.get("update_fcm_token", {
-      "warehouse_id": "1",
-      "fcm_token": fcm_token,
-    });
   }
 
   //************************************************ */

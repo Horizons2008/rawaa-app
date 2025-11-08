@@ -1,6 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rawaa_app/controller/welcome_controller.dart';
+import 'package:rawaa_app/styles/constants.dart';
+import 'package:rawaa_app/views/client/detail_stock.dart';
 
 class ScreenWelcomClient extends StatelessWidget {
   const ScreenWelcomClient({super.key});
@@ -8,87 +12,40 @@ class ScreenWelcomClient extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GetBuilder<WelcomeClientController>(
-        init: WelcomeClientController(),
-        builder: (ctrl) {
-          // Dummy data for demonstration, replace with actual data/controller logic
-          final String profileImage =
-              'https://via.placeholder.com/120x120.png?text=User';
-          final String userName = 'John Doe'; // replace with actual user
-          final String userRole = 'Client'; // replace with actual role
-
-          final List<Map<String, String>> categories = [
-            {
-              'image': 'https://via.placeholder.com/60x60.png?text=Cat1',
-              'title': 'Catégorie 1',
-            },
-            {
-              'image': 'https://via.placeholder.com/60x60.png?text=Cat2',
-              'title': 'Catégorie 2',
-            },
-            {
-              'image': 'https://via.placeholder.com/60x60.png?text=Cat3',
-              'title': 'Catégorie 3',
-            },
-            {
-              'image': 'https://via.placeholder.com/60x60.png?text=Cat4',
-              'title': 'Catégorie 4',
-            },
-          ];
-
-          final List<Map<String, dynamic>> products = [
-            {
-              'image': 'https://via.placeholder.com/100x100.png?text=Prod1',
-              'title': 'Produit A',
-              'price': 800,
-              'qte': 3,
-              'vendeur_name': 'VendeurX',
-              'rating': 4.5,
-            },
-            {
-              'image': 'https://via.placeholder.com/100x100.png?text=Prod2',
-              'title': 'Produit B',
-              'price': 650,
-              'qte': 7,
-              'vendeur_name': 'VendeurY',
-              'rating': 3.8,
-            },
-            {
-              'image': 'https://via.placeholder.com/100x100.png?text=Prod3',
-              'title': 'Produit C',
-              'price': 550,
-              'qte': 1,
-              'vendeur_name': 'VendeurX',
-              'rating': 5,
-            },
-            {
-              'image': 'https://via.placeholder.com/100x100.png?text=Prod4',
-              'title': 'Produit D',
-              'price': 310,
-              'qte': 2,
-              'vendeur_name': 'VendeurZ',
-              'rating': 4,
-            },
-          ];
-
-          return SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 36),
-            child: Column(
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 36),
+        child: GetBuilder<WelcomeClientController>(
+          init: WelcomeClientController(),
+          builder: (ctrl) {
+            return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Header: Profile
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    CircleAvatar(
-                      radius: 40,
-                      backgroundImage: NetworkImage(profileImage),
+                    ClipOval(
+                      child: Image.network(
+                        "${Constants.photoUrl}user/${Constants.currentUser!.id}.jpg",
+
+                        width: 40,
+                        height: 40,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return CircleAvatar(
+                            radius: 20,
+                            child: Icon(Icons.person, size: 30),
+                          );
+                        },
+                      ),
                     ),
+
                     SizedBox(width: 20),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          userName,
+                          Constants.currentUser!.name,
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -105,7 +62,7 @@ class ScreenWelcomClient extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Text(
-                            userRole,
+                            Constants.currentUser!.role,
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.blueGrey,
@@ -128,34 +85,33 @@ class ScreenWelcomClient extends StatelessWidget {
                   height: 110,
                   child: ListView.separated(
                     scrollDirection: Axis.horizontal,
-                    itemCount: categories.length,
+                    itemCount: ctrl.listeCat.length,
                     separatorBuilder: (c, i) => SizedBox(width: 18),
                     itemBuilder: (context, idx) {
-                      final cat = categories[idx];
+                      final cat = ctrl.listeCat[idx];
                       return Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Container(
-                            width: 76,
-                            height: 76,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(18),
-                              image: DecorationImage(
-                                image: NetworkImage(cat['image']!),
+                            width: 70,
+                            height: 70,
+                            padding: EdgeInsets.all(2),
+
+                            child: ClipOval(
+                              child: Image.network(
+                                "${Constants.photoUrl}categorie/${cat.id}.jpg",
                                 fit: BoxFit.cover,
+
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Icon(Icons.error);
+                                },
                               ),
-                              boxShadow: [
-                                BoxShadow(
-                                  blurRadius: 4,
-                                  color: Colors.black12,
-                                  offset: Offset(1, 2),
-                                ),
-                              ],
                             ),
                           ),
+
                           SizedBox(height: 7),
                           Text(
-                            cat['title']!,
+                            Constants.getTitle(cat.title, Constants.lang),
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 14,
@@ -176,7 +132,7 @@ class ScreenWelcomClient extends StatelessWidget {
                 SizedBox(height: 14),
                 GridView.builder(
                   shrinkWrap: true,
-                  itemCount: products.length,
+                  itemCount: ctrl.listeStock.length,
                   physics: NeverScrollableScrollPhysics(),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
@@ -185,108 +141,106 @@ class ScreenWelcomClient extends StatelessWidget {
                     mainAxisSpacing: 18,
                   ),
                   itemBuilder: (context, idx) {
-                    final prod = products[idx];
-                    return Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(18),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black12,
-                            blurRadius: 4,
-                            offset: Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      padding: EdgeInsets.all(8),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(13),
-                            child: Image.network(
-                              prod['image'],
-                              height: 70,
-                              width: double.infinity,
-                              fit: BoxFit.cover,
+                    final prod = ctrl.listeStock[idx];
+                    return InkWell(
+                      onTap: () {
+                        ctrl.qte = 1;
+                        ctrl.total = prod.price;
+                        Get.to(() => ProductDetailScreen(stock: prod));
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(18),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black12,
+                              blurRadius: 4,
+                              offset: Offset(0, 2),
                             ),
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            prod['title'],
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          SizedBox(height: 5),
-                          Text(
-                            'Prix: ${prod['price'].toString()} DA',
-                            style: TextStyle(
-                              color: Colors.green,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14,
-                            ),
-                          ),
-                          SizedBox(height: 5),
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.inventory_2,
-                                size: 16,
-                                color: Colors.orange,
+                          ],
+                        ),
+                        padding: EdgeInsets.all(8),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Align(
+                              alignment: Alignment.center,
+                              child: Container(
+                                width: 70,
+                                height: 90,
+                                child: Image.asset(
+                                  "assets/images/splash.jpg",
+                                  height: 70,
+                                  width: double.infinity,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
-                              SizedBox(width: 3),
-                              Text(
-                                'Qté: ${prod['qte']}',
-                                style: TextStyle(fontSize: 13),
+                            ),
+
+                            SizedBox(height: 8),
+                            Text(
+                              prod.productTitle,
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
                               ),
-                            ],
-                          ),
-                          SizedBox(height: 5),
-                          Row(
-                            children: [
-                              Icon(Icons.person, size: 14, color: Colors.grey),
-                              SizedBox(width: 2),
-                              Flexible(
-                                child: Text(
-                                  prod['vendeur_name'],
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            SizedBox(height: 5),
+                            Text(
+                              'Prix: ${prod.price} DA',
+                              style: TextStyle(
+                                color: Colors.green,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                              ),
+                            ),
+                            SizedBox(height: 5),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.inventory_2,
+                                  size: 16,
+                                  color: Colors.orange,
+                                ),
+                                SizedBox(width: 3),
+                                Text(
+                                  'Qté: ${prod.qte}',
                                   style: TextStyle(fontSize: 13),
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
                                 ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 5),
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.star,
-                                color: Colors.yellow[700],
-                                size: 15,
-                              ),
-                              SizedBox(width: 3),
-                              Text(
-                                prod['rating'].toString(),
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600,
+                              ],
+                            ),
+                            SizedBox(height: 5),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.person,
+                                  size: 14,
+                                  color: Colors.grey,
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
+                                SizedBox(width: 2),
+                                Flexible(
+                                  child: Text(
+                                    prod.vendeurName,
+                                    style: TextStyle(fontSize: 13),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   },
                 ),
               ],
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

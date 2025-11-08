@@ -98,9 +98,9 @@ class ScreenRegistration extends StatelessWidget {
                           // Trigger async phone validation when user stops typing
                           if (value.isNotEmpty && value.length >= 10) {
                             Future.delayed(Duration(milliseconds: 500), () {
-                              if (controller.phoneController.text == value) {
-                                controller.validatePhoneAsync(value);
-                              }
+                              //if (controller.phoneController.text == value) {
+                              // controller.validatePhoneAsync(value);
+                              //   }
                             });
                           }
                         },

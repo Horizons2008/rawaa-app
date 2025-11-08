@@ -30,8 +30,8 @@ class DashboardVendeur extends StatelessWidget {
                 label: 'Catégories',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.shopping_bag),
-                label: 'Produits',
+                icon: Icon(Icons.shopping_basket),
+                label: 'Commande',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.settings),

@@ -17,7 +17,7 @@ class RegistrationController extends GetxController {
   ListeStatus statusCommune = ListeStatus.none;
   ListeStatus statusLocation = ListeStatus.none;
   ListeStatus statusUsername = ListeStatus.none;
-  ListeStatus statusPhone = ListeStatus.none;
+  ListeStatus statusPhone = ListeStatus.success;
 
   // Form controllers
   final nameController = TextEditingController(text: "458");
@@ -100,7 +100,6 @@ class RegistrationController extends GetxController {
 
     try {
       var result = await checkPhone(phone);
-     
 
       if (result != null && result['status'] == 'success') {
         statusPhone = ListeStatus.success;
@@ -111,7 +110,6 @@ class RegistrationController extends GetxController {
       statusPhone = ListeStatus.error;
       print('Error validating phone: $e');
     }
-    
 
     update();
   }

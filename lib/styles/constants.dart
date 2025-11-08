@@ -31,6 +31,8 @@ abstract class Constants {
   static final Box boxAttentes = Hive.box(boxAttente);
   static final String boxRecette = "cabinet_box_recette";
   static final Box boxRecettes = Hive.box(boxRecette);
+  static final Box boxCart = Hive.box('myCart');
+
   static Color primaryColor = Colors.green;
   static String lang = "fr";
 
@@ -46,25 +48,29 @@ abstract class Constants {
   static Repository reposit = Repository(ws);
   static String boxPackaging = "boxPackaging";
 
-  static Color getStatusColor(ReceptionStatus status) {
+  static Color getStatusColor(int status) {
     switch (status) {
-      case ReceptionStatus.initial:
+      case 2:
         return Colors.red;
-      case ReceptionStatus.processing:
+      case 0:
         return Colors.orange;
-      case ReceptionStatus.received:
+      case 1:
         return Colors.green;
+      default:
+        return Colors.grey;
     }
   }
 
-  static String getStatusLabel(ReceptionStatus status) {
+  static String getStatusLabel(int status) {
     switch (status) {
-      case ReceptionStatus.initial:
+      case 0:
         return "En attente";
-      case ReceptionStatus.processing:
-        return "En cours";
-      case ReceptionStatus.received:
-        return "Terminer";
+      case 1:
+        return "Accepté";
+      case 2:
+        return "Refusée";
+      default:
+        return "inconnue";
     }
   }
 

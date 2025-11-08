@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
-import 'package:get/utils.dart';
 import 'package:rawaa_app/controller/dash_client_controller.dart';
-import 'package:rawaa_app/controller/dash_vendeur_controller.dart';
 
 class DashboardClient extends StatelessWidget {
   const DashboardClient({super.key});
@@ -28,12 +26,12 @@ class DashboardClient extends StatelessWidget {
                 label: 'Accueil',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.category),
-                label: 'Catégories',
+                icon: Icon(Icons.shopping_basket_rounded),
+                label: 'Pannier',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.shopping_bag),
-                label: 'Produits',
+                label: 'Commande',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.settings),
