@@ -34,6 +34,11 @@ class DashboardVendeur extends StatelessWidget {
                 label: 'Commande',
               ),
               BottomNavigationBarItem(
+                icon: Icon(Icons.message),
+                label: 'Messagerie',
+              ),
+
+              BottomNavigationBarItem(
                 icon: Icon(Icons.settings),
                 label: 'Paramètres',
               ),

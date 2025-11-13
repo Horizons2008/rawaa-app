@@ -115,14 +115,20 @@ class ScreenProduct extends StatelessWidget {
                               child: ListTile(
                                 contentPadding: EdgeInsets.all(16),
                                 title: Text(
-                                  ctrl.listFiltred[index].title,
+                                  Constants.getTitle(
+                                    ctrl.listFiltred[index].title,
+                                    Constants.lang,
+                                  ),
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
                                 subtitle: CustomText(
-                                  text: ctrl.listFiltred[index].categorieTitle,
+                                  text: Constants.getTitle(
+                                                                           ctrl.listFiltred[index].categorieTitle,
+                                    Constants.lang,
+                                  ),
                                   size: 16,
                                   weight: FontWeight.w600,
                                   coul: Colors.grey,

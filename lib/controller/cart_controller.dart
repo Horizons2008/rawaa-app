@@ -26,7 +26,7 @@ class CartController extends GetxController {
     update();
   }
 
-  sendORder() async {
+  sendORder(bool livraison) async {
     List<Map<String, dynamic>> cartJson = cart
         .map((item) => item.toJson())
         .toList();
@@ -39,11 +39,10 @@ class CartController extends GetxController {
       'vendeur_id': cart[0].vendeurId,
       'total': total,
       'items': jsonString,
+      'livraison': livraison == true ? 1 : 0,
     };
     try {
       await Constants.reposit.repStoreOrder(data).then((onValue) {
-        print("sennnnnnnnnnnnnnnnd order $onValue");
-
         if (onValue['status'] == 'success') {
           CartService.clearCart();
           DashClientController ctrl = Get.find();

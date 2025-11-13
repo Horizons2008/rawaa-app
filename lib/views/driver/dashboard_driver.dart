@@ -2,21 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:rawaa_app/controller/dash_client_controller.dart';
+import 'package:rawaa_app/controller/dash_driver_controller.dart';
 
-class DashboardClient extends StatelessWidget {
-  const DashboardClient({super.key});
+class DashboardDriver extends StatelessWidget {
+  const DashboardDriver({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GetBuilder<DashClientController>(
-        init: DashClientController(),
+      body: GetBuilder<DashDriverController>(
+        init: DashDriverController(),
         builder: (ctrl) {
           return ctrl.page;
         },
       ),
-      bottomNavigationBar: GetBuilder<DashClientController>(
-        init: DashClientController(),
+      bottomNavigationBar: GetBuilder<DashDriverController>(
+        init: DashDriverController(),
         builder: (ctrl) {
           return BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
@@ -25,16 +26,13 @@ class DashboardClient extends StatelessWidget {
                 icon: Icon(Icons.dashboard),
                 label: 'Accueil',
               ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.shopping_basket_rounded),
-                label: 'Pannier',
-              ),
+
               BottomNavigationBarItem(
                 icon: Icon(Icons.shopping_bag),
                 label: 'Commande',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.shopping_bag),
+                icon: Icon(Icons.message),
                 label: 'Message',
               ),
               BottomNavigationBarItem(

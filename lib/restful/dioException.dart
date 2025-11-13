@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 
 class DioExceptions implements Exception {
   DioExceptions.fromDioError(DioException dioError) {
-    print("zzzzzzzzzzzzzzzzzzz ${dioError.type}");
+    print("zzzzzzzzzzzzzzzzzzz ${dioError.message}");
     switch (dioError.type) {
       case DioExceptionType.cancel:
         message = "Demande requete annuler";

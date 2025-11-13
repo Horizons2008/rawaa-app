@@ -130,8 +130,11 @@ class ScreenCategorie extends StatelessWidget {
                                         ),
                                         child: Center(
                                           child: CustomText(
-                                            text:
-                                                ctrl.listFilted[index].title[0],
+                                            text: Constants.getTitle(
+                                              ctrl.listFilted[index].title,
+                                              Constants.lang,
+                                            )[0],
+
                                             size: 20,
                                             weight: FontWeight.w500,
                                             coul: Constants.primaryColor,

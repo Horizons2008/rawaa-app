@@ -46,8 +46,36 @@ class Repository {
     return await Constants.ws.get("getProfile", null);
   }
 
+  Future<dynamic> repGetUserById(int userId) async {
+    return await Constants.ws.get("getUserById/$userId", null);
+  }
+
+  Future<dynamic> repGetAllUser() async {
+    return await Constants.ws.get("getAllUsers", null);
+  }
+
+  Future<dynamic> repStoreMsg(var data) async {
+    return await Constants.ws.post("messages", data);
+  }
+
+  Future<dynamic> repGetMsg(int id) async {
+    return await Constants.ws.get("messages/$id", null);
+  }
+
   Future<dynamic> repGetOrderById() async {
     return await Constants.ws.get("orderById", null);
+  }
+
+  Future<dynamic> repProposePrice(dynamic data) async {
+    return await Constants.ws.post("proposePrice", data);
+  }
+
+  Future<dynamic> repAcceptePrice(dynamic data) async {
+    return await Constants.ws.post("acceptePrice", data);
+  }
+
+  Future<dynamic> reprefusePrice(dynamic data) async {
+    return await Constants.ws.post("refusePrice", data);
   }
 
   Future<dynamic> repGetStock(String id) async {

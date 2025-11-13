@@ -328,8 +328,39 @@ class ScreenCart extends StatelessWidget {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () {
-                CartController ctrl = Get.find();
-                ctrl.sendORder();
+                // INSERT_YOUR_CODE
+                Get.dialog(
+                  AlertDialog(
+                    title: const Text('Livraison'),
+                    content: const Text(
+                      'Avez-vous besoin d\'un livreur pour votre commande ?',
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          // Non, pas de livreur
+                          Navigator.of(Get.overlayContext!).pop();
+                          CartController ctrl = Get.find();
+                          ctrl.sendORder(false);
+                        },
+                        child: const Text('Non'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          // Oui, besoin d'un livreur (TO DO: implement logic if needed)
+                          Navigator.of(Get.overlayContext!).pop();
+                          CartController ctrl = Get.find();
+                          // Optionally set a flag to request a delivery (livreur)
+                          // Your additional logic here if needed
+                          ctrl.sendORder(true);
+                        },
+                        child: const Text('Oui'),
+                      ),
+                    ],
+                  ),
+                );
+                //  CartController ctrl = Get.find();
+                //  ctrl.sendORder();
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green,
@@ -340,7 +371,7 @@ class ScreenCart extends StatelessWidget {
                 ),
               ),
               child: const Text(
-                'CONFIRM CART',
+                'Valider Pannier',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),

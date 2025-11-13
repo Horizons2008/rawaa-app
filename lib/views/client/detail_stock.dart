@@ -37,9 +37,9 @@ class ProductDetailScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Fresh Fruits
-                  /*  Image.network(
+                  Image.network(
                     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqoqqP60cLpUMwthnMxQ3Nisd3dMBjVFHTBg&s",
-                  ),*/
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -219,7 +219,6 @@ class ProductDetailScreen extends StatelessWidget {
                     height: 55,
                     child: ElevatedButton(
                       onPressed: () {
-                        print("aaaaaaaaaaaaaaaaaaaaaaaaaadd to cart ");
                         ctrl.addToCart(stock);
                         // Add purchase logic here
                       },

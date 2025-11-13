@@ -16,15 +16,24 @@ import 'package:rawaa_app/styles/my_theme.dart';
 import 'package:rawaa_app/translations/messages.dart';
 import 'package:rawaa_app/controller/language_controller.dart';
 import 'package:rawaa_app/views/splash/screen_splash.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await FirebaseMessaging.instance.getToken().then((onValue) {
     log("token: $onValue");
-    Constants.reposit.repUpdateFcmToken({"fcmToken": "azerty"}).then((onValue) {
-      print('uuuuuuuuuuuuupdate $onValue');
-    });
+  });
+ 
+  final IO.Socket socket = IO.io('http://192.168.1.5:3000', <String, dynamic>{
+    'transports': ['websocket'],
+    'autoConnect': false,
+  });
+  socket.connect();
+  socket.onConnect((_) {
+    print(
+      'connect+++++++++++++++++++++++++++: ${socket.id}',
+    ); // socket.emit('msg', 'test');
   });
 
   // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);

@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:rawaa_app/model/muser.dart';
@@ -5,6 +6,7 @@ import 'package:rawaa_app/styles/constants.dart';
 import 'package:rawaa_app/views/dashboard/dashboard_admin.dart';
 import 'package:rawaa_app/views/dashboard/dashboard_client.dart';
 import 'package:rawaa_app/views/dashboard/dashboard_vendeur.dart';
+import 'package:rawaa_app/views/driver/dashboard_driver.dart';
 import 'package:rawaa_app/views/login/screen_login.dart';
 
 class ContSplash extends GetxController {
@@ -49,6 +51,12 @@ class ContSplash extends GetxController {
             username: rr['username'],
             token: tok,
           );
+          FirebaseMessaging.instance.getToken().then((value) {
+            Constants.reposit
+                .repUpdateFcmToken({"fcmToken": value})
+                .then((onValue) {});
+          });
+
           switch (Constants.currentUser!.role) {
             case 'admin':
               Get.offAll(() => DashboardAdmin());
@@ -59,8 +67,8 @@ class ContSplash extends GetxController {
             case 'vendeur':
               Get.offAll(() => DashboardVendeur());
               break;
-            case 'livreur':
-              Get.offAll(() => DashboardAdmin());
+            case 'driver':
+              Get.offAll(() => DashboardDriver());
               break;
           }
         } else {

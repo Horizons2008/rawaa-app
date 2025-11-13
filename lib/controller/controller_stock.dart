@@ -19,10 +19,8 @@ class ControllerStock extends GetxController {
   List<MStock> listeStock = <MStock>[];
   List<MStock> filteredList = <MStock>[];
   final TextEditingController searchController = TextEditingController();
-  final TextEditingController priceController = TextEditingController(
-    text: "1500",
-  );
-  final TextEditingController qteController = TextEditingController(text: "85");
+  final TextEditingController priceController = TextEditingController();
+  final TextEditingController qteController = TextEditingController();
   MCat? selectedCat;
   MProduct? selectedProd;
 
@@ -120,7 +118,7 @@ class ControllerStock extends GetxController {
         .then((value) {
           print("store stooooooooooooooooooooooooooooooock $value");
           if (value['status'] == "success") {
-                        statusStore = ListeStatus.success;
+            statusStore = ListeStatus.success;
             Get.back();
             getStock();
             Constants.showSnackBar(

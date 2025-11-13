@@ -20,9 +20,9 @@ class MProduct {
   MProduct.fromJson(Map<String, dynamic> json) {
     id = json['id'];
 
-    title = getTitle(json['title']);
+    title =json['title'];
     categorieId = json['categorie_id'];
-    categorieTitle = getTitle(json['categorie_title']);
+    categorieTitle = json['categorie_title'];
   }
 
   //to json
@@ -35,26 +35,5 @@ class MProduct {
     'categorie_title': categorieTitle,
   };
 
-  String getTitle(String s) {
-    // Convert the input string `s` to JSON and return the value of 'fr'
-    try {
-      final Map<String, dynamic> jsonMap = json.decode(s);
-      switch (Constants.lang) {
-        case "fr":
-          return jsonMap['fr'];
-
-        case "en":
-          return jsonMap['en'];
-
-        case "ar":
-          return jsonMap['ar'];
-
-        default:
-          return jsonMap['fr'];
-      }
-    } catch (e) {
-      print("eeeeeeeeeeeeeeeeeeeeeeeeeeeeee $e");
-      return s;
-    }
-  }
+  
 }

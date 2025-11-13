@@ -9,6 +9,7 @@ import 'package:rawaa_app/styles/constants.dart';
 import 'package:rawaa_app/views/dashboard/dashboard_admin.dart';
 import 'package:rawaa_app/views/dashboard/dashboard_client.dart';
 import 'package:rawaa_app/views/dashboard/dashboard_vendeur.dart';
+import 'package:rawaa_app/views/driver/dashboard_driver.dart';
 
 class CtrlLogin extends GetxController {
   TextEditingController contUsername = TextEditingController(text: ("admin"));
@@ -64,8 +65,8 @@ class CtrlLogin extends GetxController {
                 case 'vendeur':
                   Get.offAll(() => DashboardVendeur());
                   break;
-                case 'livreur':
-                  Get.offAll(() => DashboardAdmin());
+                case 'driver':
+                  Get.offAll(() => DashboardDriver());
                   break;
               }
             } else if (val["status"] == "NOT_FOUND") {

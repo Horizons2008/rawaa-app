@@ -8,14 +8,21 @@ class MOrder {
     required this.clientId,
     required this.clientName,
     required this.status,
+    required this.livraison,
+    required this.fraisLivraison,
   });
   late final int id;
   late final int total;
   late final String dateDemande;
   late final int vendeurId;
   late final String vendeurName;
+  late final int? driverId;
+  late final String? driverName;
   late final int clientId;
   late final String clientName;
+  late int livraison;
+  late double? fraisLivraison;
+
   late int status;
 
   MOrder.fromJson(Map<String, dynamic> json) {
@@ -26,7 +33,13 @@ class MOrder {
     vendeurName = json['vendeur_name'];
     clientId = json['client_id'];
     clientName = json['client_name'];
+    driverId = json['livreur_id'];
+    driverName = json['livreur_name'];
     status = json['status'];
+    livraison = json['livraison'];
+    fraisLivraison = json['fraisLivraison'] is int
+        ? json['fraisLivraison'] * 1.0
+        : json['fraisLivraison'];
   }
 
   Map<String, dynamic> toJson() {

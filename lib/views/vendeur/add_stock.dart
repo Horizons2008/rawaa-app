@@ -55,7 +55,7 @@ class AddStock extends StatelessWidget {
                 items: ctrl.listeProd.map((prod) {
                   return DropdownMenuItem<MProduct>(
                     value: prod,
-                    child: Text(prod.title),
+                    child: Text(Constants.getTitle(prod.title, Constants.lang)),
                   );
                 }).toList(),
                 onChanged: (val) {

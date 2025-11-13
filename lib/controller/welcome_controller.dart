@@ -36,9 +36,6 @@ class WelcomeClientController extends GetxController {
   }
 
   addToCart(MStock stock) {
-    print("tttttttttttttttttttt ${stock.vendeurId}");
-    print("tttttttttttttttttttt ${stock.vendeurName}");
-
     CartItem item = CartItem(
       productTitle: stock.productTitle,
       categorieTitle: stock.catTitle,
@@ -50,7 +47,9 @@ class WelcomeClientController extends GetxController {
       vendeurTitle: stock.vendeurName,
     );
     CartService.addToCart(item);
-    print("xxxxxxxxxxxxxxxx ${CartService.getItemCount()}");
+
     update();
+    Get.back();
+    Constants.showSnackBar("Confirmation", "Produit ajouté au panier");
   }
 }

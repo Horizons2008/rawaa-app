@@ -19,13 +19,61 @@ class OrderController extends GetxController {
   fetchOrder() async {
     status = ListeStatus.loading;
     update();
-    await Constants.reposit.repGetOrderById().then((value) {
-      listeOrder = value['data']
-          .map<MOrder>((e) => MOrder.fromJson(e))
-          .toList();
+    try {
+      await Constants.reposit.repGetOrderById().then((value) {
+        print('vvvvvvvvvvvvvvvvvvvvvvvvv $value');
+        if (value['status'] == 'success') {
+          listeOrder = value['data']
+              .map<MOrder>((e) => MOrder.fromJson(e))
+              .toList();
 
-      status = ListeStatus.success;
+          status = ListeStatus.success;
+          update();
+        } else if (value['status'] == 'error') {
+          status = ListeStatus.error;
+          print(value);
+          update();
+        }
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  proposePrice(double price) async {
+    dynamic data = {"id": selectedOrder!.id, "price": price};
+    await Constants.reposit.repProposePrice(data).then((value) {
+      selectedOrder!.livraison = 1;
+      selectedOrder!.fraisLivraison = price;
       update();
+      fetchOrder();
+      Get.back();
+    });
+  }
+
+  acceptePrice() async {
+    dynamic data = {"id": selectedOrder!.id};
+    print('selected order $data');
+    await Constants.reposit.repAcceptePrice(data).then((value) {
+      print("accccccccccccccccccccepte $value");
+      selectedOrder!.livraison = 3;
+
+      update();
+      fetchOrder();
+      Get.back();
+    });
+  }
+
+  refusePrice() async {
+    dynamic data = {"id": selectedOrder!.id};
+    await Constants.reposit.repProposePrice(data).then((value) {
+      selectedOrder!.livraison = 1;
+      selectedOrder!.fraisLivraison = null;
+      selectedOrder!.driverId = null;
+
+      update();
+      fetchOrder();
+      Get.back();
     });
   }
 
@@ -35,6 +83,8 @@ class OrderController extends GetxController {
     ) {
       selectedOrder!.status = status;
       update();
+      Get.back();
+      Constants.showSnackBar('Success', 'Status changé avec succées ');
     });
   }
 

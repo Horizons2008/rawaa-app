@@ -54,7 +54,6 @@ class RegistrationController extends GetxController {
     await Constants.reposit.repCheckUsername({"username": username}).then((
       value,
     ) {
-      print("********************** $value");
       if (value['status'] == 'success') {
         result = true;
       } else {
@@ -193,7 +192,7 @@ class RegistrationController extends GetxController {
               tt = "vendeur";
               break;
             case 2:
-              tt = "livreur";
+              tt = "driver";
               break;
             default:
           }

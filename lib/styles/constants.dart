@@ -97,7 +97,6 @@ abstract class Constants {
   }
 
   static String getTitle(String title, String lang) {
-    // Convert the input string `s` to JSON and return the value of 'fr'
     try {
       final Map<String, dynamic> jsonMap = json.decode(title);
       switch (lang) {
@@ -111,7 +110,7 @@ abstract class Constants {
           return jsonMap['ar'];
 
         default:
-          return jsonMap['ar'];
+          return jsonMap[Constants.lang];
       }
     } catch (e) {
       print("eeeeeeeeeeeeeeeeeeeeeeeeeeeeee $e");
