@@ -25,7 +25,7 @@ class MWilaya {
           : {};
       return jsonMap['fr'] ?? '';
     } catch (e) {
-      return '';
+      return s;
     }
   }
 }

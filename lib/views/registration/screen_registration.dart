@@ -17,6 +17,14 @@ class ScreenRegistration extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: CustomText(
+          text: "registration".tr,
+          size: 25,
+          weight: FontWeight.bold,
+          coul: Colors.black,
+        ),
+      ),
       body: GetBuilder<RegistrationController>(
         init: RegistrationController(),
         builder: (controller) {
@@ -27,60 +35,42 @@ class ScreenRegistration extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.all(15),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CustomText(
-                        text: "registration".tr,
-                        size: 25,
-                        weight: FontWeight.bold,
-                        coul: Colors.black,
-                      ),
-                      SpaceV(h: 20),
+                      SpaceV(h: 10),
 
-                      // Name Field
+                      // Account Type Selection
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Radio<int>(
+                            _buildChoiceChip(
+                              label: 'client'.tr,
                               value: 0,
-                              groupValue: controller.typeCompte,
-                              onChanged: (val) {
-                                controller.typeCompte = val!;
-                                controller.update();
-                              },
+                              controller: controller,
                             ),
-                            Text('Client'),
-                            SizedBox(width: 5),
-                            Radio<int>(
+                            SizedBox(width: 10),
+                            _buildChoiceChip(
+                              label: 'vendeur'.tr,
                               value: 1,
-                              groupValue: controller.typeCompte,
-                              onChanged: (val) {
-                                controller.typeCompte = val!;
-                                controller.update();
-                              },
+                              controller: controller,
                             ),
-                            Text('Fournisseur'),
-                            SizedBox(width: 5),
-                            Radio<int>(
+                            SizedBox(width: 10),
+                            _buildChoiceChip(
+                              label: 'livreur'.tr,
                               value: 2,
-                              groupValue: controller.typeCompte,
-                              onChanged: (val) {
-                                controller.typeCompte = val!;
-                                controller.update();
-                              },
+                              controller: controller,
                             ),
-                            Text('Transporter'),
                           ],
                         ),
                       ),
                       SpaceV(h: 15),
 
                       OutlinedEdit(
-                        hint: "Numero de téléphone",
-                        label: "Numéro de téléphone",
+                        hint: "num_mobile".tr,
+                        label: "num_mobile".tr,
                         iconDroite: Icon(Icons.phone),
                         controller: controller.phoneController,
                         dataType: TextInputType.phone,
@@ -98,9 +88,9 @@ class ScreenRegistration extends StatelessWidget {
                           // Trigger async phone validation when user stops typing
                           if (value.isNotEmpty && value.length >= 10) {
                             Future.delayed(Duration(milliseconds: 500), () {
-                              //if (controller.phoneController.text == value) {
-                              // controller.validatePhoneAsync(value);
-                              //   }
+                              if (controller.phoneController.text == value) {
+                                controller.validatePhoneAsync(value);
+                              }
                             });
                           }
                         },
@@ -125,7 +115,7 @@ class ScreenRegistration extends StatelessWidget {
                                 ),
                                 SizedBox(width: 8),
                                 Text(
-                                  "Vérification du numéro de téléphone...",
+                                  "verification_phone".tr,
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: Colors.blue,
@@ -144,7 +134,7 @@ class ScreenRegistration extends StatelessWidget {
                                 ),
                                 SizedBox(width: 8),
                                 Text(
-                                  "Numéro de téléphone disponible",
+                                  "num_mobile_disponible".tr,
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: Colors.green,
@@ -159,7 +149,7 @@ class ScreenRegistration extends StatelessWidget {
                                 Icon(Icons.error, color: Colors.red, size: 16),
                                 SizedBox(width: 8),
                                 Text(
-                                  "Numéro de téléphone déjà utilisé",
+                                  "num_mobile_existe".tr,
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: Colors.red,
@@ -174,14 +164,14 @@ class ScreenRegistration extends StatelessWidget {
 
                       SpaceV(h: 15),
                       OutlinedEdit(
-                        hint: "Username",
-                        label: "Nom d'utilisateur",
+                        hint: "username".tr,
+
                         iconDroite: Icon(Icons.person),
                         controller: controller.usernameController,
                         dataType: TextInputType.text,
                         validation: (p0) {
                           if (p0!.isEmpty) {
-                            return "Nom utilisateur est obligatoire";
+                            return "champ_obligatoire".tr;
                           }
                           if (p0.length < 3) {
                             return "Le nom d'utilisateur doit contenir au moins 3 caractères";
@@ -223,7 +213,7 @@ class ScreenRegistration extends StatelessWidget {
                                 ),
                                 SizedBox(width: 8),
                                 Text(
-                                  "Vérification du nom d'utilisateur...",
+                                  "verification_username".tr,
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: Colors.blue,
@@ -242,7 +232,7 @@ class ScreenRegistration extends StatelessWidget {
                                 ),
                                 SizedBox(width: 8),
                                 Text(
-                                  "Nom d'utilisateur disponible",
+                                  "username_disponible".tr,
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: Colors.green,
@@ -257,7 +247,7 @@ class ScreenRegistration extends StatelessWidget {
                                 Icon(Icons.error, color: Colors.red, size: 16),
                                 SizedBox(width: 8),
                                 Text(
-                                  "Nom d'utilisateur déjà pris",
+                                  "username_existe".tr,
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: Colors.red,
@@ -271,14 +261,14 @@ class ScreenRegistration extends StatelessWidget {
                       ),
                       SpaceV(h: 15),
                       OutlinedEdit(
-                        hint: "Mot de passe",
+                        hint: "password".tr,
 
                         iconDroite: Icon(Icons.lock),
                         controller: controller.passwordController,
                         dataType: TextInputType.text,
                         validation: (p0) {
                           if (p0!.isEmpty) {
-                            return "Mot de passe est obligatoire";
+                            return "champ_obligatoire".tr;
                             ;
                           } else if (p0.length < 6) {
                             return "Le mot de passe  doit contenir au moins 6 caractères";
@@ -292,12 +282,12 @@ class ScreenRegistration extends StatelessWidget {
                       DropdownButtonFormField<MWilaya>(
                         value: controller.selectedWilaya,
                         decoration: InputDecoration(
-                          labelText: "Wilaya",
+                          labelText: "wilaya".tr,
                           border: OutlineInputBorder(),
 
                           prefixIcon: Icon(Icons.location_city),
                         ),
-                        hint: Text("Sélectionnez une wilaya"),
+                        hint: Text("select_wilaya".tr),
 
                         items: controller.listWilaya
                             .map<DropdownMenuItem<MWilaya>>(
@@ -318,11 +308,11 @@ class ScreenRegistration extends StatelessWidget {
                       DropdownButtonFormField<MCommune>(
                         value: controller.selectedCommune,
                         decoration: InputDecoration(
-                          labelText: "Commune",
+                          labelText: "commune".tr,
                           border: OutlineInputBorder(),
                           prefixIcon: Icon(Icons.location_city),
                         ),
-                        hint: Text("Sélectionnez une commune"),
+                        hint: Text("select_commune".tr),
                         items: controller.listCommune
                             .map<DropdownMenuItem<MCommune>>(
                               (commune) => DropdownMenuItem<MCommune>(
@@ -345,7 +335,7 @@ class ScreenRegistration extends StatelessWidget {
 
                       // Location Section
                       CustomText(
-                        text: "Localisation actuelle",
+                        text: "position_gps".tr,
                         size: 15,
                         weight: FontWeight.bold,
                         coul: Colors.black,
@@ -364,7 +354,10 @@ class ScreenRegistration extends StatelessWidget {
                                 ),
                                 child: Row(
                                   children: [
-                                    Icon(Icons.location_on, color: Colors.blue),
+                                    Icon(
+                                      Icons.location_on,
+                                      color: Constants.primaryColor,
+                                    ),
                                     SizedBox(width: 8),
                                     Expanded(
                                       child: Text(
@@ -397,8 +390,8 @@ class ScreenRegistration extends StatelessWidget {
                         titre: controller.statusStore == ListeStatus.loading
                             ? CircularProgressIndicator()
                             : CustomText(
-                                text: "Terminer l'inscription",
-                                size: 14,
+                                text: "valider".tr,
+                                size: 18,
                                 weight: FontWeight.w500,
                                 coul: Colors.white,
                               ),
@@ -425,6 +418,39 @@ class ScreenRegistration extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+
+  Widget _buildChoiceChip({
+    required String label,
+    required int value,
+    required RegistrationController controller,
+  }) {
+    bool isSelected = controller.typeCompte == value;
+    return ChoiceChip(
+      checkmarkColor: Colors.white,
+      label: Text(
+        label,
+        style: TextStyle(
+          color: isSelected ? Colors.white : Colors.black,
+          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+        ),
+      ),
+      selected: isSelected,
+      onSelected: (bool selected) {
+        controller.typeCompte = value;
+        controller.update();
+      },
+      selectedColor: Constants.primaryColor,
+      backgroundColor: Colors.grey[200],
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+        side: BorderSide(
+          color: isSelected ? Constants.primaryColor : Colors.grey[300]!,
+        ),
+      ),
+      elevation: isSelected ? 2 : 0,
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
     );
   }
 }

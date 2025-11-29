@@ -12,17 +12,22 @@ class MStock {
   late final String vendeurName;
   late final double qte;
   late final double price;
+  late final String description;
+  late final List<String> images;
+
   MStock({
     required this.id,
     required this.productTitle,
     required this.productId,
     required this.catTitle,
     required this.catId,
+    required this.description,
 
     required this.vendeurId,
     required this.vendeurName,
     required this.qte,
     required this.price,
+    required this.images,
   });
 
   MStock.fromJson(Map<String, dynamic> json) {
@@ -36,6 +41,11 @@ class MStock {
     vendeurName = json['vendeur_name'];
     qte = json['qte'] * 1.0;
     price = json['price'] * 1.0;
+    description = json['description'];
+    images = List<String>.from(
+      json['images'].split(',').map((e) => e.trim()).toList(),
+    );
+    ;
   }
 
   Map<String, dynamic> toJson() {

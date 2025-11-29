@@ -130,6 +130,7 @@ class ScreenDiscussion extends StatelessWidget {
                         icon: Icon(Icons.send, color: Colors.white),
                         onPressed: () {
                           ctrl.storeMsg();
+                          
                         },
                       ),
                     ),

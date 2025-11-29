@@ -23,7 +23,7 @@ class DashboardClient extends StatelessWidget {
             items: const [
               BottomNavigationBarItem(
                 icon: Icon(Icons.dashboard),
-                label: 'Accueil',
+                label: 'home',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.shopping_basket_rounded),
@@ -34,8 +34,13 @@ class DashboardClient extends StatelessWidget {
                 label: 'Commande',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.shopping_bag),
-                label: 'Message',
+                icon: Icon(Icons.cast_for_education),
+                label: 'Formation',
+              ),
+
+              BottomNavigationBarItem(
+                icon: Icon(Icons.message),
+                label: 'Messagerie',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.settings),

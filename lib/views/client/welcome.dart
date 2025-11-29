@@ -26,7 +26,7 @@ class ScreenWelcomClient extends StatelessWidget {
                   children: [
                     ClipOval(
                       child: Image.network(
-                        "${Constants.photoUrl}user/${Constants.currentUser!.id}.jpg",
+                        "${Constants.photoUrl}users/${Constants.currentUser!.id}.jpg",
 
                         width: 40,
                         height: 40,
@@ -78,7 +78,7 @@ class ScreenWelcomClient extends StatelessWidget {
 
                 // Categories section
                 Text(
-                  'Catégories',
+                  'categories'.tr,
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                 ),
                 SizedBox(
@@ -126,7 +126,7 @@ class ScreenWelcomClient extends StatelessWidget {
 
                 // Products section
                 Text(
-                  'Produits',
+                  'products'.tr,
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                 ),
                 SizedBox(height: 14),
@@ -160,76 +160,86 @@ class ScreenWelcomClient extends StatelessWidget {
                             ),
                           ],
                         ),
-                        padding: EdgeInsets.all(8),
+
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Align(
-                              alignment: Alignment.center,
-                              child: Container(
-                                width: 70,
+                            ClipRRect(
+                              borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(18),
+                              ),
+                              child: Image.network(
+                                "${Constants.photoUrl}stock/${prod.images[0]}",
                                 height: 90,
-                                child: Image.asset(
-                                  "assets/images/splash.jpg",
-                                  height: 70,
-                                  width: double.infinity,
-                                  fit: BoxFit.cover,
-                                ),
+                                width: double.infinity,
+                                fit: BoxFit.cover,
                               ),
                             ),
 
-                            SizedBox(height: 8),
-                            Text(
-                              prod.productTitle,
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
+                            SizedBox(height: 15),
+
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
                               ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            SizedBox(height: 5),
-                            Text(
-                              'Prix: ${prod.price} DA',
-                              style: TextStyle(
-                                color: Colors.green,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 14,
-                              ),
-                            ),
-                            SizedBox(height: 5),
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.inventory_2,
-                                  size: 16,
-                                  color: Colors.orange,
-                                ),
-                                SizedBox(width: 3),
-                                Text(
-                                  'Qté: ${prod.qte}',
-                                  style: TextStyle(fontSize: 13),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 5),
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.person,
-                                  size: 14,
-                                  color: Colors.grey,
-                                ),
-                                SizedBox(width: 2),
-                                Flexible(
-                                  child: Text(
-                                    prod.vendeurName,
-                                    style: TextStyle(fontSize: 13),
-                                    overflow: TextOverflow.ellipsis,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    prod.productTitle,
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                     maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                ),
-                              ],
+                                  SizedBox(height: 5),
+                                  Text(
+                                    '${"prix".tr}: ${Constants.currency(prod.price)}',
+                                    style: TextStyle(
+                                      color: Colors.green,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  SizedBox(height: 5),
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.inventory_2,
+                                        size: 16,
+                                        color: Colors.orange,
+                                      ),
+                                      SizedBox(width: 3),
+                                      Text(
+                                        '${"qte".tr}: ${prod.qte}',
+                                        style: TextStyle(fontSize: 13),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 5),
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.person,
+                                        size: 14,
+                                        color: Colors.grey,
+                                      ),
+                                      SizedBox(width: 2),
+                                      Flexible(
+                                        child: Text(
+                                          prod.vendeurName,
+                                          style: TextStyle(fontSize: 13),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),

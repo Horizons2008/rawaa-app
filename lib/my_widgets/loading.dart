@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:get/get_utils/get_utils.dart';
 
 class WidgetLoading extends StatelessWidget {
   const WidgetLoading({super.key});
@@ -12,7 +13,7 @@ class WidgetLoading extends StatelessWidget {
         children: [
           CircularProgressIndicator(color: Colors.blue),
           SizedBox(height: 10),
-          Text("Chargement en cours "),
+          Text("chargement_en_cours".tr),
         ],
       ),
     );

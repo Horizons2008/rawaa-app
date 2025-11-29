@@ -49,9 +49,11 @@ class CartController extends GetxController {
           ctrl.changePage(0);
           ctrl.update();
           Constants.showSnackBar(
-            "Confirmation",
-            "Votre demande est prise encharge",
+            "confirmation".tr,
+            "commande_store_seccefuly".tr,
           );
+        } else {
+          Constants.showSnackBar("confirmation".tr, "commande_store_failed".tr);
         }
       });
     } catch (e) {

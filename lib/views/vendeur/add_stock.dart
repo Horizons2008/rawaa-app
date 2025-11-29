@@ -2,10 +2,14 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:rawaa_app/controller/controller_stock.dart';
 import 'package:rawaa_app/model/model_categorie.dart';
 import 'package:rawaa_app/model/model_product.dart';
 import 'package:rawaa_app/model/model_stock.dart';
+import 'package:rawaa_app/my_widgets/custom_text.dart';
+import 'package:rawaa_app/my_widgets/space_hor.dart';
+import 'package:rawaa_app/my_widgets/space_ver.dart';
 import 'package:rawaa_app/styles/constants.dart';
 
 class AddStock extends StatelessWidget {
@@ -21,7 +25,9 @@ class AddStock extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                "Add New Stock",
+                ctrl.selectedStock == null
+                    ? "nouveau_stock".tr
+                    : "edit_stock".tr,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
               SizedBox(height: 20),
@@ -29,7 +35,7 @@ class AddStock extends StatelessWidget {
               // Category Dropdown
               DropdownButtonFormField<MCat>(
                 decoration: InputDecoration(
-                  labelText: "Select Category",
+                  labelText: "select_categorie".tr,
                   border: OutlineInputBorder(),
                 ),
                 value: ctrl.selectedCat,
@@ -48,7 +54,7 @@ class AddStock extends StatelessWidget {
               // Product Dropdown
               DropdownButtonFormField<MProduct>(
                 decoration: InputDecoration(
-                  labelText: "Select Product",
+                  labelText: "select_product".tr,
                   border: OutlineInputBorder(),
                 ),
                 value: ctrl.selectedProd,
@@ -66,34 +72,57 @@ class AddStock extends StatelessWidget {
               SizedBox(height: 16),
 
               // Price TextField
-              TextFormField(
-                controller: ctrl.priceController,
-                decoration: InputDecoration(
-                  labelText: "Price",
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.attach_money),
-                ),
-                keyboardType: TextInputType.numberWithOptions(decimal: true),
+              Row(
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: TextFormField(
+                      controller: ctrl.priceController,
+                      decoration: InputDecoration(
+                        labelText: "prix".tr,
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
+                    ),
+                  ),
+                  SpaceH(w: 10),
+                  Expanded(
+                    flex: 2,
+                    child: TextFormField(
+                      controller: ctrl.qteController,
+                      decoration: InputDecoration(
+                        labelText: "qte".tr,
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              SizedBox(height: 16),
+              SpaceV(h: 15),
+              TextFormField(
+                minLines: 4,
+                maxLines: 10,
+                controller: ctrl.descriptionController,
+                decoration: InputDecoration(
+                  labelText: "description".tr,
+
+                  border: OutlineInputBorder(),
+                ),
+              ),
 
               // Quantity TextField
-              TextFormField(
-                controller: ctrl.qteController,
-                decoration: InputDecoration(
-                  labelText: "Quantity",
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.countertops),
-                ),
-                keyboardType: TextInputType.numberWithOptions(decimal: true),
-              ),
               SizedBox(height: 16),
 
               // Images horizontal ListView
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  "Images",
+                  "image_product".tr,
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w500,
@@ -177,7 +206,7 @@ class AddStock extends StatelessWidget {
                     ctrl.storeStock();
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                    backgroundColor: Constants.primaryColor,
                     padding: EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -186,7 +215,7 @@ class AddStock extends StatelessWidget {
                   child: ctrl.statusStore == ListeStatus.loading
                       ? const CircularProgressIndicator()
                       : Text(
-                          "Store",
+                          "valider".tr,
                           style: TextStyle(color: Colors.white, fontSize: 16),
                         ),
                 ),

@@ -24,7 +24,7 @@ void main() async {
   await FirebaseMessaging.instance.getToken().then((onValue) {
     log("token: $onValue");
   });
- 
+
   final IO.Socket socket = IO.io('http://192.168.1.5:3000', <String, dynamic>{
     'transports': ['websocket'],
     'autoConnect': false,
@@ -51,7 +51,7 @@ void main() async {
   Future.wait([
     PushNotificationServices.init(),
     LocalNotificationService.init(),
-    LocalNotificationService().createNotificationChannel(),
+    // LocalNotificationService().createNotificationChannel(),
   ]);
   debugPrint("bbbbbbbbbbbbbbbbbbbbbbbbbb ${Constants.baseUrl}");
   runApp(MyApp());

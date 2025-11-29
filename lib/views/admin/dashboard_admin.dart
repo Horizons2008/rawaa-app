@@ -7,6 +7,8 @@ import 'package:rawaa_app/my_widgets/loading.dart';
 import 'package:rawaa_app/my_widgets/space_ver.dart';
 import 'package:rawaa_app/my_widgets/space_hor.dart';
 import 'package:rawaa_app/styles/constants.dart';
+import 'package:rawaa_app/views/admin/screen_client/screen_clients.dart';
+import 'package:rawaa_app/views/admin/screen_vendeur/screen_vendeur.dart';
 import 'package:rawaa_app/views/categories/screen_categories.dart';
 import 'package:rawaa_app/views/products/screen_products.dart';
 import 'package:rawaa_app/views/settings/screen_settings.dart';
@@ -111,7 +113,8 @@ class DashboardAdmin extends StatelessWidget {
                 child: _buildSummaryCard(
                   title: "categories".tr,
                   value: controller.catCount.toString(),
-                  change: "Cliquer pour voir detail",
+                  change: "clique_voir_detail".tr,
+
                   color: Colors.green,
                   icon: Icons.work,
                   onClique: () {
@@ -124,7 +127,7 @@ class DashboardAdmin extends StatelessWidget {
                 child: _buildSummaryCard(
                   title: "products".tr,
                   value: controller.prodCount.toString(),
-                  change: "Cliquer pour voir detail",
+                  change: "clique_voir_detail".tr,
                   color: Colors.red,
                   icon: Icons.warning,
                   onClique: () {
@@ -139,27 +142,27 @@ class DashboardAdmin extends StatelessWidget {
             children: [
               Expanded(
                 child: _buildSummaryCard(
-                  title: "Client",
+                  title: "clients".tr,
                   value: controller.clientCount.toString(),
-                  change: "↑ 1 New vs last 7 days",
+                  change: "clique_voir_detail".tr,
                   color: Colors.orange,
                   icon: Icons.pending,
                   onClique: () {
-                    Get.to(() => ScreenSettings());
+                    Get.to(() => ScreenClients());
                   },
                 ),
               ),
               SpaceH(w: 15),
               Expanded(
                 child: _buildSummaryCard(
-                  title: "Vendeur",
+                  title: "vendeurs".tr,
                   value: controller.fourCount.toString(),
 
-                  change: "No new Meetings",
+                  change: "clique_voir_detail".tr,
                   color: Colors.blue,
                   icon: Icons.event,
                   onClique: () {
-                    Get.to(() => ScreenCategorie());
+                    Get.to(() => ScreenVendeurs());
                   },
                 ),
               ),
@@ -488,13 +491,19 @@ class DashboardAdmin extends StatelessWidget {
             controller.updateBottomNavIndex(index);
           },
           items: [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-            BottomNavigationBarItem(icon: Icon(Icons.star), label: 'Features'),
-            BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Pages'),
-            BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'home'.tr),
+
+            BottomNavigationBarItem(
+              icon: Icon(Icons.cast_for_education_sharp),
+              label: 'cours'.tr,
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.message),
+              label: 'messages'.tr,
+            ),
             BottomNavigationBarItem(
               icon: Icon(Icons.settings),
-              label: 'Setings',
+              label: 'settings'.tr,
             ),
           ],
         ),

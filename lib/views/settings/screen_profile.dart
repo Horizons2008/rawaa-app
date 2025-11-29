@@ -111,10 +111,13 @@ class EditProfileScreen extends StatelessWidget {
 
                           fit: BoxFit.fill,
                           errorBuilder: (context, error, stackTrace) {
-                            return const Icon(
-                              Icons.person,
-                              size: 40,
-                              color: Colors.blue,
+                            return const CircleAvatar(
+                              radius: 60,
+                              child: Icon(
+                                Icons.person,
+                                size: 100,
+                                color: Colors.grey,
+                              ),
                             );
                           },
                         ),
@@ -125,7 +128,7 @@ class EditProfileScreen extends StatelessWidget {
                   right: 0,
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.blue,
+                      color: Constants.primaryColor,
                       shape: BoxShape.circle,
                       border: Border.all(color: Colors.white, width: 3),
                     ),

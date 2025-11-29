@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:rawaa_app/model/muser.dart';
 import 'package:rawaa_app/styles/constants.dart';
-import 'package:rawaa_app/views/dashboard/dashboard_admin.dart';
+import 'package:rawaa_app/views/admin/dashboard_admin.dart';
 import 'package:rawaa_app/views/dashboard/dashboard_client.dart';
 import 'package:rawaa_app/views/dashboard/dashboard_vendeur.dart';
 import 'package:rawaa_app/views/driver/dashboard_driver.dart';
@@ -34,7 +34,7 @@ class CtrlLogin extends GetxController {
       await Constants.reposit
           .checkLogin(contUsername.text, contpassword.text)
           .then((val) {
-            print("--------------------------- val : $val");
+           
             if (val["status"] == "SUCCESS") {
               status = ListeStatus.success;
               errorLogin = null;
@@ -49,9 +49,7 @@ class CtrlLogin extends GetxController {
               });*/
               Constants.currentUser = Muser.fromJson(val["user"]);
               Constants.currentUser!.token = val["access_token"];
-              print(
-                "ttttttttttttttttttttttttt ${Constants.currentUser!.token}",
-              );
+              
 
               Hive.box(Constants.boxConfig).put("current_user", val);
               Hive.box(Constants.boxConfig).put("logged", true);

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:dio/dio.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -21,8 +22,10 @@ class ControllerStock extends GetxController {
   final TextEditingController searchController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
   final TextEditingController qteController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
   MCat? selectedCat;
   MProduct? selectedProd;
+  MStock? selectedStock;
 
   List<MCat> listeCat = <MCat>[];
   List<MProduct> listeProd = <MProduct>[];
@@ -54,6 +57,35 @@ class ControllerStock extends GetxController {
         update();
       }
     });
+  }
+
+  editStock(MStock stock) async {
+    selectedStock = stock;
+    selectedCat = listeCat.firstWhere(
+      (element) => element.id.toString() == stock.catId,
+    );
+    await getProduct(selectedCat!.id);
+    selectedProd = listeProd.firstWhere(
+      (element) => element.id.toString() == stock.productId,
+    );
+    priceController.text = stock.price.toString();
+    qteController.text = stock.qte.toString();
+    descriptionController.text = stock.description;
+
+    images.clear();
+    for (var image in stock.images) {
+      try {
+        var url = "${Constants.photoUrl}stock/$image";
+        var tempDir = Directory.systemTemp;
+        var tempPath = '${tempDir.path}/$image';
+        await Dio().download(url, tempPath);
+        images.add(File(tempPath));
+      } catch (e) {
+        print("Error downloading image $image: $e");
+      }
+    }
+
+    update();
   }
 
   Future<void> pickImageFromGallery() async {
@@ -96,7 +128,6 @@ class ControllerStock extends GetxController {
             .toList();
         filteredList = listeStock;
         update();
-        print("ttttttttttttt ${listeStock.length}");
       } else {
         status = ListeStatus.error;
         update();
@@ -105,37 +136,63 @@ class ControllerStock extends GetxController {
   }
 
   storeStock() async {
+    // Validate required fields
+    if (selectedProd == null) {
+      Constants.showSnackBar("Erreur", "Veuillez sélectionner un produit");
+      return;
+    }
+
+    if (priceController.text.isEmpty || qteController.text.isEmpty) {
+      Constants.showSnackBar("Erreur", "Veuillez remplir tous les champs");
+      return;
+    }
+
+    if (images.isEmpty) {
+      Constants.showSnackBar(
+        "Erreur",
+        "Veuillez sélectionner au moins une image",
+      );
+      return;
+    }
+
     statusStore = ListeStatus.loading;
     update();
-    await Constants.reposit
-        .repStoreStock({
-          "product_id": selectedProd!.id,
-          "vendeur_id": Constants.currentUser!.id,
-          "price": priceController.text,
-          "qte": qteController.text,
-          "promo": "0",
-        }, images)
-        .then((value) {
-          print("store stooooooooooooooooooooooooooooooock $value");
-          if (value['status'] == "success") {
-            statusStore = ListeStatus.success;
-            Get.back();
-            getStock();
-            Constants.showSnackBar(
-              "Confirmation",
-              "Votre produit est attribué avec succés",
-            );
 
-            update();
-          } else if (value['status'] == "product existe") {
-            Constants.showSnackBar("Erreur", "Ce produit est déja attribué à ");
-            statusStore = ListeStatus.error;
-            update();
-          } else {
-            status = ListeStatus.error;
-            update();
-          }
-        });
+    try {
+      final value = await Constants.reposit.repStoreStock({
+        "id": selectedStock?.id,
+        "product_id": selectedProd!.id,
+        "vendeur_id": Constants.currentUser!.id,
+        "price": priceController.text,
+        "qte": qteController.text,
+        "promo": "0",
+        "description": descriptionController.text,
+      }, images);
+      print(value);
+
+      if (value['status'] == "success") {
+        statusStore = ListeStatus.success;
+        Get.back();
+        Constants.showSnackBar("Success", "Stock added successfully");
+        getStock();
+        // Clear form after success
+        update();
+      } else {
+        Constants.showSnackBar(
+          "Erreur",
+          value['message'] ?? "Une erreur est survenue",
+        );
+        statusStore = ListeStatus.error;
+        update();
+      }
+    } catch (e) {
+      Constants.showSnackBar(
+        "Erreur",
+        "Erreur lors de l'envoi: ${e.toString()}",
+      );
+      statusStore = ListeStatus.error;
+      update();
+    }
   }
 
   void filterStocks(String query) {

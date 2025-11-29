@@ -1,3 +1,4 @@
+import 'package:rawaa_app/my_widgets/space_hor.dart';
 import 'package:rawaa_app/styles/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -8,6 +9,7 @@ import 'package:rawaa_app/my_widgets/outlined_edit.dart';
 import 'package:rawaa_app/my_widgets/space_ver.dart';
 import 'package:rawaa_app/styles/my_color.dart';
 import 'package:rawaa_app/views/registration/screen_registration.dart';
+import 'package:rawaa_app/controller/language_controller.dart';
 
 class ScreenLogin extends StatelessWidget {
   const ScreenLogin({super.key});
@@ -15,12 +17,52 @@ class ScreenLogin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: MyColor.grey, // Softer background
+      backgroundColor: Colors.white, // Softer background
+      appBar: AppBar(
+        elevation: 0,
+        actions: [
+          Obx(() {
+            final langCtrl = Get.find<LanguageController>();
+            return PopupMenuButton<String>(
+              offset: Offset(0, 40),
+              onSelected: (String value) {
+                langCtrl.changeLanguage(value);
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                  children: [
+                    Text(
+                      langCtrl.currentLanguageFlag,
+                      style: TextStyle(fontSize: 24),
+                    ),
+                    Icon(Icons.arrow_drop_down, color: Colors.black),
+                  ],
+                ),
+              ),
+              itemBuilder: (BuildContext context) {
+                return langCtrl.languages.map((language) {
+                  return PopupMenuItem<String>(
+                    value: language['code'],
+                    child: Row(
+                      children: [
+                        Text(language['flag']!, style: TextStyle(fontSize: 24)),
+                        SizedBox(width: 10),
+                        Text(language['name']!),
+                      ],
+                    ),
+                  );
+                }).toList();
+              },
+            );
+          }),
+        ],
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Container(
             width: double.infinity,
-            height: MediaQuery.of(context).size.height * 0.95,
+            height: MediaQuery.of(context).size.height * 0.90,
             color: Colors.white,
 
             // constraints: BoxConstraints(maxWidth: 600),
@@ -46,7 +88,7 @@ class ScreenLogin extends StatelessWidget {
 
                       // Welcome Text
                       Text(
-                        "Bienvenue!",
+                        "bienvenue".tr,
                         style: TextStyle(
                           fontSize: 26,
                           fontWeight: FontWeight.bold,
@@ -54,7 +96,7 @@ class ScreenLogin extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "Veuillez connecter pour continuer",
+                        "veuillez_connecter".tr,
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
@@ -67,7 +109,7 @@ class ScreenLogin extends StatelessWidget {
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "Nom Utilisateur",
+                          "username".tr,
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
@@ -81,7 +123,7 @@ class ScreenLogin extends StatelessWidget {
                         errorText: ctrl.errorLogin,
                         validation: (v) {
                           if ((v == null) || (v.isEmpty)) {
-                            return "Champs Obligatoire";
+                            return "champ_obligatoire".tr;
                           }
                           return ctrl.errorLogin;
                         },
@@ -92,7 +134,7 @@ class ScreenLogin extends StatelessWidget {
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "Mot de passe",
+                          "password".tr,
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
@@ -117,27 +159,13 @@ class ScreenLogin extends StatelessWidget {
                         ),
                         validation: (v) {
                           if ((v == null) || (v.isEmpty)) {
-                            return "Champs Obligatoire";
+                            return "champ_obligatoire".tr;
                           }
                           return null;
                         },
                       ),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton(
-                          onPressed: () {
-                            // Add forgot password functionality
-                          },
-                          child: Text(
-                            "Mot de passe oublié?",
-                            style: TextStyle(
-                              color: MyColor.primaryColor,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SpaceV(h: 30),
+
+                      SpaceV(h: 60),
 
                       // Login Button
                       SizedBox(
@@ -146,7 +174,7 @@ class ScreenLogin extends StatelessWidget {
                         child: CustomButton(
                           titre: ctrl.status != ListeStatus.loading
                               ? Text(
-                                  "Se connecter",
+                                  "se_connecter".tr,
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
@@ -167,17 +195,18 @@ class ScreenLogin extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           CustomText(
-                            text: "Jai pas un compte ? ",
+                            text: "jai_pas_compte".tr,
                             size: 16,
                             weight: FontWeight.normal,
                             coul: Colors.black,
                           ),
+                          SpaceH(w: 5),
                           InkWell(
                             onTap: () {
                               Get.to(ScreenRegistration());
                             },
                             child: CustomText(
-                              text: "s'Inscrire",
+                              text: "creer_compte".tr,
                               size: 14,
                               weight: FontWeight.w600,
                               coul: Colors.green,

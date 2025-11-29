@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class CustomDialog extends StatelessWidget {
+class CustomDialog1 extends StatelessWidget {
   final String title;
   final String content;
   final List<Widget> actions;
 
-  const CustomDialog({
+  const CustomDialog1({
     super.key,
     required this.title,
     required this.content,

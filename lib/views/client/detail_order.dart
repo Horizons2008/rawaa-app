@@ -18,8 +18,8 @@ class OrderDetailWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Détails de la Commande',
+        title: Text(
+          'detail_order'.tr,
           style: TextStyle(
             color: Colors.white,
             fontSize: 18,
@@ -69,7 +69,7 @@ class OrderDetailWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Commande #${order.id}',
+                '${"order".tr} #${order.id}',
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -87,7 +87,7 @@ class OrderDetailWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Date: ${_formatDate(DateTime.parse(order.dateDemande))}',
+                      '${"date".tr} : ${_formatDate(DateTime.parse(order.dateDemande))}',
                       style: const TextStyle(fontSize: 14, color: Colors.grey),
                     ),
                     const SizedBox(height: 4),
@@ -96,7 +96,7 @@ class OrderDetailWidget extends StatelessWidget {
                         Expanded(
                           child: Text(
                             Constants.currentUser!.role == 'client'
-                                ? 'Vendeur: ${order.vendeurName}'
+                                ? '${"vendeur".tr} : ${order.vendeurName}'
                                 : 'Client: ${order.clientName}',
                             style: const TextStyle(
                               fontSize: 14,
@@ -117,7 +117,7 @@ class OrderDetailWidget extends StatelessWidget {
                 ),
               ),
               Text(
-                _formatCurrency(order.total * 1.0),
+                Constants.currency(order.total * 1.0),
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -139,7 +139,7 @@ class OrderDetailWidget extends StatelessWidget {
                     'Client',
                   ),
                   icon: const Icon(Icons.person, size: 18),
-                  label: const Text('Détails Client'),
+                  label: Text('detail_client'.tr),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
                     foregroundColor: Colors.white,
@@ -160,7 +160,7 @@ class OrderDetailWidget extends StatelessWidget {
                     'Vendeur',
                   ),
                   icon: const Icon(Icons.store, size: 18),
-                  label: const Text('Détails Vendeur'),
+                  label: Text('detail_vendeur'.tr),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
                     foregroundColor: Colors.white,
@@ -208,14 +208,11 @@ class OrderDetailWidget extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildInfoItem('Quantité', '${item.qte}'),
+                _buildInfoItem('qte'.tr, '${item.qte}'),
+                _buildInfoItem('prix'.tr, Constants.currency(item.price * 1.0)),
                 _buildInfoItem(
-                  'Prix Unitaire',
-                  '${_formatCurrency(item.price * 1.0)}',
-                ),
-                _buildInfoItem(
-                  'Sous-total',
-                  '${_formatCurrency(item.price * item.qte * 1.0)}',
+                  'total'.tr,
+                  Constants.currency(item.price * item.qte * 1.0),
                 ),
               ],
             ),
@@ -619,8 +616,6 @@ class OrderDetailWidget extends StatelessWidget {
       username: '',
       token: '',
     );
-
-    
   }
 
   Widget _buildQuickActionButtons(BuildContext context, int userId) {
@@ -748,7 +743,7 @@ class OrderDetailWidget extends StatelessWidget {
     switch (order.livraison) {
       case 0:
         // Commande sans livraison
-        statusText = 'Commande sans livraison';
+        statusText = 'sans_livraison'.tr;
         statusColor = Colors.grey;
         statusIcon = Icons.cancel;
         break;
@@ -814,7 +809,7 @@ class OrderDetailWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Statut de livraison',
+                      'status_livraison'.tr,
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.grey[600],

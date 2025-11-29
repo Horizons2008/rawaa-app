@@ -38,15 +38,30 @@ abstract class Constants {
 
   Color secondaryColor = Colors.green.shade400;
 
-  static final String baseUrl = "http://10.126.94.224:8000";
-  static final String photoUrl = "http://10.126.94.224:8000/storage/";
-  // static final String baseUrl = "https://boutique.tassiliweb.com";
-  // static final String photoUrl = "https://boutique.tassiliweb.com/storage/";
+  static final String baseUrl = "http://192.168.1.10:8000";
+  static final String photoUrl = "http://192.168.1.10:8000/storage/";
+  //static final String baseUrl = "https://boutique.tassiliweb.com";
+  //static final String photoUrl = "https://boutique.tassiliweb.com/storage/";
 
   static final String prefixe = "api";
   static WebService ws = WebService();
   static Repository reposit = Repository(ws);
   static String boxPackaging = "boxPackaging";
+
+  static String currency(var price) {
+    // INSERT_YOUR_CODE
+    if (price is int) {
+      return "$price.00${'symbol'.tr}";
+    } else if (price is double) {
+      return price.toStringAsFixed(2) + "symbol".tr;
+    } else if (price is String) {
+      int? intPrice = int.tryParse(price);
+      if (intPrice != null) {
+        return "$intPrice.00{'symbol'.tr}";
+      }
+    }
+    return "$price";
+  }
 
   static Color getStatusColor(int status) {
     switch (status) {
@@ -64,11 +79,11 @@ abstract class Constants {
   static String getStatusLabel(int status) {
     switch (status) {
       case 0:
-        return "En attente";
+        return "attente".tr;
       case 1:
-        return "Accepté";
+        return "accepted".tr;
       case 2:
-        return "Refusée";
+        return "rejected".tr;
       default:
         return "inconnue";
     }

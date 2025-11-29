@@ -3,10 +3,12 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:rawaa_app/model/muser.dart';
 import 'package:rawaa_app/styles/constants.dart';
-import 'package:rawaa_app/views/dashboard/dashboard_admin.dart';
+import 'package:rawaa_app/views/admin/dashboard_admin.dart';
 import 'package:rawaa_app/views/dashboard/dashboard_client.dart';
 import 'package:rawaa_app/views/dashboard/dashboard_vendeur.dart';
 import 'package:rawaa_app/views/driver/dashboard_driver.dart';
+import 'package:rawaa_app/views/login/check_phone.dart';
+
 import 'package:rawaa_app/views/login/screen_login.dart';
 
 class ContSplash extends GetxController {
@@ -73,6 +75,7 @@ class ContSplash extends GetxController {
           }
         } else {
           Get.offAll(() => ScreenLogin());
+          //  Get.offAll(() => CheckPhone());
         }
       }
     });

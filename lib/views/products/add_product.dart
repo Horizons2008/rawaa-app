@@ -40,7 +40,7 @@ class AddProduct extends StatelessWidget {
                         Text(
                           selectedPRoduct == null
                               ? 'add_new_product'.tr
-                              : 'modifier produit',
+                              : 'edit_product'.tr,
 
                           style: TextStyle(
                             fontSize: 16,
@@ -49,7 +49,10 @@ class AddProduct extends StatelessWidget {
                         ),
                         Spacer(),
                         IconButton(
-                          onPressed: () => Get.back(),
+                          onPressed: () {
+                            ctrl.clearForm();
+                            Get.back();
+                          },
                           icon: Icon(Icons.close),
                         ),
                       ],
@@ -82,7 +85,7 @@ class AddProduct extends StatelessWidget {
                       },
                       validator: (value) {
                         if (value == null) {
-                          return 'Please select a category';
+                          return 'please_select_category'.tr;
                         }
                         return null;
                       },
@@ -94,27 +97,19 @@ class AddProduct extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SpaceV(h: 16),
+                    SpaceV(h: 50),
 
                     // Image Selection
 
                     // Arabic Input
-                    Text(
-                      'Arabic Title',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    SpaceV(h: 8),
                     OutlinedEdit(
-                      hint: 'Enter Arabic title',
-                      label: 'Arabic Title',
+                      hint: 'enter_arabic_title'.tr,
+                      label: 'arabic_title'.tr,
                       iconDroite: Icon(Icons.language),
                       controller: ctrl.arabicController,
                       validation: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Arabic title is required';
+                          return 'arabic_title_required'.tr;
                         }
                         return null;
                       },
@@ -122,22 +117,14 @@ class AddProduct extends StatelessWidget {
                     SpaceV(h: 16),
 
                     // French Input
-                    Text(
-                      'French Title',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    SpaceV(h: 8),
                     OutlinedEdit(
-                      hint: 'Enter French title',
-                      label: 'French Title',
+                      hint: 'enter_french_title'.tr,
+                      label: 'french_title'.tr,
                       iconDroite: Icon(Icons.language),
                       controller: ctrl.frenchController,
                       validation: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'French title is required';
+                          return 'french_title_required'.tr;
                         }
                         return null;
                       },
@@ -145,22 +132,14 @@ class AddProduct extends StatelessWidget {
                     SpaceV(h: 16),
 
                     // English Input
-                    Text(
-                      'English Title',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    SpaceV(h: 8),
                     OutlinedEdit(
-                      hint: 'Enter English title',
-                      label: 'English Title',
+                      hint: 'enter_english_title'.tr,
+                      label: 'english_title'.tr,
                       iconDroite: Icon(Icons.language),
                       controller: ctrl.englishController,
                       validation: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'English title is required';
+                          return 'english_title_required'.tr;
                         }
                         return null;
                       },
@@ -171,17 +150,25 @@ class AddProduct extends StatelessWidget {
                     Row(
                       children: [
                         Expanded(
-                          child: CustomButton(
-                            titre: Text(
-                              'Cancel',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            onclick: () {
+                          child: ElevatedButton(
+                            onPressed: () {
                               ctrl.clearForm();
                               Get.back();
                             },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.grey,
+                              fixedSize: Size(100, 50),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            child: Text(
+                              'cancel'.tr,
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
                         ),
+
                         SpaceH(w: 16),
                         Expanded(
                           child: CustomButton(
@@ -201,11 +188,11 @@ class AddProduct extends StatelessWidget {
                                         ),
                                       ),
                                       SpaceH(w: 8),
-                                      Text('Saving...'),
+                                      Text('savring'.tr),
                                     ],
                                   )
                                 : Text(
-                                    'Save Product',
+                                    'save'.tr,
                                     style: TextStyle(color: Colors.white),
                                   ),
                             onclick: ctrl.addStatus == ListeStatus.loading

@@ -1,13 +1,21 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rawaa_app/controller/welcome_controller.dart';
 import 'package:rawaa_app/model/model_stock.dart';
 import 'package:rawaa_app/styles/constants.dart';
 
-class ProductDetailScreen extends StatelessWidget {
+class ProductDetailScreen extends StatefulWidget {
   final MStock stock;
 
   const ProductDetailScreen({super.key, required this.stock});
+
+  @override
+  State<ProductDetailScreen> createState() => _ProductDetailScreenState();
+}
+
+class _ProductDetailScreenState extends State<ProductDetailScreen> {
+  int _currentPage = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +23,7 @@ class ProductDetailScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
-          'Product',
+          'detail_product'.tr,
           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
         ),
         backgroundColor: Colors.white,
@@ -36,9 +44,61 @@ class ProductDetailScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Fresh Fruits
-                  Image.network(
-                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqoqqP60cLpUMwthnMxQ3Nisd3dMBjVFHTBg&s",
+                  // Image Slider
+                  Container(
+                    width: double.infinity,
+                    margin: EdgeInsets.only(bottom: 16),
+                    height: 250,
+                    child: Stack(
+                      children: [
+                        CarouselSlider.builder(
+                          itemCount: widget.stock.images.length,
+                          itemBuilder: (context, index, realIndex) {
+                            return Container(
+                              width: double.infinity,
+                              child: Image.network(
+                                "${Constants.photoUrl}stock/${widget.stock.images[index]}",
+                                fit: BoxFit.cover,
+                              ),
+                            );
+                          },
+                          options: CarouselOptions(
+                            height: 250,
+                            viewportFraction: 1.0,
+                            autoPlay: widget.stock.images.length > 1,
+                            autoPlayInterval: Duration(milliseconds: 2000),
+                            onPageChanged: (index, reason) {
+                              setState(() {
+                                _currentPage = index;
+                              });
+                            },
+                          ),
+                        ),
+                        if (widget.stock.images.length > 1)
+                          Positioned(
+                            bottom: 10,
+                            left: 0,
+                            right: 0,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: List.generate(
+                                widget.stock.images.length,
+                                (index) => Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 4),
+                                  width: 8,
+                                  height: 8,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: _currentPage == index
+                                        ? Constants.primaryColor
+                                        : Colors.grey.withOpacity(0.5),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -46,24 +106,21 @@ class ProductDetailScreen extends StatelessWidget {
                       Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
-
                         children: [
                           Text(
-                            stock.catTitle,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.grey[700],
-                            ),
-                          ),
-
-                          // Strawberries Title
-                          Text(
-                            stock.productTitle,
+                            widget.stock.productTitle,
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
+                            ),
+                          ),
+                          Text(
+                            widget.stock.catTitle,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.grey[700],
                             ),
                           ),
                         ],
@@ -72,7 +129,7 @@ class ProductDetailScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                            'Price',
+                            'prix'.tr,
                             style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w500,
@@ -80,7 +137,7 @@ class ProductDetailScreen extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            '\$${stock.price}',
+                            Constants.currency(widget.stock.price),
                             style: TextStyle(
                               fontSize: 19,
                               fontWeight: FontWeight.bold,
@@ -91,37 +148,28 @@ class ProductDetailScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-
-                  // Price Section
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [],
-                  ),
                   SizedBox(height: 5),
-
-                  // Introduction Section
                   Text(
-                    'Déscription',
+                    'description'.tr,
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 14,
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
                     ),
                   ),
-                  SizedBox(height: 12),
-
-                  // Introduction Text
+                  SizedBox(height: 2),
                   Container(
                     height: 100,
+                    width: double.infinity,
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey[300]!),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
-                      'The strawberry (fragaria ananassa) is a widely grown hybrid species of the genus Fragaria. It is cultivated worldwide for its fruit. The fruit known for it characteristic aroma, bright red color, juicy texture, and sweetness. It is consumed in large quantities throughout the world, both fresh or in prepared foods such as preserves, fruit juice etc.',
+                      widget.stock.description,
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 13,
                         height: 1.5,
                         color: Colors.grey[800],
                       ),
@@ -132,7 +180,7 @@ class ProductDetailScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Qte',
+                        'qte'.tr,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
@@ -148,10 +196,9 @@ class ProductDetailScreen extends StatelessWidget {
                             onPressed: () {
                               if (ctrl.qte > 1) {
                                 ctrl.qte--;
-                                ctrl.total = ctrl.qte * stock.price;
+                                ctrl.total = ctrl.qte * widget.stock.price;
                                 ctrl.update();
                               }
-                              // Decrement logic here (to be implemented in StatefulWidget)
                             },
                           ),
                           Container(
@@ -160,8 +207,7 @@ class ProductDetailScreen extends StatelessWidget {
                               vertical: 8,
                             ),
                             child: Text(
-                              ctrl.qte
-                                  .toString(), // replace with your qte value variable if needed
+                              ctrl.qte.toString(),
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -175,24 +221,20 @@ class ProductDetailScreen extends StatelessWidget {
                             ),
                             onPressed: () {
                               ctrl.qte++;
-                              ctrl.total = ctrl.qte * stock.price;
+                              ctrl.total = ctrl.qte * widget.stock.price;
                               ctrl.update();
-                              // Increment logic here (to be implemented in StatefulWidget)
-                              // Increment logic here (to be implemented in StatefulWidget)
                             },
                           ),
                         ],
                       ),
                     ],
                   ),
-
-                  // Total Section
                   SizedBox(height: 50),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Total:',
+                        'total'.tr,
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -200,7 +242,7 @@ class ProductDetailScreen extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        '\$${ctrl.total}',
+                        Constants.currency(ctrl.total),
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -210,20 +252,15 @@ class ProductDetailScreen extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 10),
-
-                  // Weight Information
-
-                  // Purchase Now Button
                   SizedBox(
                     width: double.infinity,
                     height: 55,
                     child: ElevatedButton(
                       onPressed: () {
-                        ctrl.addToCart(stock);
-                        // Add purchase logic here
+                        ctrl.addToCart(widget.stock);
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
+                        backgroundColor: Constants.primaryColor,
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -231,7 +268,7 @@ class ProductDetailScreen extends StatelessWidget {
                         elevation: 2,
                       ),
                       child: Text(
-                        'Ajouter au pannier',
+                        'add_to_cart'.tr,
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,

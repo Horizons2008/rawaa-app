@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:rawaa_app/controller/dashboard_controller.dart';
 import 'package:rawaa_app/model/model_categorie.dart';
 import 'package:rawaa_app/model/model_product.dart';
 import 'package:rawaa_app/styles/constants.dart';
@@ -28,7 +29,7 @@ class ControllerProducts extends GetxController {
   final formKey = GlobalKey<FormState>();
 
   // Image picker
-  final ImagePicker _picker = ImagePicker();
+
   File? selectedImage;
   @override
   void onInit() {
@@ -117,6 +118,8 @@ class ControllerProducts extends GetxController {
         frenchController.clear();
         englishController.clear();
         selectedCat = null;
+        CtrlDashboard ctrl = Get.find();
+        ctrl.loadDashboardData();
 
         // Refresh categories list
         await fetchProducts();
@@ -169,9 +172,11 @@ class ControllerProducts extends GetxController {
     try {
       var response = await Constants.reposit.repDeleteCategorie(id);
       if (response['status'] == 'success') {
+        CtrlDashboard ctrl = Get.find();
+        ctrl.loadDashboardData();
         Get.snackbar(
           'Success',
-          'Category deleted successfully',
+          'Produit dSupprimé avec Succés',
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.green,
           colorText: Colors.white,

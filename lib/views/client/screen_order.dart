@@ -20,7 +20,7 @@ class ScreenOrder extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Constants.primaryColor,
         title: CustomText(
-          text: "Mes commandes",
+          text: "liste_orders".tr,
           coul: Colors.white,
           weight: FontWeight.bold,
           size: 18,
@@ -58,7 +58,7 @@ class ScreenOrder extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "Order #: ${order.id}",
+                                    "${"order".tr} # ${order.id}",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18,
@@ -67,7 +67,7 @@ class ScreenOrder extends StatelessWidget {
 
                                   Text(
                                     DateFormat(
-                                      'dd MMMM yyyy',
+                                      'dd-MM-yyyy',
                                     ).format(DateTime.parse(order.dateDemande)),
 
                                     style: TextStyle(
@@ -129,7 +129,7 @@ class ScreenOrder extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    "\$${order.total.toStringAsFixed(2)}",
+                                    Constants.currency(order.total),
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20,
@@ -158,11 +158,11 @@ class ScreenOrder extends StatelessWidget {
 
     switch (order.livraison) {
       case 0:
-        text = "Sans Livraison";
+        text = "sans_livraison".tr;
         color = Colors.grey;
         break;
       case 1:
-        text = " demandée";
+        text = "demande_livraison".tr;
         color = Colors.blue;
         break;
       case 2:
@@ -215,7 +215,7 @@ class ScreenOrder extends StatelessWidget {
 
     switch (order.livraison) {
       case 1:
-        statusText = 'En attente d\'acceptation livreur';
+        statusText = 'attente_accepte_livreur'.tr;
         textColor = Colors.blue;
         break;
       case 2:

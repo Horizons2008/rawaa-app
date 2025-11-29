@@ -4,6 +4,7 @@ import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:rawaa_app/controller/controller_categories.dart';
 import 'package:rawaa_app/model/model_categorie.dart';
 import 'package:rawaa_app/my_widgets/custom_button.dart';
+import 'package:rawaa_app/my_widgets/custom_text.dart';
 import 'package:rawaa_app/my_widgets/outlined_edit.dart';
 import 'package:rawaa_app/my_widgets/space_hor.dart';
 import 'package:rawaa_app/my_widgets/space_ver.dart';
@@ -38,7 +39,7 @@ class AddCategorie extends StatelessWidget {
                     Text(
                       selectedCat == null
                           ? 'add_new_category'.tr
-                          : "update_cat",
+                          : "update_category".tr,
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -46,7 +47,10 @@ class AddCategorie extends StatelessWidget {
                     ),
                     Spacer(),
                     IconButton(
-                      onPressed: () => Get.back(),
+                      onPressed: () {
+                        ctrl.clearForm();
+                        Get.back();
+                      },
                       icon: Icon(Icons.close),
                     ),
                   ],
@@ -54,11 +58,6 @@ class AddCategorie extends StatelessWidget {
                 SpaceV(h: 20),
 
                 // Image Selection
-                Text(
-                  'category_image'.tr,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                ),
-                SpaceV(h: 10),
                 GestureDetector(
                   onTap: () => ctrl.pickImageFromGallery(),
                   child: Container(
@@ -98,7 +97,7 @@ class AddCategorie extends StatelessWidget {
                               ),
                               SpaceV(h: 10),
                               Text(
-                                'Tap to select image',
+                                'tape_select_image'.tr,
                                 style: TextStyle(
                                   color: Colors.grey[600],
                                   fontSize: 14,
@@ -111,19 +110,14 @@ class AddCategorie extends StatelessWidget {
                 SpaceV(h: 20),
 
                 // Arabic Input
-                Text(
-                  'Nom Arab',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                ),
-                SpaceV(h: 8),
                 OutlinedEdit(
-                  hint: 'Enter Arabic title',
-                  label: 'Arabic Title',
+                  hint: 'nom_arab'.tr,
+
                   iconDroite: Icon(Icons.language),
                   controller: ctrl.arabicController,
                   validation: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Arabic title is required';
+                      return 'champ_obligatoire'.tr;
                     }
                     return null;
                   },
@@ -131,19 +125,14 @@ class AddCategorie extends StatelessWidget {
                 SpaceV(h: 16),
 
                 // French Input
-                Text(
-                  'Nom Français',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                ),
-                SpaceV(h: 8),
                 OutlinedEdit(
-                  hint: 'Nom',
-                  label: 'French Title',
+                  hint: 'nom_francais'.tr,
+
                   iconDroite: Icon(Icons.language),
                   controller: ctrl.frenchController,
                   validation: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Champ obligatoire';
+                      return 'champ_obligatoire'.tr;
                     }
                     return null;
                   },
@@ -151,19 +140,14 @@ class AddCategorie extends StatelessWidget {
                 SpaceV(h: 16),
 
                 // English Input
-                Text(
-                  'Nom Anglais',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                ),
-                SpaceV(h: 8),
                 OutlinedEdit(
-                  hint: 'Nom Anglais',
+                  hint: 'nom_anglais'.tr,
                   label: 'English Title',
                   iconDroite: Icon(Icons.language),
                   controller: ctrl.englishController,
                   validation: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'champ obligatoire';
+                      return 'champ_obligatoire'.tr;
                     }
                     return null;
                   },
@@ -174,15 +158,24 @@ class AddCategorie extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
-                      child: CustomButton(
-                        titre: Text(
-                          'Annuler',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        onclick: () {
+                      child: ElevatedButton(
+                        onPressed: () {
                           ctrl.clearForm();
                           Get.back();
                         },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.grey[200],
+                          fixedSize: Size(double.infinity, 45),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: CustomText(
+                          text: 'cancel'.tr,
+                          size: 15,
+                          weight: FontWeight.w500,
+                          coul: Colors.black,
+                        ),
                       ),
                     ),
                     SpaceH(w: 16),
@@ -208,11 +201,11 @@ class AddCategorie extends StatelessWidget {
                               )
                             : selectedCat == null
                             ? Text(
-                                'Ajouter',
+                                'valider'.tr,
                                 style: TextStyle(color: Colors.white),
                               )
                             : Text(
-                                'Modifier',
+                                'update'.tr,
                                 style: TextStyle(color: Colors.white),
                               ),
                         onclick: ctrl.addStatus == ListeStatus.loading

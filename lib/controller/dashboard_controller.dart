@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rawaa_app/styles/constants.dart';
+import 'package:rawaa_app/views/admin/screen_formation.dart';
+import 'package:rawaa_app/views/admin/screen_formation2.dart';
+import 'package:rawaa_app/views/client/screen_chat.dart';
 import 'package:rawaa_app/views/settings/screen_settings.dart';
 
 class CtrlDashboard extends GetxController {
@@ -27,7 +30,7 @@ class CtrlDashboard extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _loadDashboardData();
+    loadDashboardData();
   }
 
   void collapse() {
@@ -36,7 +39,7 @@ class CtrlDashboard extends GetxController {
     update();
   }
 
-  void _loadDashboardData() async {
+  void loadDashboardData() async {
     // Initialize with sample data
     status = ListeStatus.loading;
     update();
@@ -86,7 +89,16 @@ class CtrlDashboard extends GetxController {
 
     update();
     switch (index) {
-      case 4:
+      case 1:
+        Get.to(() => ScreenFormation2());
+
+        break;
+      case 2:
+        Get.to(() => ChatRoom());
+
+        break;
+
+      case 3:
         Get.to(() => ScreenSettings());
 
         break;
@@ -96,7 +108,7 @@ class CtrlDashboard extends GetxController {
 
   void refreshDashboard() {
     // Refresh dashboard data
-    _loadDashboardData();
+    loadDashboardData();
     update();
   }
 }

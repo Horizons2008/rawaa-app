@@ -17,7 +17,7 @@ class RegistrationController extends GetxController {
   ListeStatus statusCommune = ListeStatus.none;
   ListeStatus statusLocation = ListeStatus.none;
   ListeStatus statusUsername = ListeStatus.none;
-  ListeStatus statusPhone = ListeStatus.success;
+  ListeStatus statusPhone = ListeStatus.none;
 
   // Form controllers
   final nameController = TextEditingController(text: "458");
@@ -87,6 +87,7 @@ class RegistrationController extends GetxController {
 
   checkPhone(String phone) async {
     var result = await Constants.reposit.repCheckPhone({"phone": phone});
+
     return result;
   }
 
@@ -118,6 +119,7 @@ class RegistrationController extends GetxController {
     update();
     try {
       await Constants.reposit.repGetWilaya().then((value) {
+        print(value);
         if (value['status'] != null &&
             value['status'] == 'success' &&
             value['data'] != null &&
@@ -127,6 +129,7 @@ class RegistrationController extends GetxController {
           listWilaya = value['data']
               .map<MWilaya>((e) => MWilaya.fromJson(e))
               .toList();
+          print("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeee ${listWilaya.length}");
           update();
         }
       });
@@ -161,13 +164,16 @@ class RegistrationController extends GetxController {
   store() async {
     if (registrationKey.currentState!.validate()) {
       if (typeCompte == -1) {
-        Get.snackbar("Erreur", "Veuillez choisir le type de compte");
+        Constants.showSnackBar('erreur'.tr, 'choisir_type_compte'.tr);
+
         return;
       } else if (selectedWilaya == null) {
-        Get.snackbar("Erreur", "Veuillez choisir la wilaya");
+        Constants.showSnackBar('erreur'.tr, 'choisir_wilaya'.tr);
+
         return;
       } else if (selectedCommune == null) {
-        Get.snackbar("Erreur", "Veuillez choisir la commune");
+        Constants.showSnackBar('erreur'.tr, 'choisir_commune'.tr);
+
         return;
       } else if (statusUsername != ListeStatus.success) {
         Get.snackbar(

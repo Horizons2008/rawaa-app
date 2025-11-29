@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rawaa_app/controller/welcome_controller.dart';
+import 'package:rawaa_app/views/admin/screen_formation.dart';
 import 'package:rawaa_app/views/chat/screen_chat.dart';
 
 import 'package:rawaa_app/views/client/screen_cart.dart';
@@ -26,9 +27,13 @@ class DashClientController extends GetxController {
         page = ScreenOrder();
         break;
       case 3:
+        page = ScreenFormation();
+        break;
+
+      case 4:
         page = ChatRoom();
         break;
-      case 4:
+      case 5:
         page = ScreenSettings();
         break;
       default:

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rawaa_app/model/model_contact.dart';
-import 'package:rawaa_app/model/model_message.dart';
 import 'package:rawaa_app/model/model_msg.dart';
 import 'package:rawaa_app/styles/constants.dart';
 
@@ -10,12 +9,14 @@ class ChatController extends GetxController {
   TextEditingController TecMessage = TextEditingController();
   ScrollController scrollController = ScrollController();
   List<MMessage> listeMessage = [];
+  List<MMessage> listeRecent = [];
+
   MContact? selectedContact;
   @override
   void onInit() {
-    // TODO: implement onInit
     super.onInit();
     fetchUser();
+    getRecent();
   }
 
   Future fetchUser() async {
@@ -27,6 +28,24 @@ class ChatController extends GetxController {
     });
   }
 
+  getRecent() async {
+    await Constants.reposit.repGetRecentMsg().then((value) {
+      listeRecent = value['data']
+          .map<MMessage>((e) => MMessage.fromJson(e))
+          .toList();
+
+      update();
+    });
+  }
+
+  String getName(MMessage item) {
+    int id = item.receiverId.toString() == Constants.currentUser!.id
+        ? item.senderId
+        : item.receiverId;
+    MContact contact = listeContact.firstWhere((element) => element.id == id);
+    return contact.name;
+  }
+
   storeMsg() async {
     Map<String, String> data = {
       'message': TecMessage.text,
@@ -36,6 +55,7 @@ class ChatController extends GetxController {
       TecMessage.clear();
       update();
       fetchMsg();
+      getRecent();
     });
   }
 

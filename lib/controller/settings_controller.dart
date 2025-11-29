@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rawaa_app/styles/constants.dart';
 import 'package:rawaa_app/views/settings/change_password.dart';
@@ -88,7 +89,10 @@ class SettingsController extends GetxController {
       if (value['status'] == 'SUCCESS') {
         statusLoadProfile = ListeStatus.success;
 
-        profileData = value['user'];
+        profileData = value['data'];
+
+        profileData['id'] = profileData['user']['id'];
+        profileData['name'] = profileData['user']['name'];
 
         nameController.text = profileData['name'];
         adresseController.text = profileData['adresse'] ?? "adrrrr";
@@ -169,14 +173,17 @@ class SettingsController extends GetxController {
     profileData['latidude'] = locationController.text.split(',')[0];
     profileData['longitude'] = locationController.text.split(',')[1];
 
-    profileData['name'] = nameController.text;
-    
-
     await Constants.reposit
-        .repUpdateProfile(profileData, File(profileImagePath))
+        .repUpdateProfile(
+          profileData,
+          profileImagePath.isNotEmpty ? File(profileImagePath) : null,
+        )
         .then((value) {
+          print("response update profile : $value");
           if (value['status'] == 'success') {
             Constants.currentUser?.name = nameController.text;
+            //Hive.box(Constants.boxConfig,
+            //        ).put(("current_user")['user'],value['user']);
             Get.back();
             Get.snackbar('Success', 'Profile updated successfully');
             update();

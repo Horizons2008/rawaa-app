@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+
 import 'package:rawaa_app/restful/web_service.dart';
 import 'package:rawaa_app/styles/constants.dart';
 
@@ -10,6 +11,14 @@ class Repository {
 
   Future<dynamic> repGetWilaya() async {
     return await Constants.ws.get("getWilaya", null);
+  }
+
+  Future<dynamic> repGetClient() async {
+    return await Constants.ws.get("getClients", null);
+  }
+
+  Future<dynamic> repGetVendeur() async {
+    return await Constants.ws.get("getVendeurs", null);
   }
 
   Future<dynamic> repGetCommune(int idWilaya) async {
@@ -58,6 +67,10 @@ class Repository {
     return await Constants.ws.post("messages", data);
   }
 
+  Future<dynamic> repGetRecentMsg() async {
+    return await Constants.ws.get("recentMsg", null);
+  }
+
   Future<dynamic> repGetMsg(int id) async {
     return await Constants.ws.get("messages/$id", null);
   }
@@ -94,60 +107,94 @@ class Repository {
     return await Constants.ws.get("stock", null);
   }
 
+  Future<dynamic> repGetAllFormation() async {
+    return await Constants.ws.get("formation", null);
+  }
+
+  Future<dynamic> repDeleteFormation(int id) async {
+    return await Constants.ws.delete("formation/$id");
+  }
+
   Future<dynamic> repStoreOrder(dynamic data) async {
     return await Constants.ws.post("order", data);
   }
 
   Future<dynamic> repStoreStock(var data, List<File> imageList) async {
-    List<MultipartFile> multipartFiles = [];
-
-    for (int i = 0; i < imageList.length; i++) {
-      multipartFiles.add(
-        await MultipartFile.fromFile(
-          imageList[i].path,
-          filename: 'image$i.jpg',
-          contentType: DioMediaType(
-            'image',
-            'jpeg',
-          ), // Use MediaType instead of DioMediaType
-        ),
-      );
-    }
+    // Create FormData
     FormData formData = FormData();
-    for (int i = 0; i < multipartFiles.length; i++) {
-      formData.files.add(MapEntry('images[]', multipartFiles[i]));
-    }
 
+    // Add all data fields first
     if (data is Map<String, dynamic>) {
       data.forEach((key, value) {
-        if (key != 'images') {
-          formData.fields.add(MapEntry(key, value.toString()));
-        }
+        formData.fields.add(MapEntry(key, value.toString()));
       });
     }
+
+    // Add multiple images to FormData
+    // Laravel expects images[] for array of files
+    if (imageList.isNotEmpty) {
+      for (int i = 0; i < imageList.length; i++) {
+        MultipartFile multipartFile = await MultipartFile.fromFile(
+          imageList[i].path,
+          filename: 'image_${i + 1}.jpg',
+          contentType: DioMediaType('image', 'jpeg'),
+        );
+        // Use 'images[]' key so Laravel receives it as an array
+        formData.files.add(MapEntry('images[]', multipartFile));
+      }
+    }
+
     return await Constants.ws.post("stock", formData);
   }
 
-  Future<dynamic> repUpdateProfile(var data, File image) async {
-    FormData formData = FormData.fromMap({
-      "image": await MultipartFile.fromFile(
-        image.path,
-        filename: 'image.jpg', // or get from file
-        contentType: DioMediaType(
-          'image',
-          'jpeg',
-        ), // adjust based on your file type
-      ),
-    });
-    // Add all fields from 'data' to formData except 'image', since it's handled separately
-    if (data is Map<String, dynamic>) {
-      data.forEach((key, value) {
-        if (key != 'image')
-          formData.fields.add(MapEntry(key, value.toString()));
+  Future<dynamic> repUpdateProfile(var data, File? image) async {
+    if (image != null) {
+      FormData formData = FormData.fromMap({
+        "image": await MultipartFile.fromFile(
+          image.path,
+          filename: 'image.jpg', // or get from file
+          contentType: DioMediaType(
+            'image',
+            'jpeg',
+          ), // adjust based on your file type
+        ),
       });
+      if (data is Map<String, dynamic>) {
+        data.forEach((key, value) {
+          if (key != 'image') {
+            formData.fields.add(MapEntry(key, value.toString()));
+          }
+        });
+      }
+      return await Constants.ws.post("updateProfile", formData);
+    } else {
+      return await Constants.ws.post("updateProfile", data);
     }
+  }
 
-    return await Constants.ws.post("updateProfile", formData);
+  Future<dynamic> repStoreFormation(var data, File? image) async {
+    if (image != null) {
+      FormData formData = FormData.fromMap({
+        "image": await MultipartFile.fromFile(
+          image.path,
+          filename: 'image.jpg', // or get from file
+          contentType: DioMediaType(
+            'image',
+            'jpeg',
+          ), // adjust based on your file type
+        ),
+      });
+      if (data is Map<String, dynamic>) {
+        data.forEach((key, value) {
+          if (key != 'image') {
+            formData.fields.add(MapEntry(key, value.toString()));
+          }
+        });
+      }
+      return await Constants.ws.post("formation", formData);
+    } else {
+      return await Constants.ws.post("formation", data);
+    }
   }
 
   Future<dynamic> repGetCategorie() async {
@@ -160,6 +207,18 @@ class Repository {
 
   Future<dynamic> repGetProduct() async {
     return await Constants.ws.get("product", null);
+  }
+
+  Future<dynamic> repGetAchats() async {
+    return await Constants.ws.get("achat", null);
+  }
+
+  Future<dynamic> repAccepteAchat(int id) async {
+    return await Constants.ws.get("accepteAchat/$id", null);
+  }
+
+  Future<dynamic> repRefuseAchat(int id) async {
+    return await Constants.ws.get("refuseAchat/$id", null);
   }
 
   Future<dynamic> repGetProdByCat(int catId) async {
@@ -192,6 +251,27 @@ class Repository {
 
   Future<dynamic> repAddProduct(var data) async {
     return await Constants.ws.post("product", data);
+  }
+
+  Future<dynamic> repStoreAchat(var data, File image) async {
+    var formData = FormData.fromMap({
+      "image": await MultipartFile.fromFile(
+        image.path,
+        filename: 'image.jpg', // or get from file
+        contentType: DioMediaType(
+          'image',
+          'jpeg',
+        ), // adjust based on your file type
+      ),
+    });
+    print("ddddddddddddddddddddddddddddddddate $data");
+    if (data is Map<String, dynamic>) {
+      data.forEach((key, value) {
+        formData.fields.add(MapEntry(key, value.toString()));
+      });
+    }
+
+    return await Constants.ws.post("achat", formData);
   }
 
   Future<dynamic> repDeleteCategorie(int id) async {
