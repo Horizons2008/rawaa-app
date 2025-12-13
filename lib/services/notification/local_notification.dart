@@ -14,45 +14,41 @@ class LocalNotificationService {
   static Future<void> createNotificationChannels() async {
     final androidPlugin = flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>();
+          AndroidFlutterLocalNotificationsPlugin
+        >();
 
     if (androidPlugin == null) return;
 
     final channels = [
       AndroidNotificationChannel(
-        'regular',
+        'regular_default',
         'Regular Notifications',
-        description: 'This channel plays a custom regular sound for notifications.',
-        importance: Importance.defaultImportance,
-        sound: RawResourceAndroidNotificationSound('regular'),
-      ),
-      AndroidNotificationChannel(
-        'danger',
-        'Danger Notifications',
-        description: 'This channel plays a custom danger sound for critical notifications.',
+        description: 'Default channel for regular notifications.',
         importance: Importance.high,
-        sound: RawResourceAndroidNotificationSound('dangerlong'),
       ),
       AndroidNotificationChannel(
-        'medium',
+        'danger_default',
+        'Danger Notifications',
+        description: 'Default channel for critical notifications.',
+        importance: Importance.high,
+      ),
+      AndroidNotificationChannel(
+        'medium_default',
         'Medium Notifications',
-        description: 'This channel plays a custom medium sound for notifications.',
+        description: 'Default channel for medium priority notifications.',
         importance: Importance.defaultImportance,
-        sound: RawResourceAndroidNotificationSound('medium'),
       ),
       AndroidNotificationChannel(
-        'happy',
+        'happy_default',
         'Happy Notifications',
-        description: 'This channel plays a custom happy sound for notifications.',
+        description: 'Default channel for happy notifications.',
         importance: Importance.defaultImportance,
-        sound: RawResourceAndroidNotificationSound('happy'),
       ),
       AndroidNotificationChannel(
-        'low',
+        'low_default',
         'Low Notifications',
-        description: 'This channel plays a custom low sound for notifications.',
+        description: 'Default channel for low priority notifications.',
         importance: Importance.defaultImportance,
-        sound: RawResourceAndroidNotificationSound('low'),
       ),
     ];
 
@@ -104,6 +100,13 @@ class LocalNotificationService {
 
     print('User granted permission: ${settings.authorizationStatus}');
 
+    // Update foreground notification presentation options
+    await messaging.setForegroundNotificationPresentationOptions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+
     // Set up foreground message handler
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print('Foreground message received: ${message.messageId}');
@@ -112,7 +115,9 @@ class LocalNotificationService {
 
     // Set up when app is opened from background
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('App opened from background via notification: ${message.messageId}');
+      print(
+        'App opened from background via notification: ${message.messageId}',
+      );
       _handleBackgroundMessageTap(message);
     });
 
@@ -131,24 +136,25 @@ class LocalNotificationService {
   static void _handleBackgroundMessageTap(RemoteMessage message) {
     print('Notification tapped while app was in background');
     // You can add navigation logic here
-    streamController.add(NotificationResponse(
-      payload: message.data['payload'] ?? message.data['route'] ?? '',
-      id: int.tryParse(message.data['id'] ?? '0') ?? 0,
-      actionId: message.data['actionId'],
-      input: message.data['input'],
-      notificationResponseType: NotificationResponseType.selectedNotification
-
-    ));
+    streamController.add(
+      NotificationResponse(
+        payload: message.data['payload'] ?? message.data['route'] ?? '',
+        id: int.tryParse(message.data['id'] ?? '0') ?? 0,
+        actionId: message.data['actionId'],
+        input: message.data['input'],
+        notificationResponseType: NotificationResponseType.selectedNotification,
+      ),
+    );
   }
 
   // Background message handler - static method
   @pragma('vm:entry-point')
   static Future<void> handleBackgroundMessage(RemoteMessage message) async {
     print("Handling background message: ${message.messageId}");
-    
+
     // Initialize notifications in background isolate
     await _initializeInBackground();
-    
+
     // Show the notification
     await showBasicNotification(message);
   }
@@ -157,10 +163,10 @@ class LocalNotificationService {
   static Future<void> _initializeInBackground() async {
     const AndroidInitializationSettings androidSettings =
         AndroidInitializationSettings('@mipmap/ic_launcher');
-    
+
     const DarwinInitializationSettings iosSettings =
         DarwinInitializationSettings();
-    
+
     const InitializationSettings settings = InitializationSettings(
       android: androidSettings,
       iOS: iosSettings,
@@ -172,17 +178,26 @@ class LocalNotificationService {
   // Basic Notification
   static Future<void> showBasicNotification(RemoteMessage message) async {
     try {
+      String channelId =
+          message.notification?.android?.channelId ??
+          message.data['channel'] ??
+          'regular_default';
+
+      // Ensure we use the new default channels if the old ones are requested
+      if (!channelId.endsWith('_default')) {
+        channelId = '${channelId}_default';
+      }
+
       AndroidNotificationDetails android = AndroidNotificationDetails(
-        message.notification?.android?.channelId ?? 
-        message.data['channel'] ?? 'regular',
-        'Regular Notifications',
-        channelDescription: 'Regular notifications channel',
+        channelId,
+        'Notifications', // Generic name as it might vary
+        channelDescription: 'Notification channel',
         importance: Importance.high,
         priority: Priority.high,
       );
 
       NotificationDetails details = NotificationDetails(android: android);
-      
+
       await flutterLocalNotificationsPlugin.show(
         DateTime.now().millisecondsSinceEpoch.remainder(100000),
         message.notification?.title ?? message.data['title'] ?? 'Notification',
@@ -190,7 +205,7 @@ class LocalNotificationService {
         details,
         payload: message.data['payload'] ?? message.data['route'] ?? '',
       );
-      
+
       print('Notification shown successfully');
     } catch (e) {
       print('Error showing notification: $e');

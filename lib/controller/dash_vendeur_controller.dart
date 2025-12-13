@@ -17,13 +17,13 @@ class DashVendeurController extends GetxController {
         page = MyStock();
         break;
       case 1:
-        page = Center(child: Text("Page 3"));
+        page = ScreenOrder();
 
         break;
-      case 3:
+      case 2:
         page = ChatRoom();
         break;
-      case 4:
+      case 3:
         page = ScreenSettings();
         break;
 

@@ -38,10 +38,10 @@ abstract class Constants {
 
   Color secondaryColor = Colors.green.shade400;
 
-  static final String baseUrl = "http://192.168.1.10:8000";
-  static final String photoUrl = "http://192.168.1.10:8000/storage/";
-  //static final String baseUrl = "https://boutique.tassiliweb.com";
-  //static final String photoUrl = "https://boutique.tassiliweb.com/storage/";
+  // static final String baseUrl = "http://192.168.1.7:8000";
+  //  static final String photoUrl = "http://192.168.1.7:8000/storage/";
+  static final String baseUrl = "https://boutique.tassiliweb.com";
+  static final String photoUrl = "https://boutique.tassiliweb.com/storage/";
 
   static final String prefixe = "api";
   static WebService ws = WebService();
@@ -63,30 +63,53 @@ abstract class Constants {
     return "$price";
   }
 
-  static Color getStatusColor(int status) {
-    switch (status) {
-      case 2:
-        return Colors.red;
-      case 0:
-        return Colors.orange;
-      case 1:
-        return Colors.green;
-      default:
-        return Colors.grey;
+  static Color getStatusColor(dynamic status) {
+    if (status is int) {
+      switch (status) {
+        case 2:
+          return Colors.red;
+        case 0:
+          return Colors.orange;
+        case 1:
+          return Colors.green;
+        default:
+          return Colors.grey;
+      }
+    } else if (status is String) {
+      switch (status) {
+        case "confirmed":
+          return Colors.green;
+        case "waitting":
+          return Colors.orange;
+        default:
+          return Colors.amber;
+      }
+    } else {
+      return Colors.grey;
     }
   }
 
-  static String getStatusLabel(int status) {
-    switch (status) {
-      case 0:
-        return "attente".tr;
-      case 1:
-        return "accepted".tr;
-      case 2:
-        return "rejected".tr;
-      default:
-        return "inconnue";
+  static String getStatusLabel(dynamic status) {
+    if (status is int) {
+      switch (status) {
+        case 0:
+          return "attente".tr;
+        case 1:
+          return "accepted".tr;
+        case 2:
+          return "rejected".tr;
+      }
+    } else if (status is String) {
+      switch (status) {
+        case "confirmed":
+          return "confirmed".tr;
+        case "waiting":
+          return "attente".tr;
+        default:
+          return status;
+      }
     }
+    return "inconnue";
   }
 
   static void showSnackBar(String? title, String msg) {

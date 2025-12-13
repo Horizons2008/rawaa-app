@@ -3,13 +3,10 @@ import 'package:get/get.dart';
 import 'package:rawaa_app/controller/controller_categories.dart';
 import 'package:rawaa_app/my_widgets/custom_search_bar.dart';
 import 'package:rawaa_app/my_widgets/custom_text.dart';
-import 'package:rawaa_app/my_widgets/error_restful.dart';
 import 'package:rawaa_app/my_widgets/liste_vide.dart';
 import 'package:rawaa_app/my_widgets/loading.dart';
-import 'package:rawaa_app/my_widgets/outlined_edit.dart';
 
 import 'package:rawaa_app/styles/constants.dart';
-import 'dart:io';
 
 import 'package:rawaa_app/views/categories/add_categorie.dart';
 
@@ -74,11 +71,17 @@ class _ScreenCategorieState extends State<ScreenCategorie> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                customSearchBar(ctrl.searchController, 'taper_chercher'.tr, (
-                  val,
-                ) {
-                  ctrl.filterCategories(val);
-                }),
+                customSearchBar(
+                  ctrl.searchController,
+                  'taper_chercher'.tr,
+                  () {
+                    ctrl.searchController.text = "";
+                    ctrl.filterCategories(ctrl.searchController.text);
+                  },
+                  (val) {
+                    ctrl.filterCategories(val);
+                  },
+                ),
                 // Toggle panel
                 Padding(
                   padding: const EdgeInsets.symmetric(

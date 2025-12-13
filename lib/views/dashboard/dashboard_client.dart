@@ -20,31 +20,31 @@ class DashboardClient extends StatelessWidget {
         builder: (ctrl) {
           return BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
-            items: const [
+            items: [
               BottomNavigationBarItem(
                 icon: Icon(Icons.dashboard),
-                label: 'home',
+                label: 'home'.tr,
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.shopping_basket_rounded),
-                label: 'Pannier',
+                label: 'panier'.tr,
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.shopping_bag),
-                label: 'Commande',
+                label: 'orders'.tr,
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.cast_for_education),
-                label: 'Formation',
+                icon: Icon(Icons.school),
+                label: 'cours'.tr,
               ),
 
               BottomNavigationBarItem(
                 icon: Icon(Icons.message),
-                label: 'Messagerie',
+                label: 'messages'.tr,
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.settings),
-                label: 'Paramètres',
+                label: 'parametre'.tr,
               ),
             ],
             currentIndex: ctrl

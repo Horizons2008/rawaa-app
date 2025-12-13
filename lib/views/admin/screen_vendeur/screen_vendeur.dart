@@ -35,11 +35,17 @@ class ScreenVendeurs extends StatelessWidget {
             padding: const EdgeInsets.all(8),
             child: Column(
               children: [
-                customSearchBar(ctrl.searchController, "taper_chercher".tr, (
-                  v,
-                ) {
-                  ctrl.filterVendeur(v);
-                }),
+                customSearchBar(
+                  ctrl.searchController,
+                  "taper_chercher".tr,
+                  () {
+                    ctrl.searchController.text = "";
+                    ctrl.filterVendeur(ctrl.searchController.text);
+                  },
+                  (v) {
+                    ctrl.filterVendeur(v);
+                  },
+                ),
                 Align(
                   alignment: Alignment.centerRight,
                   child: IconButton(

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 Widget customSearchBar(
   TextEditingController textController,
   String hint,
+  VoidCallback closeSearch,
 
   ValueChanged<String>? onChanged,
 ) {
@@ -30,9 +32,7 @@ Widget customSearchBar(
         prefixIcon: Icon(Icons.search, size: 20),
         suffixIcon: textController.text.isNotEmpty
             ? InkWell(
-                onTap: () {
-                  textController.text = "";
-                },
+                onTap: closeSearch,
                 child: Icon(Icons.close),
               )
             : SizedBox(),

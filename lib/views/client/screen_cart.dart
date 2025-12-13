@@ -142,7 +142,7 @@ class ScreenCart extends StatelessWidget {
                         ),
                         const SizedBox(height: 24),
                         Text(
-                          'Your cart is empty',
+                          'pannier_vide'.tr,
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -151,7 +151,7 @@ class ScreenCart extends StatelessWidget {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'Looks like you haven\'t added anything yet',
+                          'votre_pannier_est_vide'.tr,
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.grey[500],
@@ -173,7 +173,7 @@ class ScreenCart extends StatelessWidget {
                               borderRadius: BorderRadius.circular(30),
                             ),
                           ),
-                          child: const Text('Start Shopping'),
+                          child: Text('demmarer_achat'.tr),
                         ),
                       ],
                     ),

@@ -20,15 +20,12 @@ class DashboardVendeur extends StatelessWidget {
         builder: (ctrl) {
           return BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
-            items: const [
+            items: [
               BottomNavigationBarItem(
                 icon: Icon(Icons.dashboard),
-                label: 'Accueil',
+                label: 'home'.tr,
               ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.category),
-                label: 'Catégories',
-              ),
+
               BottomNavigationBarItem(
                 icon: Icon(Icons.shopping_basket),
                 label: 'Commande',

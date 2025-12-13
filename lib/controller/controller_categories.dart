@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:rawaa_app/controller/dash_client_controller.dart';
+import 'package:rawaa_app/controller/dashboard_controller.dart';
 import 'package:rawaa_app/model/model_categorie.dart';
 import 'package:rawaa_app/styles/constants.dart';
 import 'dart:io';
+
+import 'package:rawaa_app/views/admin/dashboard_admin.dart';
 
 class ControllerCategories extends GetxController {
   // Observable list to hold categories
@@ -126,6 +130,12 @@ class ControllerCategories extends GetxController {
           .then((value) {
             print("rrrrrrrrrrrespponse add categorie ${value}");
             if (value['status'] == 'success') {
+              if (id == null) {
+                CtrlDashboard ctrl = Get.find();
+                ctrl.catCount++;
+                ctrl.update();
+              }
+
               addStatus = ListeStatus.success;
 
               // Clear form
@@ -185,6 +195,9 @@ class ControllerCategories extends GetxController {
     try {
       var response = await Constants.reposit.repDeleteCategorie(id);
       if (response['status'] == 'success') {
+        CtrlDashboard ctrl = Get.find();
+        ctrl.catCount--;
+        ctrl.update();
         Get.snackbar(
           'Success',
           'Category deleted successfully',

@@ -13,6 +13,7 @@ class MFormation {
   String? instructor;
   Duration? duration;
   String dejaAcheter;
+  List<String> playlist;
 
   // Constructor
 
@@ -20,6 +21,7 @@ class MFormation {
     required this.id,
     required this.title,
     required this.description,
+    required this.playlist,
     this.imageUrl,
     this.duration,
     required this.price,
@@ -64,12 +66,13 @@ class MFormation {
           ? parseTime(map['time_start'])
           : null,
       endTime: map['time_end'] != null ? parseTime(map['time_end']) : null,
-      instructor: map['prof_name'],
+      instructor: map['file_path'].split(',')[0], // map['prof_name'],
       duration: map['duration'] != null ? parseDuration(map['duration']) : null,
       dejaAcheter:
           ((map['achats'] != null) && (map['achats'] as List).isNotEmpty)
           ? map['achats'][0]['status']
           : "Acheter",
+      playlist: map['file_path'] != null ? map['file_path'].split(',') : [],
     );
   }
 

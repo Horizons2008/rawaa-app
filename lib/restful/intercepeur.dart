@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:hive/hive.dart';
 import 'package:rawaa_app/styles/constants.dart';
@@ -39,6 +41,15 @@ typeRequest == 1
   }
 
   void onError(DioException err, ErrorInterceptorHandler handler) {
+    if (err.response != null) {
+      print('  Response Headers: ${err.response!.headers}');
+      print('  Response Data: ${err.response!.data}');
+    }
+
+    if (err.error is SocketException) {
+      print('  Socket Exception: ${err.error}');
+    }
+    print("error1111111111111111111111111111111 ${err}");
     if (err.response?.statusCode == 404 &&
         err.response?.data != null &&
         err.response?.data["status"] != null) {

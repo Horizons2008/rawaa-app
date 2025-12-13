@@ -45,6 +45,9 @@ class AddFormationScreen extends StatelessWidget {
                   // Upload Course Image Section
                   _buildImageUploadSection(ctrl),
 
+                  const SizedBox(height: 16),
+                  _buildFileUploadButton(ctrl),
+
                   // Course Title
                   const SizedBox(height: 8),
                   OutlinedEdit(
@@ -239,6 +242,23 @@ class AddFormationScreen extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildFileUploadButton(FormationController controller) {
+    return SizedBox(
+      width: double.infinity,
+      child: OutlinedButton.icon(
+        onPressed: controller.openUploadBottomSheet,
+        icon: const Icon(Icons.attach_file),
+        label: const Text('Manage Files'),
+        style: OutlinedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+      ),
     );
   }
 

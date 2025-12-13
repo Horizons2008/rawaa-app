@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:rawaa_app/controller/admin/achat_controller.dart';
 import 'package:rawaa_app/model/model_achat.dart';
 import 'package:rawaa_app/styles/constants.dart';
+import 'package:rawaa_app/views/admin/image_editor.dart';
 
 class PurchaseRequestsScreen extends StatelessWidget {
   PurchaseRequestsScreen({super.key});
@@ -118,23 +119,37 @@ class PurchaseRequestsScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // INSERT_YOUR_CODE
-          Container(
-            height: 120,
-            width: double.infinity,
-            margin: const EdgeInsets.only(bottom: 12.0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15),
-                topRight: Radius.circular(15),
-              ),
-              image: DecorationImage(
-                image: NetworkImage(
-                  "${Constants.photoUrl}recus_payement/${request.id}.jpg",
+          GestureDetector(
+            onTap: () {
+              Get.to(
+                () => ImageEditorScreen(
+                  imageUrl:
+                      "${Constants.photoUrl}recus_payement/${request.id}.jpg",
+                  heroTag: 'receipt_${request.id}',
                 ),
-                fit: BoxFit.cover,
-                colorFilter: ColorFilter.mode(
-                  Colors.black.withOpacity(0.2),
-                  BlendMode.darken,
+              );
+            },
+            child: Hero(
+              tag: 'receipt_${request.id}',
+              child: Container(
+                height: 120,
+                width: double.infinity,
+                margin: const EdgeInsets.only(bottom: 12.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(15),
+                    topRight: Radius.circular(15),
+                  ),
+                  image: DecorationImage(
+                    image: NetworkImage(
+                      "${Constants.photoUrl}recus_payement/${request.id}.jpg",
+                    ),
+                    fit: BoxFit.fill,
+                    colorFilter: ColorFilter.mode(
+                      Colors.black.withOpacity(0.2),
+                      BlendMode.darken,
+                    ),
+                  ),
                 ),
               ),
             ),

@@ -39,7 +39,7 @@ class WebService {
   //************************************************************* */
   delete(String endPoint) async {
     String url = "${Constants.baseUrl}/${Constants.prefixe}/$endPoint";
-    print("*********************************url $url");
+    print("*********************************url delete $url");
     try {
       Response response = await dio.delete(url);
       // print("responde data ${response.data}");
@@ -54,12 +54,20 @@ class WebService {
   }
 
   //************************************************************* */
-  post(String endPoint, dynamic data) async {
+  post(
+    String endPoint,
+    dynamic data, {
+    Function(int, int)? onSendProgress,
+  }) async {
     String url = "${Constants.baseUrl}/${Constants.prefixe}/$endPoint";
     print("*********************************url $url");
 
     try {
-      Response response = await dio.post(url, data: data);
+      Response response = await dio.post(
+        url,
+        data: data,
+        onSendProgress: onSendProgress,
+      );
       // print("responde data ${response.data}");
       return response.data;
     } on DioException catch (e) {

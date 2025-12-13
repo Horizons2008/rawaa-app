@@ -494,7 +494,7 @@ class DashboardAdmin extends StatelessWidget {
             BottomNavigationBarItem(icon: Icon(Icons.home), label: 'home'.tr),
 
             BottomNavigationBarItem(
-              icon: Icon(Icons.cast_for_education_sharp),
+              icon: Icon(Icons.school),
               label: 'cours'.tr,
             ),
             BottomNavigationBarItem(

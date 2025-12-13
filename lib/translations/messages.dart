@@ -41,6 +41,7 @@ class Messages extends Translations {
       'grid_view': 'Grid View',
       'list_view': 'List View',
       'liste_vide': 'No element Found',
+      'image_editor': 'Image Editor',
       // Order
       'liste_orders': 'List of Orders',
       'order': 'Order',
@@ -61,6 +62,9 @@ class Messages extends Translations {
 
       'liste_clients': 'List of Consumers',
       'liste_vendeurs': 'List of Sellers',
+      'accepter_order': 'Accepte Order',
+      'refuser_order': 'Réfuse Order',
+      'client_demande_livraison': 'Consumer need Service Delivery',
 
       'nom_arab': 'Name Arab',
       'nom_francais': 'Name Frensh',
@@ -140,6 +144,11 @@ class Messages extends Translations {
       'clients': 'customers',
       'vendeurs': 'sellers',
       'clique_voir_detail': 'Click to view details', // English
+      //pannier
+      'pannier_vide': 'Empty Cart',
+      'votre_pannier_est_vide': 'Your cart is empty',
+      'demmarer_achat': 'Start Shopping',
+      // Bottom menu
       'home': 'Home',
       'messages': 'Messages',
       'cours': 'Training',
@@ -148,7 +157,9 @@ class Messages extends Translations {
       'arabic': 'Arabic',
       'english': 'English',
       'search': 'Search',
-
+      'orders': 'Orders',
+      'panier': 'Cart',
+      'parametre': 'Settings',
       // Arabic
       'active_projects': 'Active Projects',
       'overdue': 'Overdue',
@@ -158,17 +169,18 @@ class Messages extends Translations {
       'view_all': 'View All',
       'recent_activity': 'Recent Activity',
       // add new formation
+      'liste_formation': 'List of Training ',
       'gestion_formation': 'Training Management',
       'formation': 'Training',
+      'acheter': 'Buy',
       'gestion_achats': 'Shopping Management',
       'add_new_formation': 'Add New Training',
       'update_formation': 'Update Training',
       'upload_image': 'Upload Image',
       'upload': 'Upload',
       'titre_formation': 'Title Training',
-      'description': 'Déscription',
       'description_objectif_formation': 'Description about this training',
-      'prix': 'Price',
+
       'formatteur': 'Instructor',
       'type_formation': 'Formation Type',
       'online': 'Online',
@@ -195,6 +207,7 @@ class Messages extends Translations {
       'attente': 'Waitting',
       'accepte': 'Accepted',
       'refuse': 'Refused',
+      'playlist': 'PlayList',
 
       'confirmed': '',
       'rejected': '',
@@ -339,6 +352,7 @@ class Messages extends Translations {
       'commande_store_failed': 'Commande Non Effectuee',
       'list_view': 'Vue Liste',
       'liste_vide': 'Aucun Element trouvé',
+      'image_editor': 'Éditeur d\'image',
       // detail order
       'detail_order': 'Detail Commande',
       'date': 'Date',
@@ -349,6 +363,9 @@ class Messages extends Translations {
 
       'liste_clients': ' Liste des Clients',
       'liste_vendeurs': 'Liste des Vendeurs',
+      'accepter_order': 'Accepter Commande',
+      'refuser_order': 'Refuser Commande',
+      'client_demande_livraison': 'Client Demande Service Livraison',
       'nom_arab': 'Nom arab',
       'nom_francais': 'Nom Français',
       'nom_anglais': 'Nom Anglais',
@@ -426,6 +443,11 @@ class Messages extends Translations {
       'products': 'Produits',
       'clients': 'Clients',
       'vendeurs': 'Vendeurs',
+      //pannier
+      'pannier_vide': 'Pannier Vide',
+      'votre_pannier_est_vide': 'Votre pannier est vide',
+      'demmarer_achat': 'Démarrer l\'achat',
+      //bottom menu
       'home': 'Accueil',
       'messages': 'Messages',
       'logout': 'Déconnexion',
@@ -435,6 +457,9 @@ class Messages extends Translations {
       'english': 'Anglais',
       'search': 'Chercher',
       'clique_voir_detail': 'Cliquez pour voir les détails', // French
+      'orders': 'Comandes',
+      'panier': 'Pannier',
+      'parametre': 'Parametre',
 
       'active_projects': 'Projets Actifs',
       'overdue': 'En Retard',
@@ -444,8 +469,10 @@ class Messages extends Translations {
       'view_all': 'Voir Tout',
       'recent_activity': 'Activité Récente',
       // add new formation
+      'liste_formation': 'Liste des Formations',
       'gestion_formation': 'Gestion des Formations',
       'formation': 'Liste des Formations',
+      'acheter': 'Acheter',
       'gestion_achats': 'Gestion des Achats',
       'add_new_formation': 'Ajouter une Formation',
       'update_formation': 'Modifier Formation',
@@ -481,11 +508,15 @@ class Messages extends Translations {
       'attente': 'en Attente',
       'accepte': 'Accepté',
       'refuse': 'Refusé',
+      'playlist': 'Liste des videos',
       'client': 'Client',
       'confirmed': '',
       'rejected': '',
       'accepter': 'Accepter',
       'refuser': 'Refuser',
+      'confirme_achat': 'Confirmer l\'Achat',
+      'prendre_photo': 'Prendre Photo',
+      'choisir_photo': 'Ouvrir Gallerie',
 
       // Categories
       'add_new_category': 'Ajouter une Catégorie',
@@ -560,7 +591,6 @@ class Messages extends Translations {
           'Les permissions de localisation sont définitivement refusées. Veuillez les activer dans les paramètres.',
 
       // Navigation
-      'home': 'Accueil',
       'features': 'Fonctionnalités',
       'pages': 'Pages',
       'search': 'Recherche',
@@ -623,6 +653,7 @@ class Messages extends Translations {
       'grid_view': 'عرض الشبكة',
       'list_view': 'عرض القائمة',
       'liste_vide': 'لاتوجد اي بيانات',
+      'image_editor': 'محرر الصور',
       // detail order
       'detail_order': 'تفاصيل الطلب',
       'date': 'التاريخ',
@@ -636,6 +667,9 @@ class Messages extends Translations {
       'erreur': 'خطأ',
       'commande_store_seccefuly': 'تم الطلب بنجاح',
       'commande_store_failed': 'فشل الطلب',
+      'accepter_order': 'قبول الطلب',
+      'refuser_order': 'رفض الطلب',
+      'client_demande_livraison': 'الزبون طلب خدمة التوصيل',
 
       'nom_arab': 'الاسم بالعربية',
       'nom_francais': 'الاسم بالفرنسية',
@@ -722,6 +756,10 @@ class Messages extends Translations {
       'products': 'السلع',
       'clients': 'العملاء',
       'vendeurs': 'الموردين',
+      //pannier
+      'pannier_vide': 'السلة فارغة ',
+      'votre_pannier_est_vide': 'ليس لديك اي منتجات في السلة',
+      'demmarer_achat': 'ابدأ الشراء',
       // bottom menus
       'home': 'الرئيسية',
       'messages': 'الرسائل',
@@ -731,19 +769,24 @@ class Messages extends Translations {
       'arabic': 'العربية',
       'english': 'الإنجليزية',
       'search': 'بحث',
+      'orders': 'الطلبات',
+      'panier': 'السلة',
+      'parametre': 'الإعدادات',
 
       'clique_voir_detail': 'اضغط لعرض التفاصيل',
 
       'active_projects': 'المشاريع النشطة',
       'overdue': 'متأخر',
-      'pending': 'في الانتظار',
+
       'meetings': 'الاجتماعات',
       'your_projects': 'مشاريعك',
       'view_all': 'عرض الكل',
       'recent_activity': 'النشاط الأخير',
       // add new
       'gestion_formation': 'تسيير الدورات',
+      'liste_formation': 'قائمة الدورات',
       'formation': 'قائمة الدورات',
+      'acheter': 'شراء',
       'gestion_achats': 'تسيير المشتريات',
       'add_new_formation': 'إضافة دورة جديدة',
       'update_formation': 'تعديل دورة ',
@@ -775,6 +818,7 @@ class Messages extends Translations {
       'formation_supprime_succees': 'تم حذف الدورة بنجاح',
       'confirm_delete_formation': 'هل تريد حذف هذه الدورة؟',
       //Achats
+      'playlist': 'قائمة الفيديوهات',
       'tous': 'الكل',
       'attente': 'في انتظار',
       'accepte': 'مقبولة',
@@ -784,6 +828,9 @@ class Messages extends Translations {
       'rejected': 'مرفوضة',
       'accepter': 'قبول',
       'refuser': 'رفض',
+      'confirme_achat': 'تأكيد الشراء',
+      'prendre_photo': 'التقاط صورة',
+      'choisir_photo': 'اختيار صورة',
 
       // Categories
       'add_new_category': 'إضافة فئة جديدة',
@@ -832,7 +879,6 @@ class Messages extends Translations {
       'verifying_phone': 'جاري التحقق من رقم الهاتف...',
 
       // Account Types
-      'client': 'عميل',
       'supplier': 'مورد',
       'transporter': 'ناقل',
       'choose_account_type': 'يرجى اختيار نوع الحساب',
@@ -853,7 +899,6 @@ class Messages extends Translations {
           'أذونات الموقع مرفوضة نهائياً. يرجى تفعيلها في الإعدادات.',
 
       // Navigation
-      'home': 'الرئيسية',
       'features': 'الميزات',
       'pages': 'الصفحات',
       'search': 'البحث',

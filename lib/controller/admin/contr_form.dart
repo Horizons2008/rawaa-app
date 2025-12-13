@@ -3,17 +3,40 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:rawaa_app/model/model_formation.dart';
 import 'package:rawaa_app/styles/constants.dart';
 import 'package:dio/dio.dart';
 
+class FileUploadModel {
+  File file;
+  String name;
+  double progress;
+  bool isUploading;
+  bool isCompleted;
+  String? serverPath;
+
+  FileUploadModel({
+    required this.file,
+    required this.name,
+    this.progress = 0.0,
+    this.isUploading = false,
+    this.isCompleted = false,
+    this.serverPath,
+  });
+}
+
 class FormationController extends GetxController {
-  TextEditingController titleController = TextEditingController();
-  TextEditingController formateurController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
-  TextEditingController priceController = TextEditingController();
-  TextEditingController heureController = TextEditingController();
-  TextEditingController minuteController = TextEditingController();
+  TextEditingController titleController = TextEditingController(text: 'title');
+  TextEditingController formateurController = TextEditingController(
+    text: 'formateur',
+  );
+  TextEditingController descriptionController = TextEditingController(
+    text: 'description',
+  );
+  TextEditingController priceController = TextEditingController(text: '4500');
+  TextEditingController heureController = TextEditingController(text: '5');
+  TextEditingController minuteController = TextEditingController(text: '30');
 
   bool isOnline = false;
   // INSERT_YOUR_CODE
@@ -31,7 +54,15 @@ class FormationController extends GetxController {
   TimeOfDay? endTime;
   Duration? duration;
   String imagePath = "";
+  File? documentFile;
+
   String recusPath = "";
+
+  // Upload variables
+  List<FileUploadModel> uploadedFiles = [];
+  double uploadProgress = 0.0;
+  bool isUploading = false;
+  String? uploadedFileName;
 
   @override
   void onInit() {
@@ -57,6 +88,11 @@ class FormationController extends GetxController {
   }
 
   editFormation(MFormation formation) async {
+    List<String> playlist = formation.playlist;
+    for (var element in playlist) {
+      uploadedFiles.add(FileUploadModel(file: File(element), name: element));
+    }
+
     selectedFormation = formation;
     titleController.text = formation.title;
     formateurController.text = formation.instructor!;
@@ -136,6 +172,7 @@ class FormationController extends GetxController {
       formations = onValue['data']
           .map<MFormation>((e) => MFormation.fromMap(e))
           .toList();
+
       update();
     });
   }
@@ -144,7 +181,10 @@ class FormationController extends GetxController {
     if (storeFormationKey.currentState!.validate()) {
       addStatus = ListeStatus.loading;
       update();
-
+      String playList = "";
+      if (uploadedFiles.isNotEmpty) {
+        playList = uploadedFiles.map((file) => file.serverPath).join(",");
+      }
       final data = ({
         "id": selectedFormation?.id,
         "title": titleController.text,
@@ -162,21 +202,39 @@ class FormationController extends GetxController {
 
         "prof_name": formateurController.text,
         "type": "gratuit",
+        "playlist": playList,
       });
 
-      await Constants.reposit
+      Constants.reposit
           .repStoreFormation(
             data,
             imagePath.isNotEmpty ? File(imagePath) : null,
+            document: documentFile,
+            onSendProgress: (sent, total) {
+              if (documentFile != null) {
+                uploadProgress = sent / total;
+                isUploading = true;
+                update();
+              }
+            },
           )
           .then((value) {
             print("sssssssssssssssssssssssssssssssss $value");
             addStatus = ListeStatus.success;
+            isUploading = false;
+            Constants.showSnackBar(
+              "confirmation",
+              "Formation ajoutée avec succès",
+            );
             update();
+            if (documentFile != null) {
+              Get.back();
+              // Close BottomSheet if it was open
+            }
           });
-      Get.back();
+      //  Get.back();
       fetchFormation();
-      Constants.showSnackBar("confirmation", "Formation ajoutée avec succès");
+
       resetForm();
     } else {
       addStatus = ListeStatus.error;
@@ -195,9 +253,15 @@ class FormationController extends GetxController {
       "formation_id": formation.id,
       "pric": formation.price,
     };
-    await Constants.reposit
-        .repStoreAchat(data, File(recusPath))
-        .then((value) {});
+    await Constants.reposit.repStoreAchat(data, File(recusPath)).then((value) {
+      print("sssssssssssssssssssssssssssssssss $value");
+      if (value['status'] == 'success') {
+        Get.back();
+        fetchFormation();
+        Constants.showSnackBar("confirmation", "Achat effectué avec succès");
+        update();
+      }
+    });
   }
 
   void resetForm() {
@@ -220,5 +284,135 @@ class FormationController extends GetxController {
     if (index != -1) {
       formations[index] = updatedFormation;
     }
+  }
+
+  Future<void> pickAndUploadFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+    if (result != null) {
+      File file = File(result.files.single.path!);
+      String fileName = result.files.single.name;
+
+      FileUploadModel fileModel = FileUploadModel(
+        file: file,
+        name: fileName,
+        isUploading: true,
+      );
+
+      uploadedFiles.add(fileModel);
+      update();
+
+      // Start Upload
+      await Constants.reposit
+          .repUploadFile(file, (sent, total) {
+            fileModel.progress = sent / total;
+            update();
+          })
+          .then((value) {
+            print("111111111111111111111111111111111 $value");
+            fileModel.isUploading = false;
+            fileModel.isCompleted = true;
+            fileModel.serverPath =
+                value['path']; // Adjust based on API response
+            update();
+          })
+          .catchError((e) {
+            print("2222222222 $e");
+
+            fileModel.isUploading = false;
+            // Handle error
+            update();
+          });
+    }
+  }
+
+  void deleteFile(int index) {
+    Constants.reposit
+        .repRemoveFile({"fileName": uploadedFiles[index].serverPath})
+        .then((value) {
+          print("value $value");
+          uploadedFiles.removeAt(index);
+          update();
+        });
+  }
+
+  void openUploadBottomSheet() {
+    Get.bottomSheet(
+      GetBuilder<FormationController>(
+        builder: (controller) {
+          return Container(
+            padding: const EdgeInsets.all(20),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Manage Files',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () => Get.back(),
+                      icon: const Icon(Icons.close),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                ElevatedButton.icon(
+                  onPressed: controller.pickAndUploadFile,
+                  icon: const Icon(Icons.add),
+                  label: const Text('Add File'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    foregroundColor: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Flexible(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: controller.uploadedFiles.length,
+                    itemBuilder: (context, index) {
+                      final file = controller.uploadedFiles[index];
+                      return Card(
+                        margin: const EdgeInsets.only(bottom: 10),
+                        child: ListTile(
+                          title: Text(file.name),
+                          subtitle: file.isUploading
+                              ? LinearProgressIndicator(value: file.progress)
+                              : file.isCompleted
+                              ? const Text(
+                                  'Upload Complete',
+                                  style: TextStyle(color: Colors.green),
+                                )
+                              : const Text('Pending'),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.delete, color: Colors.red),
+                            onPressed: () => controller.deleteFile(index),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+      isDismissible: true,
+      enableDrag: true,
+    );
   }
 }

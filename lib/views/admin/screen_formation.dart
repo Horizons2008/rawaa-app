@@ -1,13 +1,14 @@
-import 'dart:io';
+import 'package:rawaa_app/views/admin/demande_achat.dart';
+import 'package:video_player/video_player.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:rawaa_app/controller/admin/contr_form.dart';
 import 'package:rawaa_app/model/model_formation.dart';
 
 import 'package:rawaa_app/my_widgets/custom_text.dart';
 import 'package:rawaa_app/my_widgets/loading.dart';
+
 import 'package:rawaa_app/styles/constants.dart';
 import 'package:rawaa_app/views/admin/add_formation.dart';
 
@@ -17,11 +18,17 @@ class ScreenFormation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Get.to(() => AddFormationScreen());
-        },
-      ),
+      appBar: Constants.currentUser!.role == 'client'
+          ? AppBar(title: Text("liste_formation".tr))
+          : null,
+      floatingActionButton: Constants.currentUser!.role == "admin"
+          ? FloatingActionButton(
+              onPressed: () {
+                Get.to(() => AddFormationScreen());
+              },
+              child: Icon(Icons.school_rounded),
+            )
+          : null,
       body: GetBuilder<FormationController>(
         init: FormationController(),
         builder: (ctrl) {
@@ -89,7 +96,7 @@ class CourseCard extends StatelessWidget {
                         image: NetworkImage(
                           '${Constants.photoUrl}formation/${course.id}.jpg',
                         ),
-                        fit: BoxFit.cover,
+                        fit: BoxFit.fill,
                       ),
                     ),
                   ),
@@ -267,320 +274,7 @@ class CourseCard extends StatelessWidget {
                               ? InkWell(
                                   onTap: () {
                                     // INSERT_YOUR_CODE
-                                    showModalBottomSheet(
-                                      context: context,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.vertical(
-                                          top: Radius.circular(16),
-                                        ),
-                                      ),
-                                      isScrollControlled: true,
-                                      builder: (context) {
-                                        return GetBuilder<FormationController>(
-                                          builder: (ctrl) {
-                                            return Padding(
-                                              padding: MediaQuery.of(context)
-                                                  .viewInsets
-                                                  .add(
-                                                    const EdgeInsets.only(
-                                                      left: 20,
-                                                      right: 20,
-                                                      bottom: 20,
-                                                      top: 24,
-                                                    ),
-                                                  ),
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Center(
-                                                    child: Container(
-                                                      height: 4,
-                                                      width: 40,
-                                                      margin:
-                                                          const EdgeInsets.only(
-                                                            bottom: 12,
-                                                          ),
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.grey[400],
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                              4,
-                                                            ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Text(
-                                                        "Confirmer l'achat",
-                                                        style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 18,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  const SizedBox(height: 18),
-                                                  Row(
-                                                    children: [
-                                                      Icon(
-                                                        Icons.school,
-                                                        color:
-                                                            Colors.blueAccent,
-                                                      ),
-                                                      const SizedBox(width: 8),
-                                                      Expanded(
-                                                        child: Text(
-                                                          course.title,
-                                                          style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontSize: 16,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  const SizedBox(height: 10),
-                                                  Row(
-                                                    children: [
-                                                      Icon(
-                                                        Icons.person,
-                                                        color:
-                                                            Colors.deepOrange,
-                                                      ),
-                                                      const SizedBox(width: 8),
-                                                      Expanded(
-                                                        child: Text(
-                                                          course.instructor!,
-                                                          style: TextStyle(
-                                                            fontSize: 15,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  const SizedBox(height: 10),
-                                                  Row(
-                                                    children: [
-                                                      Icon(
-                                                        Icons.price_check,
-                                                        color: Colors.green,
-                                                      ),
-                                                      const SizedBox(width: 8),
-                                                      Text(
-                                                        ("$course.price DA"),
-                                                        style: TextStyle(
-                                                          color: Colors.teal,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 15,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  const SizedBox(height: 18),
-                                                  Center(
-                                                    child: Column(
-                                                      children: [
-                                                        Row(
-                                                          children: [
-                                                            GestureDetector(
-                                                              onTap: () async {
-                                                                ctrl.pickImage(
-                                                                  ImageSource
-                                                                      .gallery,
-                                                                );
-                                                              },
-                                                              child: Container(
-                                                                padding:
-                                                                    EdgeInsets.symmetric(
-                                                                      horizontal:
-                                                                          8,
-                                                                      vertical:
-                                                                          12,
-                                                                    ),
-                                                                decoration: BoxDecoration(
-                                                                  borderRadius:
-                                                                      BorderRadius.circular(
-                                                                        10,
-                                                                      ),
-                                                                  color: Colors
-                                                                      .grey[100],
-                                                                  border: Border.all(
-                                                                    color: Colors
-                                                                        .grey
-                                                                        .shade300,
-                                                                  ),
-                                                                ),
-                                                                child: Row(
-                                                                  mainAxisSize:
-                                                                      MainAxisSize
-                                                                          .min,
-                                                                  children: [
-                                                                    Icon(
-                                                                      Icons
-                                                                          .photo_library,
-                                                                      color: Colors
-                                                                          .indigo,
-                                                                    ),
-                                                                    const SizedBox(
-                                                                      width: 8,
-                                                                    ),
-                                                                    Text(
-                                                                      "Choisir une image",
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            GestureDetector(
-                                                              onTap: () async {
-                                                                ctrl.pickImage(
-                                                                  ImageSource
-                                                                      .camera,
-                                                                );
-                                                              },
-                                                              child: Container(
-                                                                padding:
-                                                                    EdgeInsets.symmetric(
-                                                                      horizontal:
-                                                                          10,
-                                                                      vertical:
-                                                                          12,
-                                                                    ),
-                                                                decoration: BoxDecoration(
-                                                                  borderRadius:
-                                                                      BorderRadius.circular(
-                                                                        10,
-                                                                      ),
-                                                                  color: Colors
-                                                                      .grey[100],
-                                                                  border: Border.all(
-                                                                    color: Colors
-                                                                        .grey
-                                                                        .shade300,
-                                                                  ),
-                                                                ),
-                                                                child: Row(
-                                                                  mainAxisSize:
-                                                                      MainAxisSize
-                                                                          .min,
-                                                                  children: [
-                                                                    Icon(
-                                                                      Icons
-                                                                          .camera_alt,
-                                                                      color: Colors
-                                                                          .deepOrange,
-                                                                    ),
-                                                                    const SizedBox(
-                                                                      width: 8,
-                                                                    ),
-                                                                    Text(
-                                                                      "Prendre photo",
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        const SizedBox(
-                                                          height: 12,
-                                                        ),
-                                                        if (ctrl
-                                                            .recusPath
-                                                            .isNotEmpty) ...[
-                                                          const SizedBox(
-                                                            height: 14,
-                                                          ),
-                                                          ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius.circular(
-                                                                  8,
-                                                                ),
-                                                            child:
-                                                                ctrl
-                                                                    .recusPath
-                                                                    .isNotEmpty
-                                                                ? Image.file(
-                                                                    File(
-                                                                      ctrl.recusPath,
-                                                                    ),
-                                                                    height: 150,
-                                                                    width: 300,
-                                                                    fit: BoxFit
-                                                                        .cover,
-                                                                  )
-                                                                : Container(
-                                                                    width: 50,
-                                                                    height: 50,
-                                                                    color: Colors
-                                                                        .grey,
-                                                                  ),
-                                                          ),
-                                                        ],
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  const SizedBox(height: 20),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.end,
-                                                    children: [
-                                                      ElevatedButton.icon(
-                                                        onPressed: () async {
-                                                          if (ctrl
-                                                              .recusPath
-                                                              .isEmpty) {
-                                                            ScaffoldMessenger.of(
-                                                              context,
-                                                            ).showSnackBar(
-                                                              SnackBar(
-                                                                content: Text(
-                                                                  "Merci de choisir ou prendre une image avant de confirmer",
-                                                                ),
-                                                              ),
-                                                            );
-                                                            return;
-                                                          }
-
-                                                          ctrl.storeAchat(
-                                                            course.id,
-                                                          );
-                                                          Navigator.of(
-                                                            context,
-                                                          ).pop();
-                                                        },
-                                                        icon: Icon(
-                                                          Icons.check_circle,
-                                                        ),
-                                                        label: Text(
-                                                          "Confirmer l'achat",
-                                                        ),
-                                                        style:
-                                                            ElevatedButton.styleFrom(
-                                                              backgroundColor:
-                                                                  Colors.green,
-                                                              foregroundColor:
-                                                                  Colors.white,
-                                                            ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                            );
-                                          },
-                                        );
-                                      },
-                                    );
+                                    confirmAchat(context, course);
 
                                     //ctrl.storeAchat(id);
                                   },
@@ -588,14 +282,21 @@ class CourseCard extends StatelessWidget {
                                       ? Row(
                                           children: [
                                             Icon(
+                                              // Display translated 'deja_acheter' status with color
                                               Icons.circle_rounded,
                                               size: 12,
-                                              color: Colors.orange,
+                                              color: Constants.getStatusColor(
+                                                course.dejaAcheter,
+                                              ),
                                             ),
                                             Text(
-                                              course.dejaAcheter,
+                                              Constants.getStatusLabel(
+                                                course.dejaAcheter,
+                                              ),
                                               style: TextStyle(
-                                                color: Colors.orange,
+                                                color: Constants.getStatusColor(
+                                                  course.dejaAcheter,
+                                                ),
                                               ),
                                             ),
                                           ],
@@ -604,14 +305,14 @@ class CourseCard extends StatelessWidget {
                                           padding: EdgeInsets.all(8),
                                           decoration: BoxDecoration(
                                             color: course.dejaAcheter == true
-                                                ? Colors.grey
+                                                ? Colors.blue
                                                 : Colors.green,
                                             borderRadius: BorderRadius.circular(
                                               8,
                                             ),
                                           ),
                                           child: CustomText(
-                                            text: course.dejaAcheter,
+                                            text: "acheter".tr,
                                             size: 14,
                                             weight: FontWeight.w600,
                                             coul: Colors.white,
@@ -619,13 +320,105 @@ class CourseCard extends StatelessWidget {
                                         ),
                                 )
                               : SizedBox(),
+                          if (Constants.currentUser!.role == 'client' &&
+                              course.dejaAcheter == 'confirmed')
+                            TextButton.icon(
+                              onPressed: () {
+                                showModalBottomSheet(
+                                  context: context,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.vertical(
+                                      top: Radius.circular(16),
+                                    ),
+                                  ),
+                                  builder: (context) {
+                                    return Container(
+                                      padding: const EdgeInsets.all(16),
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                          0.5,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Center(
+                                            child: Container(
+                                              width: 40,
+                                              height: 4,
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey[300],
+                                                borderRadius:
+                                                    BorderRadius.circular(2),
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 16),
+                                          Text(
+                                            'playlist'.tr,
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 16),
+                                          Expanded(
+                                            child: course.playlist.isEmpty
+                                                ? Center(
+                                                    child: Text(
+                                                      'No videos available',
+                                                    ),
+                                                  )
+                                                : ListView.builder(
+                                                    itemCount:
+                                                        course.playlist.length,
+                                                    itemBuilder: (context, index) {
+                                                      final fileUrl = course
+                                                          .playlist[index];
+                                                      // Extract filename from URL for display
+                                                      final fileName = fileUrl
+                                                          .split('/')
+                                                          .last;
+                                                      return ListTile(
+                                                        leading: const Icon(
+                                                          Icons
+                                                              .play_circle_fill,
+                                                          color: Colors.blue,
+                                                        ),
+                                                        title: Text(fileName),
+                                                        onTap: () {
+                                                          Get.to(
+                                                            () => VideoPlayerScreen(
+                                                              videoUrl:
+                                                                  "${Constants.photoUrl}formation/documents/$fileUrl",
+                                                            ),
+                                                          );
+                                                        },
+                                                      );
+                                                    },
+                                                  ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                              icon: const Icon(Icons.playlist_play),
+                              label: Text('playlist'.tr),
+                              style: TextButton.styleFrom(
+                                foregroundColor: Colors.purple,
+                              ),
+                            ),
                           Spacer(),
                           Constants.currentUser!.role == "admin"
-                              ? _buildActionButton('update'.tr, Colors.blue, () {
-                                  // ctrl.editFormation(formation);
-                                  ctrl.editFormation(course);
-                                  Get.to(() => AddFormationScreen());
-                                })
+                              ? _buildActionButton(
+                                  'update'.tr,
+                                  Colors.blue,
+                                  () {
+                                    ctrl.editFormation(course);
+                                    Get.to(() => AddFormationScreen());
+                                  },
+                                )
                               : SizedBox(),
                           const SizedBox(width: 8),
                           Constants.currentUser!.role == "admin"
@@ -687,6 +480,106 @@ class CourseCard extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
       ),
       child: Text(text, style: const TextStyle(fontWeight: FontWeight.w500)),
+    );
+  }
+}
+
+class VideoPlayerScreen extends StatefulWidget {
+  final String videoUrl;
+  const VideoPlayerScreen({super.key, required this.videoUrl});
+
+  @override
+  State<VideoPlayerScreen> createState() => _VideoPlayerScreenState();
+}
+
+class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
+  late VideoPlayerController _controller;
+  bool _isError = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl))
+      ..initialize()
+          .then((_) {
+            setState(() {});
+            _controller.play();
+          })
+          .catchError((error) {
+            setState(() {
+              print("Video Error: $error");
+              _isError = true;
+            });
+            print("Video Error: $error");
+          });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        title: const Text("Video Player"),
+        backgroundColor: Colors.transparent,
+        iconTheme: IconThemeData(color: Colors.white),
+        titleTextStyle: TextStyle(color: Colors.white, fontSize: 20),
+      ),
+      body: Center(
+        child: _isError
+            ? Text("Error loading video", style: TextStyle(color: Colors.white))
+            : _controller.value.isInitialized
+            ? AspectRatio(
+                aspectRatio: _controller.value.aspectRatio,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    VideoPlayer(_controller),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _controller.value.isPlaying
+                              ? _controller.pause()
+                              : _controller.play();
+                        });
+                      },
+                      child: Container(
+                        color: Colors.transparent,
+                        child: Center(
+                          child: Icon(
+                            _controller.value.isPlaying
+                                ? Icons.pause_circle_outline
+                                : Icons.play_circle_outline,
+                            size: 64,
+                            color: Colors.white.withOpacity(0.7),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: VideoProgressIndicator(
+                        _controller,
+                        allowScrubbing: true,
+                        colors: VideoProgressColors(
+                          playedColor: Colors.red,
+                          bufferedColor: Colors.white24,
+                          backgroundColor: Colors.white12,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            : CircularProgressIndicator(),
+      ),
     );
   }
 }

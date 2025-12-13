@@ -257,8 +257,8 @@ class OrderDetailWidget extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
-                    child: const Text(
-                      'Accepter',
+                    child: Text(
+                      'accepter_order'.tr,
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -280,8 +280,8 @@ class OrderDetailWidget extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
-                    child: const Text(
-                      'Refuser',
+                    child: Text(
+                      'refuser_order'.tr,
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,

@@ -70,11 +70,17 @@ class _ScreenProductState extends State<ScreenProduct> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                customSearchBar(ctrl.searchController, 'taper_chercher'.tr, (
-                  val,
-                ) {
-                  ctrl.filterProduct(val);
-                }),
+                customSearchBar(
+                  ctrl.searchController,
+                  'taper_chercher'.tr,
+                  () {
+                    ctrl.searchController.text = "";
+                    ctrl.filterProduct(ctrl.searchController.text);
+                  },
+                  (val) {
+                    ctrl.filterProduct(val);
+                  },
+                ),
                 // Toggle panel
                 Padding(
                   padding: const EdgeInsets.symmetric(
@@ -203,7 +209,7 @@ class _ScreenProductState extends State<ScreenProduct> {
                               ),
                               onPressed: () {
                                 Navigator.of(context).pop();
-                                ctrl.deleteCategory(item.id);
+                                ctrl.deleteProduct(item.id);
                               },
                             ),
                           ],
@@ -332,7 +338,7 @@ class _ScreenProductState extends State<ScreenProduct> {
                                 ),
                                 onPressed: () {
                                   Navigator.of(context).pop();
-                                  ctrl.deleteCategory(item.id);
+                                  ctrl.deleteProduct(item.id);
                                 },
                               ),
                             ],

@@ -172,29 +172,78 @@ class Repository {
     }
   }
 
-  Future<dynamic> repStoreFormation(var data, File? image) async {
+  Future<dynamic> repStoreFormation(
+    var data,
+    File? image, {
+    File? document,
+    Function(int, int)? onSendProgress,
+  }) async {
+    FormData formData = FormData();
+
     if (image != null) {
-      FormData formData = FormData.fromMap({
-        "image": await MultipartFile.fromFile(
-          image.path,
-          filename: 'image.jpg', // or get from file
-          contentType: DioMediaType(
-            'image',
-            'jpeg',
-          ), // adjust based on your file type
+      formData.files.add(
+        MapEntry(
+          "image",
+          await MultipartFile.fromFile(
+            image.path,
+            filename: 'image.jpg',
+            contentType: DioMediaType('image', 'jpeg'),
+          ),
         ),
-      });
-      if (data is Map<String, dynamic>) {
-        data.forEach((key, value) {
-          if (key != 'image') {
-            formData.fields.add(MapEntry(key, value.toString()));
-          }
-        });
-      }
-      return await Constants.ws.post("formation", formData);
-    } else {
-      return await Constants.ws.post("formation", data);
+      );
     }
+
+    if (document != null) {
+      formData.files.add(
+        MapEntry(
+          "document",
+          await MultipartFile.fromFile(
+            document.path,
+            filename: document.path.split('/').last,
+          ),
+        ),
+      );
+    }
+
+    if (data is Map<String, dynamic>) {
+      data.forEach((key, value) {
+        if (key != 'image' && key != 'document') {
+          formData.fields.add(MapEntry(key, value.toString()));
+        }
+      });
+    }
+    return await Constants.ws.post(
+      "formation",
+      formData,
+      onSendProgress: onSendProgress,
+    );
+  }
+
+  Future<dynamic> repUploadFile(
+    File file,
+    Function(int, int)? onSendProgress,
+  ) async {
+    FormData formData = FormData();
+    formData.files.add(
+      MapEntry(
+        "file",
+        await MultipartFile.fromFile(
+          file.path,
+
+          filename: file.path.split('/').last,
+        ),
+      ),
+    );
+
+    return await Constants.ws.post(
+      "uploadFile",
+      formData,
+      onSendProgress: onSendProgress,
+    );
+  }
+
+  Future<dynamic> repRemoveFile(var data) async {
+    return await Constants.ws.post("removeFile", data);
   }
 
   Future<dynamic> repGetCategorie() async {
@@ -276,6 +325,10 @@ class Repository {
 
   Future<dynamic> repDeleteCategorie(int id) async {
     return await Constants.ws.delete("categorie/$id");
+  }
+
+  Future<dynamic> repDeleteProduct(int id) async {
+    return await Constants.ws.delete("product/$id");
   }
 
   Future<dynamic> repDeleteStock(int id) async {

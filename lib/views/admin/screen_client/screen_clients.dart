@@ -36,11 +36,17 @@ class ScreenClients extends StatelessWidget {
             padding: EdgeInsetsGeometry.all(8),
             child: Column(
               children: [
-                customSearchBar(ctrl.searchController, "taper_chercher".tr, (
-                  v,
-                ) {
-                  ctrl.filterClient(v);
-                }),
+                customSearchBar(
+                  ctrl.searchController,
+                  "taper_chercher".tr,
+                  () {
+                    ctrl.searchController.text = "";
+                    ctrl.filterClient(ctrl.searchController.text);
+                  },
+                  (v) {
+                    ctrl.filterClient(v);
+                  },
+                ),
                 Align(
                   alignment: Alignment.centerRight,
                   child: IconButton(

@@ -134,7 +134,6 @@ class ControllerProducts extends GetxController {
         );
 
         // Close bottom sheet
-        Get.back();
       } else {
         addStatus = ListeStatus.error;
         Get.snackbar(
@@ -168,24 +167,27 @@ class ControllerProducts extends GetxController {
     update();
   }
 
-  deleteCategory(int id) async {
+  deleteProduct(int id) async {
     try {
-      var response = await Constants.reposit.repDeleteCategorie(id);
-      if (response['status'] == 'success') {
-        CtrlDashboard ctrl = Get.find();
-        ctrl.loadDashboardData();
-        Get.snackbar(
-          'Success',
-          'Produit dSupprimé avec Succés',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-        );
+      var response = await Constants.reposit.repDeleteProduct(id).then((v) {
+        if (v['status'] != null && v['status'] == 'success') {
+          CtrlDashboard ctrl = Get.find();
+          ctrl.prodCount--;
+          ctrl.update();
+          Get.back();
 
-        // Close bottom sheet
-        fetchCategories();
-        Get.back();
-      }
+          Get.snackbar(
+            'Success',
+            'Produit Supprimé avec Succés',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.green,
+            colorText: Colors.white,
+          );
+
+          // Close bottom sheet
+          fetchProducts();
+        }
+      });
     } catch (e) {}
   }
 
