@@ -7,7 +7,7 @@ import 'package:rawaa_app/views/admin/dashboard_admin.dart';
 import 'package:rawaa_app/views/dashboard/dashboard_client.dart';
 import 'package:rawaa_app/views/dashboard/dashboard_vendeur.dart';
 import 'package:rawaa_app/views/driver/dashboard_driver.dart';
-import 'package:rawaa_app/views/login/check_phone.dart';
+import 'package:rawaa_app/views/onboarding/screen_onboarding.dart';
 
 import 'package:rawaa_app/views/login/screen_login.dart';
 
@@ -34,6 +34,16 @@ class ContSplash extends GetxController {
         Get.offAll(() => ScreenLogin());
       } else*/
       {
+        // Check if onboarding has been completed
+        bool onboardingCompleted =
+            Hive.box(Constants.boxConfig).get("onboarding_completed") ?? false;
+
+        if (!onboardingCompleted) {
+          // Show onboarding screen
+          Get.offAll(() => ScreenOnboarding());
+          return;
+        }
+
         bool logged = Hive.box(Constants.boxConfig).get("logged") ?? false;
 
         if (logged) {

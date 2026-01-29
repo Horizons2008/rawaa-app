@@ -27,12 +27,14 @@ class WelcomeClientController extends GetxController {
   }
 
   getStock() {
-    Constants.reposit.repGetAllStock().then((value) {
-      listeStock = value['data']
-          .map<MStock>((e) => MStock.fromJson(e))
-          .toList();
-      update();
-    });
+    try {
+      Constants.reposit.repGetAllStock().then((value) {
+        listeStock = value['data']
+            .map<MStock>((e) => MStock.fromJson(e))
+            .toList();
+        update();
+      });
+    } catch (e) {}
   }
 
   addToCart(MStock stock) {

@@ -43,6 +43,9 @@ class CartController extends GetxController {
     };
     try {
       await Constants.reposit.repStoreOrder(data).then((onValue) {
+        print(
+          'ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooonValue: $onValue',
+        );
         if (onValue['status'] == 'success') {
           CartService.clearCart();
           DashClientController ctrl = Get.find();

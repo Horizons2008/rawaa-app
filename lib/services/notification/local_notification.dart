@@ -129,7 +129,7 @@ class LocalNotificationService {
   // Handle foreground messages
   static void _handleForegroundMessage(RemoteMessage message) {
     print('Handling foreground message');
-    showBasicNotification(message);
+    //  showBasicNotification(message);
   }
 
   // Handle when user taps notification while app is in background

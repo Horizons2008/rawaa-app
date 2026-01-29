@@ -16,6 +16,20 @@ class Messages extends Translations {
       'confirm': 'Confirm',
       'yes': 'Yes',
       'no': 'No',
+      // Onboarding
+      'skip': 'Skip',
+      'next': 'Next',
+      'back': 'Back',
+      'get_started': 'Get Started',
+      'welcome_title': 'Welcome to Rawaa',
+      'welcome_description':
+          'Your one-stop shop for all your shopping needs. Discover amazing products and great deals.',
+      'easy_shopping_title': 'Easy Shopping',
+      'easy_shopping_description':
+          'Browse through thousands of products, add to cart, and checkout with ease.',
+      'fast_delivery_title': 'Fast Delivery',
+      'fast_delivery_description':
+          'Get your orders delivered quickly and safely to your doorstep.',
       //cart
       'cart': 'Cart',
       'product_count': 'Product Count',
@@ -46,13 +60,21 @@ class Messages extends Translations {
       'liste_orders': 'List of Orders',
       'order': 'Order',
       'accepted': 'Accepted',
-      'rejected': 'Rejected',
+
       'pending': 'Pending',
       'delivered': 'Delivered',
       'attente_accepte_livreur': 'Waiting for Acceptance',
       'sans_livraison': 'Without Delivery',
       'demande_livraison': 'Delivery Request',
       // detail order
+      'client_demande_livraison': 'Client Request Delivery Service',
+      'adresse_libvraison': '',
+      'voir_sur_maps': 'View on Google Maps',
+      'prix_propose': 'Proposed Price',
+      'message': 'Message',
+      'whatsapp': 'WhatsApp',
+      'appeler': 'Call',
+      'position_gps': 'GPS Position',
       'detail_order': 'Detail Order',
       'date': 'Date',
       'status_livraison': 'Status of Delivery',
@@ -202,6 +224,17 @@ class Messages extends Translations {
       'formation_supprime_succees': 'Training Deleted Successfully',
       'confirm_delete_formation':
           'Are you sure you want to delete this training?',
+      'formation_paid_title': 'Paid Formation',
+      'formation_paid_message':
+          'This formation is not free. You must purchase it to access the videos.',
+      'formation_price': 'Price',
+      'video_locked_message': 'Purchase required to watch',
+      'purchase_processing_title': 'Purchase in Progress',
+      'purchase_processing_message':
+          'Your purchase is being processed. Please wait for confirmation.',
+      'purchase_waiting_info':
+          'Your purchase request is under review. You will be notified once it is confirmed.',
+      'ok': 'OK',
       //Achats
       'tous': 'All',
       'attente': 'Waitting',
@@ -210,9 +243,14 @@ class Messages extends Translations {
       'playlist': 'PlayList',
 
       'confirmed': '',
-      'rejected': '',
+      'rejected': 'Rejected',
       'accepter': 'Accept',
       'refuser': 'Reject',
+      'confirme_achat': 'Confirm Purchase',
+      'prendre_photo': 'Take Photo',
+      'choisir_photo': 'Choose Photo',
+      'ccp_payment_info': 'Payment Information',
+      'ccp_send_payment_to': 'Please send payment to CCP:',
 
       // Categories
       'add_new_category': 'Add New Category',
@@ -318,6 +356,20 @@ class Messages extends Translations {
       'confirm': 'Confirmer',
       'yes': 'Oui',
       'no': 'Non',
+      // Onboarding
+      'skip': 'Passer',
+      'next': 'Suivant',
+      'back': 'Retour',
+      'get_started': 'Commencer',
+      'welcome_title': 'Bienvenue sur Rawaa',
+      'welcome_description':
+          'Votre magasin unique pour tous vos besoins d\'achat. Découvrez des produits incroyables et de superbes offres.',
+      'easy_shopping_title': 'Achat Facile',
+      'easy_shopping_description':
+          'Parcourez des milliers de produits, ajoutez au panier et passez commande en toute simplicité.',
+      'fast_delivery_title': 'Livraison Rapide',
+      'fast_delivery_description':
+          'Recevez vos commandes rapidement et en toute sécurité à votre porte.',
       //cart
       'cart': 'Pannier',
       'product_count': 'Nombre de produits',
@@ -354,7 +406,16 @@ class Messages extends Translations {
       'liste_vide': 'Aucun Element trouvé',
       'image_editor': 'Éditeur d\'image',
       // detail order
+      'client_demande_livraison': 'Service Livraison Demandé',
+      'adresse_libvraison': 'Destination de livraison',
+      'voir_sur_maps': 'Voir sur Google Maps',
+      'prix_propose': 'Prix Propose',
+      'message': 'Message',
+      'whatsapp': 'WhatsApp',
+      'appeler': 'Appeler',
+      'position_gps': 'Position GPS',
       'detail_order': 'Detail Commande',
+
       'date': 'Date',
       'status_livraison': 'Status de Livraison',
       'vendeur': 'Vendeur',
@@ -502,7 +563,17 @@ class Messages extends Translations {
       'formation_supprime_succees': 'Formation supprimée avec succès',
       'confirm_delete_formation':
           'Etez-vous sur de vouloir supprimer cette formation ?',
-
+      'formation_paid_title': 'Formation Payante',
+      'formation_paid_message':
+          'Cette formation n\'est pas gratuite. Vous devez l\'acheter pour accéder aux vidéos.',
+      'formation_price': 'Prix',
+      'video_locked_message': 'Achat requis pour regarder',
+      'purchase_processing_title': 'Achat en Cours',
+      'purchase_processing_message':
+          'Votre achat est en cours de traitement. Veuillez patienter pour la confirmation.',
+      'purchase_waiting_info':
+          'Votre demande d\'achat est en cours d\'examen. Vous serez notifié une fois qu\'elle sera confirmée.',
+      'ok': 'OK',
       //Achats
       'tous': 'Tous',
       'attente': 'en Attente',
@@ -511,12 +582,14 @@ class Messages extends Translations {
       'playlist': 'Liste des videos',
       'client': 'Client',
       'confirmed': '',
-      'rejected': '',
+      'rejected': 'Refusé',
       'accepter': 'Accepter',
       'refuser': 'Refuser',
       'confirme_achat': 'Confirmer l\'Achat',
       'prendre_photo': 'Prendre Photo',
       'choisir_photo': 'Ouvrir Gallerie',
+      'ccp_payment_info': 'Informations de Paiement',
+      'ccp_send_payment_to': 'Veuillez envoyer le paiement au CCP:',
 
       // Categories
       'add_new_category': 'Ajouter une Catégorie',
@@ -595,6 +668,7 @@ class Messages extends Translations {
       'pages': 'Pages',
       'search': 'Recherche',
       'settings': 'Paramètres',
+      'liste_orders': 'Liste des commandes',
       // parametre
       'changer_password': 'Changer mot de passe',
       'changer_langue': 'Changer la langue',
@@ -624,6 +698,19 @@ class Messages extends Translations {
       'confirm': 'تأكيد',
       'yes': 'نعم',
       'no': 'لا',
+      // Onboarding
+      'skip': 'تخطي',
+      'next': 'التالي',
+      'back': 'رجوع',
+      'get_started': 'ابدأ الآن',
+      'welcome_title': 'مرحباً بك في رواء',
+      'welcome_description':
+          'متجرك الواحد لجميع احتياجات التسوق. اكتشف منتجات رائعة وعروض ممتازة.',
+      'easy_shopping_title': 'تسوق سهل',
+      'easy_shopping_description':
+          'تصفح آلاف المنتجات، أضف إلى السلة، وأكمل الطلب بسهولة.',
+      'fast_delivery_title': 'توصيل سريع',
+      'fast_delivery_description': 'احصل على طلباتك بسرعة وأمان إلى باب منزلك.',
       //cart
       'cart': 'سلة المشتريات',
       'product_count': 'عدد المنتجات',
@@ -655,6 +742,14 @@ class Messages extends Translations {
       'liste_vide': 'لاتوجد اي بيانات',
       'image_editor': 'محرر الصور',
       // detail order
+      'client_demande_livraison': 'تم طلب خدمة التوصيل',
+      'adresse_libvraison': 'عنوان التوصيل',
+      'voir_sur_maps': 'عرض على الخريطة',
+      'prix_propose': 'السعر المقترح',
+      'message': 'الرسالة',
+      'whatsapp': 'واتساب',
+      'appeler': 'اتصل',
+      'position_gps': 'الموقع الجغرافي',
       'detail_order': 'تفاصيل الطلب',
       'date': 'التاريخ',
       'status_livraison': 'حالة التوصيل',
@@ -817,6 +912,17 @@ class Messages extends Translations {
       'formation_modifie_succees': 'تم تعديل الدورة بنجاح',
       'formation_supprime_succees': 'تم حذف الدورة بنجاح',
       'confirm_delete_formation': 'هل تريد حذف هذه الدورة؟',
+      'formation_paid_title': 'دورة مدفوعة',
+      'formation_paid_message':
+          'هذه الدورة ليست مجانية. يجب عليك شراؤها للوصول إلى الفيديوهات.',
+      'formation_price': 'السعر',
+      'video_locked_message': 'الشراء مطلوب للمشاهدة',
+      'purchase_processing_title': 'الشراء قيد المعالجة',
+      'purchase_processing_message':
+          'شراؤك قيد المعالجة. يرجى الانتظار للتأكيد.',
+      'purchase_waiting_info':
+          'طلب الشراء الخاص بك قيد المراجعة. سيتم إشعارك بمجرد تأكيده.',
+      'ok': 'موافق',
       //Achats
       'playlist': 'قائمة الفيديوهات',
       'tous': 'الكل',
@@ -831,6 +937,8 @@ class Messages extends Translations {
       'confirme_achat': 'تأكيد الشراء',
       'prendre_photo': 'التقاط صورة',
       'choisir_photo': 'اختيار صورة',
+      'ccp_payment_info': 'معلومات الدفع',
+      'ccp_send_payment_to': 'يرجى إرسال الدفع إلى الحساب البريدي:',
 
       // Categories
       'add_new_category': 'إضافة فئة جديدة',

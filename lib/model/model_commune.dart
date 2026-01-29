@@ -21,10 +21,10 @@ class MCommune {
     return _data;
   }
 
-  String getTitle(String s) {
+  String getTitle(dynamic s) {
     // Convert the input string `s` to JSON and return the value of 'fr'
     try {
-      final Map<String, dynamic> jsonMap = json.decode(s);
+      final Map<String, dynamic> jsonMap = (s);
       return jsonMap['fr'];
     } catch (e) {
       return s;

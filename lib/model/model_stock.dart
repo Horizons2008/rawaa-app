@@ -34,7 +34,7 @@ class MStock {
     id = json['id'];
     productTitle = getTitle(json['product_title']);
     productId = json['product_id'].toString();
-    catTitle = getTitle(json['categorie_title']);
+    catTitle = getTitle((json['categorie_title']));
     catId = json['categorie_id'].toString();
 
     vendeurId = json['vendeur_id'].toString();
@@ -60,10 +60,10 @@ class MStock {
     };
   }
 
-  String getTitle(String s) {
+  String getTitle(dynamic s) {
     // Convert the input string `s` to JSON and return the value of 'fr'
     try {
-      final Map<String, dynamic> jsonMap = json.decode(s);
+      final Map<String, dynamic> jsonMap = s;
       switch (Constants.lang) {
         case "fr":
           return jsonMap['fr'];

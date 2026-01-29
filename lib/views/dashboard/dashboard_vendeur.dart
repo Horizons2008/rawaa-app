@@ -28,16 +28,16 @@ class DashboardVendeur extends StatelessWidget {
 
               BottomNavigationBarItem(
                 icon: Icon(Icons.shopping_basket),
-                label: 'Commande',
+                label: 'orders'.tr,
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.message),
-                label: 'Messagerie',
+                label: 'messages'.tr,
               ),
 
               BottomNavigationBarItem(
                 icon: Icon(Icons.settings),
-                label: 'Paramètres',
+                label: 'parametre'.tr,
               ),
             ],
             currentIndex: ctrl

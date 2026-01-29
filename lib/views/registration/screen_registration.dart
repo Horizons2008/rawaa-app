@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+
 import 'package:get/get.dart';
 import 'package:rawaa_app/controller/registration_controller.dart';
 import 'package:rawaa_app/model/model_commune.dart';
@@ -87,11 +87,10 @@ class ScreenRegistration extends StatelessWidget {
                         onChange: (value) {
                           // Trigger async phone validation when user stops typing
                           if (value.isNotEmpty && value.length >= 10) {
-                            Future.delayed(Duration(milliseconds: 500), () {
-                              if (controller.phoneController.text == value) {
+                            if (controller.phoneController.text == value) {
                                 controller.validatePhoneAsync(value);
                               }
-                            });
+                            
                           }
                         },
                       ),

@@ -52,6 +52,8 @@ class MyStock extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          ControllerStock  ctrl=Get.find<ControllerStock>();
+          ctrl.reset();
           showModalBottomSheet(
             context: context,
             isScrollControlled: true,

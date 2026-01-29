@@ -27,16 +27,12 @@ class FileUploadModel {
 }
 
 class FormationController extends GetxController {
-  TextEditingController titleController = TextEditingController(text: 'title');
-  TextEditingController formateurController = TextEditingController(
-    text: 'formateur',
-  );
-  TextEditingController descriptionController = TextEditingController(
-    text: 'description',
-  );
-  TextEditingController priceController = TextEditingController(text: '4500');
-  TextEditingController heureController = TextEditingController(text: '5');
-  TextEditingController minuteController = TextEditingController(text: '30');
+  TextEditingController titleController = TextEditingController();
+  TextEditingController formateurController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+  TextEditingController priceController = TextEditingController();
+  TextEditingController heureController = TextEditingController();
+  TextEditingController minuteController = TextEditingController();
 
   bool isOnline = false;
   // INSERT_YOUR_CODE
@@ -168,16 +164,25 @@ class FormationController extends GetxController {
     loadFormationStatus = ListeStatus.loading;
     update();
     await Constants.reposit.repGetAllFormation().then((onValue) {
+      print('ppppppppppppppppppppppppppppppppppppp $onValue');
       loadFormationStatus = ListeStatus.success;
       formations = onValue['data']
           .map<MFormation>((e) => MFormation.fromMap(e))
           .toList();
+          
 
       update();
     });
   }
 
   void addFormation() async {
+    String playList = "";
+
+    if (uploadedFiles.isNotEmpty) {
+      playList = uploadedFiles.map((file) => file.serverPath).join(",");
+    }
+    print('playListxxxxxxxxxxxxxxxxxxxxxxxxxx  $playList');
+
     if (storeFormationKey.currentState!.validate()) {
       addStatus = ListeStatus.loading;
       update();
@@ -185,6 +190,7 @@ class FormationController extends GetxController {
       if (uploadedFiles.isNotEmpty) {
         playList = uploadedFiles.map((file) => file.serverPath).join(",");
       }
+
       final data = ({
         "id": selectedFormation?.id,
         "title": titleController.text,
@@ -219,23 +225,25 @@ class FormationController extends GetxController {
             },
           )
           .then((value) {
-            print("sssssssssssssssssssssssssssssssss $value");
-            addStatus = ListeStatus.success;
-            isUploading = false;
-            Constants.showSnackBar(
-              "confirmation",
-              "Formation ajoutée avec succès",
-            );
-            update();
+            if (value['status'] == 'success') {
+              Get.back();
+              addStatus = ListeStatus.success;
+              isUploading = false;
+              Constants.showSnackBar(
+                "confirmation",
+                "Formation ajoutée avec 12",
+              );
+              resetForm();
+              fetchFormation();
+
+              update();
+            }
+
             if (documentFile != null) {
               Get.back();
               // Close BottomSheet if it was open
             }
           });
-      //  Get.back();
-      fetchFormation();
-
-      resetForm();
     } else {
       addStatus = ListeStatus.error;
       update();
@@ -254,7 +262,6 @@ class FormationController extends GetxController {
       "pric": formation.price,
     };
     await Constants.reposit.repStoreAchat(data, File(recusPath)).then((value) {
-      print("sssssssssssssssssssssssssssssssss $value");
       if (value['status'] == 'success') {
         Get.back();
         fetchFormation();

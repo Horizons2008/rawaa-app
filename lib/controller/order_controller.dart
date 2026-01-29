@@ -7,6 +7,8 @@ class OrderController extends GetxController {
   ListeStatus status = ListeStatus.none;
   List<MOrder> listeOrder = [];
   List<MDetail> listeDetail = [];
+  dynamic detailClient;
+  dynamic detailVendeur;
 
   MOrder? selectedOrder;
   @override
@@ -21,8 +23,10 @@ class OrderController extends GetxController {
     update();
     try {
       await Constants.reposit.repGetOrderById().then((value) {
-        print('vvvvvvvvvvvvvvvvvvvvvvvvv $value');
+       
         if (value['status'] == 'success') {
+          detailClient = value['client'];
+          detailVendeur = value['vendeur'];
           listeOrder = value['data']
               .map<MOrder>((e) => MOrder.fromJson(e))
               .toList();
@@ -55,7 +59,7 @@ class OrderController extends GetxController {
     dynamic data = {"id": selectedOrder!.id};
     print('selected order $data');
     await Constants.reposit.repAcceptePrice(data).then((value) {
-      print("accccccccccccccccccccepte $value");
+      
       selectedOrder!.livraison = 3;
 
       update();
@@ -93,6 +97,9 @@ class OrderController extends GetxController {
     await Constants.reposit.repGetDetailByOrderId(selectedOrder!.id).then((
       value,
     ) {
+      
+      detailClient = value['client'];
+      detailVendeur = value['vendeur'];
       listeDetail = value['data']
           .map<MDetail>((e) => MDetail.fromJson(e))
           .toList();

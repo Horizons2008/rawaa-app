@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class MDetail {
   MDetail({
     required this.id,
@@ -15,7 +17,7 @@ class MDetail {
   MDetail.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     productId = json['product_id'];
-    productName = json['product_name'];
+    productName =jsonEncode(json['product_name']);
     qte = json['qte'];
     price = json['price'];
   }

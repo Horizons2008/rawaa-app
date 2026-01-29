@@ -93,13 +93,12 @@ class ScreenOrder extends StatelessWidget {
                                         weight: FontWeight.w400,
                                         coul: Colors.grey,
                                       ),
-                                      SpaceH(w: 15),
-                                      _buildDeliveryStatusChip(order),
                                     ],
                                   ),
-                                  SpaceV(h: 8),
+
                                   // Statut de livraison détaillé
-                                  _buildDeliveryStatusText(order),
+                                   _buildDeliveryStatusChip(order),
+                                  //_buildDeliveryStatusText(order),
                                 ],
                               ),
                               Spacer(),
@@ -166,7 +165,7 @@ class ScreenOrder extends StatelessWidget {
         color = Colors.blue;
         break;
       case 2:
-        text = "Prix proposé";
+        text = "prix_propose".tr;
         color = Colors.orange;
         break;
       case 3:
@@ -220,7 +219,7 @@ class ScreenOrder extends StatelessWidget {
         break;
       case 2:
         statusText = order.fraisLivraison != null && order.fraisLivraison! > 0
-            ? 'Prix proposé: ${_formatCurrency(order.fraisLivraison!)} Livreur ${order.driverName}'
+            ? '${"prix_propose".tr}: ${Constants.currency(order.fraisLivraison!)}     [${order.driverName}]'
             : 'Livreur propose un prix';
         textColor = Colors.orange;
         break;

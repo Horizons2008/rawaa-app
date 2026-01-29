@@ -29,8 +29,8 @@ class Repository {
     return await Constants.ws.post("register", data);
   }
 
-  Future<dynamic> repCheckUsername(var data) async {
-    return await Constants.ws.get("checkUsername", data);
+  Future<dynamic> repCheckUsername(String username) async {
+    return await Constants.ws.get("checkUsername/$username", null);
   }
 
   Future<dynamic> repChangePassword(
@@ -43,8 +43,8 @@ class Repository {
     });
   }
 
-  Future<dynamic> repCheckPhone(var data) async {
-    return await Constants.ws.get("checkPhone", data);
+  Future<dynamic> repCheckPhone(String phone) async {
+    return await Constants.ws.get("checkPhone/$phone", null);
   }
 
   Future<dynamic> repUpdateFcmToken(var data) async {
@@ -109,6 +109,10 @@ class Repository {
 
   Future<dynamic> repGetAllFormation() async {
     return await Constants.ws.get("formation", null);
+  }
+
+  Future<dynamic> repGetFormationPlaylist(int id) async {
+    return await Constants.ws.get("formations/$id/playlist", null);
   }
 
   Future<dynamic> repDeleteFormation(int id) async {
@@ -236,7 +240,7 @@ class Repository {
     );
 
     return await Constants.ws.post(
-      "uploadFile",
+      "uploadCourse",
       formData,
       onSendProgress: onSendProgress,
     );
@@ -358,6 +362,10 @@ class Repository {
 
   Future repgetPackagingList() async {
     return await Constants.ws.get("packaging", {"warehouse_id": "1"});
+  }
+
+  Future<dynamic> repGetConfiguration() async {
+    return await Constants.ws.get("getCcpNumber", null);
   }
 
   //************************************************ */

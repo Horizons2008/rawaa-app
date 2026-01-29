@@ -11,7 +11,7 @@ class MCat {
   MCat.fromJson(Map<String, dynamic> json) {
     id = json['id'];
 
-    title = json['title'];
+    title = jsonEncode(json['title']);
   }
 
   //to json

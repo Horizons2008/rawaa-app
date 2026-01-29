@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
-import 'package:rawaa_app/controller/dash_client_controller.dart';
+
 import 'package:rawaa_app/controller/dash_driver_controller.dart';
 
 class DashboardDriver extends StatelessWidget {
@@ -21,23 +21,23 @@ class DashboardDriver extends StatelessWidget {
         builder: (ctrl) {
           return BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
-            items: const [
+            items: [
               BottomNavigationBarItem(
                 icon: Icon(Icons.dashboard),
-                label: 'Accueil',
+                label: 'home'.tr,
               ),
 
               BottomNavigationBarItem(
                 icon: Icon(Icons.shopping_bag),
-                label: 'Commande',
+                label: 'order'.tr,
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.message),
-                label: 'Message',
+                label: 'messages'.tr,
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.settings),
-                label: 'Paramètres',
+                label: 'settings'.tr,
               ),
             ],
             currentIndex: ctrl

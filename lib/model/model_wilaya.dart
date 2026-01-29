@@ -17,12 +17,11 @@ class MWilaya {
     return _data;
   }
 
-  String getTitle(String s) {
+  String getTitle(dynamic s) {
     // Convert the input string `s` to JSON and return the value of 'fr'
     try {
-      final Map<String, dynamic> jsonMap = s.isNotEmpty
-          ? Map<String, dynamic>.from(jsonDecode(s))
-          : {};
+      final Map<String, dynamic> jsonMap = Map<String, dynamic>.from(s);
+
       return jsonMap['fr'] ?? '';
     } catch (e) {
       return s;

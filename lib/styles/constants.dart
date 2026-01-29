@@ -38,10 +38,10 @@ abstract class Constants {
 
   Color secondaryColor = Colors.green.shade400;
 
-  // static final String baseUrl = "http://192.168.1.7:8000";
-  //  static final String photoUrl = "http://192.168.1.7:8000/storage/";
-  static final String baseUrl = "https://boutique.tassiliweb.com";
-  static final String photoUrl = "https://boutique.tassiliweb.com/storage/";
+  static final String baseUrl = "http://192.168.1.7:8000";
+  static final String photoUrl = "http://192.168.1.7:8000/storage/";
+  // static final String baseUrl = "https://rawaa-dz.com";
+  // static final String photoUrl = "https://rawaa-dz.com/storage/";
 
   static final String prefixe = "api";
   static WebService ws = WebService();
@@ -98,6 +98,8 @@ abstract class Constants {
           return "accepted".tr;
         case 2:
           return "rejected".tr;
+        default:
+          status.toString();
       }
     } else if (status is String) {
       switch (status) {
@@ -151,8 +153,7 @@ abstract class Constants {
           return jsonMap[Constants.lang];
       }
     } catch (e) {
-      print("eeeeeeeeeeeeeeeeeeeeeeeeeeeeee $e");
-      return title;
+      return "title";
     }
   }
 }

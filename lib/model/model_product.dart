@@ -20,9 +20,9 @@ class MProduct {
   MProduct.fromJson(Map<String, dynamic> json) {
     id = json['id'];
 
-    title =json['title'];
+    title = jsonEncode(json['title']);
     categorieId = json['categorie_id'];
-    categorieTitle = json['categorie_title'];
+    categorieTitle = json['categorie_title'].toString();
   }
 
   //to json
@@ -34,6 +34,4 @@ class MProduct {
     'categorie_id': categorieId,
     'categorie_title': categorieTitle,
   };
-
-  
 }

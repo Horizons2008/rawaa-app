@@ -66,7 +66,7 @@ class MFormation {
           ? parseTime(map['time_start'])
           : null,
       endTime: map['time_end'] != null ? parseTime(map['time_end']) : null,
-      instructor: map['file_path'].split(',')[0], // map['prof_name'],
+      instructor: map['prof_name'], // map['prof_name'],
       duration: map['duration'] != null ? parseDuration(map['duration']) : null,
       dejaAcheter:
           ((map['achats'] != null) && (map['achats'] as List).isNotEmpty)
@@ -82,7 +82,7 @@ class MFormation {
   }
 
   static Duration parseDuration(String timeString) {
-    final parts = timeString.split(':');
+       final parts = timeString.split(':');
     return Duration(hours: int.parse(parts[0]), minutes: int.parse(parts[1]));
   }
 }

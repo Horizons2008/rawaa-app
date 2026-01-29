@@ -33,7 +33,7 @@ class ControllerStock extends GetxController {
 
   getCat() async {
     await Constants.reposit.repGetCategorie().then((value) {
-      if (value['status'] == "success") {
+      if (value['status'] == "success12") {
         listeCat = value['data'].map<MCat>((e) => MCat.fromJson(e)).toList();
         update();
       }
@@ -50,6 +50,7 @@ class ControllerStock extends GetxController {
 
   getProduct(int id) async {
     await Constants.reposit.repGetProdByCat(id).then((value) {
+      print("ffffffffffffffffffffffffffffffffffff $value");
       if (value['status'] == "success") {
         listeProd = value['data']
             .map<MProduct>((e) => MProduct.fromJson(e))
@@ -121,6 +122,7 @@ class ControllerStock extends GetxController {
     await Constants.reposit.repGetStock(Constants.currentUser!.id).then((
       value,
     ) {
+      print("gggggggggggggggggggggggggggggggggggggggg $value");
       if (value['status'] == "success") {
         status = ListeStatus.success;
         listeStock = value['data']
@@ -133,6 +135,18 @@ class ControllerStock extends GetxController {
         update();
       }
     });
+  }
+
+  void reset() {
+    images = [];
+    selectedImage = null;
+    selectedProd = null;
+    selectedCat = null;
+    selectedStock = null;
+    priceController.clear();
+    qteController.clear();
+    descriptionController.clear();
+    update();
   }
 
   storeStock() async {
@@ -168,12 +182,13 @@ class ControllerStock extends GetxController {
         "promo": "0",
         "description": descriptionController.text,
       }, images);
-      print(value);
 
       if (value['status'] == "success") {
         statusStore = ListeStatus.success;
         Get.back();
         Constants.showSnackBar("Success", "Stock added successfully");
+        reset();
+
         getStock();
         // Clear form after success
         update();

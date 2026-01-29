@@ -34,22 +34,24 @@ class CtrlLogin extends GetxController {
       await Constants.reposit
           .checkLogin(contUsername.text, contpassword.text)
           .then((val) {
-           
             if (val["status"] == "SUCCESS") {
               status = ListeStatus.success;
               errorLogin = null;
 
-              /*  Firebase.initializeApp();
-             FirebaseMessaging.instance.getToken().then((newToken) {
+              Firebase.initializeApp();
+              FirebaseMessaging.instance.getToken().then((newToken) {
                 newToken != null
                     ? Constants.reposit
-                          .repUpdateFcmToken(newToken)
-                          .then((value) {})
+                          .repUpdateFcmToken({'fcmToken': newToken})
+                          .then((value) {
+                            print(
+                              'ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooonValue: $value',
+                            );
+                          })
                     : null;
-              });*/
+              });
               Constants.currentUser = Muser.fromJson(val["user"]);
               Constants.currentUser!.token = val["access_token"];
-              
 
               Hive.box(Constants.boxConfig).put("current_user", val);
               Hive.box(Constants.boxConfig).put("logged", true);

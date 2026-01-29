@@ -20,11 +20,11 @@ class RegistrationController extends GetxController {
   ListeStatus statusPhone = ListeStatus.none;
 
   // Form controllers
-  final nameController = TextEditingController(text: "458");
+  final nameController = TextEditingController(text: "");
   final phoneController = TextEditingController(text: "");
   final usernameController = TextEditingController(text: "");
   final passwordController = TextEditingController(text: "");
-  final adresseController = TextEditingController(text: "124");
+  final adresseController = TextEditingController(text: "");
   int typeCompte = -1;
   MWilaya? selectedWilaya;
   MCommune? selectedCommune;
@@ -51,9 +51,7 @@ class RegistrationController extends GetxController {
 
   Future<bool> checkUsername(String username) async {
     bool result = false;
-    await Constants.reposit.repCheckUsername({"username": username}).then((
-      value,
-    ) {
+    await Constants.reposit.repCheckUsername(username).then((value) {
       if (value['status'] == 'success') {
         result = true;
       } else {
@@ -86,7 +84,7 @@ class RegistrationController extends GetxController {
   }
 
   checkPhone(String phone) async {
-    var result = await Constants.reposit.repCheckPhone({"phone": phone});
+    var result = await Constants.reposit.repCheckPhone(phone);
 
     return result;
   }
@@ -134,6 +132,7 @@ class RegistrationController extends GetxController {
         }
       });
     } catch (e) {
+      print("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeee $e");
       statusWilaya = ListeStatus.error;
       update();
     }
@@ -207,7 +206,7 @@ class RegistrationController extends GetxController {
           update();
           await Constants.reposit
               .repRegister({
-                "name": nameController.text,
+                "name": 'name',
                 "phone": phoneController.text,
                 "username": usernameController.text,
                 "password": passwordController.text,
@@ -217,7 +216,7 @@ class RegistrationController extends GetxController {
                 "longitude": longitude.value,
 
                 "role": tt,
-                "address": adresseController.text,
+                "address": 'Algerie',
                 "confirmed_phone": 0,
                 "confirmed_compte": 0,
               })

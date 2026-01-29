@@ -5,6 +5,7 @@ import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:rawaa_app/controller/cart_controller.dart';
 
 import 'package:rawaa_app/model/model_pannier.dart';
+import 'package:rawaa_app/my_widgets/space_ver.dart';
 import 'package:rawaa_app/services/service_cart.dart';
 import 'package:rawaa_app/styles/constants.dart';
 
@@ -241,22 +242,15 @@ class ScreenCart extends StatelessWidget {
                     Get.find<CartController>().getCartItems();
                   },
                   borderRadius: BorderRadius.circular(20),
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.red.withOpacity(0.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      CupertinoIcons.delete,
-                      color: Colors.red,
-                      size: 18,
-                    ),
+                  child: const Icon(
+                    CupertinoIcons.clear_circled,
+                    color: Colors.red,
+                    size: 18,
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+
             Row(
               children: [
                 Icon(
@@ -287,9 +281,17 @@ class ScreenCart extends StatelessWidget {
               ],
             ),
             const Padding(
-              padding: EdgeInsets.symmetric(vertical: 12),
+              padding: EdgeInsets.symmetric(vertical: 5),
               child: Divider(height: 1, thickness: 0.5),
             ),
+            Row(
+              children: [
+                Text("${Constants.currency(item.price)} * ${item.qte} "),
+                Spacer(),
+                Text("${Constants.currency(item.price * item.qte)}"),
+              ],
+            ),
+            /*
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -302,7 +304,8 @@ class ScreenCart extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      '\$${item.price.toStringAsFixed(2)}',
+                      Constants.currency(item.price),
+
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -352,6 +355,7 @@ class ScreenCart extends StatelessWidget {
                 ),
               ],
             ),
+        */
           ],
         ),
       ),
@@ -360,14 +364,14 @@ class ScreenCart extends StatelessWidget {
 
   Widget _buildTotalSection() {
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
-            blurRadius: 20,
+            blurRadius: 16,
             offset: const Offset(0, -5),
           ),
         ],
@@ -379,23 +383,6 @@ class ScreenCart extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'product_count'.tr,
-                style: TextStyle(fontSize: 15, color: Colors.grey[600]),
-              ),
-              Text(
-                CartService.getItemCount().toString(),
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
                 'net_payer'.tr,
                 style: const TextStyle(
                   fontSize: 18,
@@ -403,19 +390,21 @@ class ScreenCart extends StatelessWidget {
                 ),
               ),
               Text(
-                '\$${CartService.getTotalPrice().toStringAsFixed(2)}',
+                Constants.currency(CartService.getTotalPrice()),
+
                 style: const TextStyle(
-                  fontSize: 24,
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: Colors.green,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 24),
+          SpaceV(h: 5),
+
           SizedBox(
             width: double.infinity,
-            height: 56,
+            height: 45,
             child: ElevatedButton(
               onPressed: () {
                 Get.dialog(

@@ -9,53 +9,66 @@ class DashboardClient extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GetBuilder<DashClientController>(
-        init: DashClientController(),
-        builder: (ctrl) {
-          return ctrl.page;
-        },
-      ),
-      bottomNavigationBar: GetBuilder<DashClientController>(
-        init: DashClientController(),
-        builder: (ctrl) {
-          return BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            items: [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.dashboard),
-                label: 'home'.tr,
+        body: GetBuilder<DashClientController>(
+          init: DashClientController(),
+          builder: (ctrl) {
+            return ctrl.page;
+          },
+        ),
+        bottomNavigationBar: GetBuilder<DashClientController>(
+          init: DashClientController(),
+          builder: (ctrl) {
+            return Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.2),
+                    blurRadius: 10,
+                    offset: Offset(0, -2),
+                  ),
+                ],
               ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.shopping_basket_rounded),
-                label: 'panier'.tr,
+              child: BottomNavigationBar(
+                type: BottomNavigationBarType.fixed,
+                backgroundColor: Colors.white,
+                selectedItemColor: Colors.green,
+                unselectedItemColor: Colors.black,
+                currentIndex: ctrl.indexPage,
+                onTap: (int index) {
+                  ctrl.changePage(index);
+                },
+                items: [
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.home),
+                    label: 'home'.tr,
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.shopping_basket_rounded),
+                    label: 'panier'.tr,
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.shopping_bag),
+                    label: 'orders'.tr,
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.school),
+                    label: 'cours'.tr,
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.message),
+                    label: 'messages'.tr,
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.settings),
+                    label: 'settings'.tr,
+                  ),
+                ],
               ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.shopping_bag),
-                label: 'orders'.tr,
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.school),
-                label: 'cours'.tr,
-              ),
-
-              BottomNavigationBarItem(
-                icon: Icon(Icons.message),
-                label: 'messages'.tr,
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.settings),
-                label: 'parametre'.tr,
-              ),
-            ],
-            currentIndex: ctrl
-                .indexPage, // You may use a stateful widget/controller to manage this
-            onTap: (int index) {
-              ctrl.changePage(index);
-              // TODO: Implement navigation to respective screens
-            },
-          );
-        },
-      ),
+            );
+          },
+        ),
+      
     );
   }
 }

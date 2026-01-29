@@ -34,6 +34,9 @@ class ChatController extends GetxController {
           .map<MMessage>((e) => MMessage.fromJson(e))
           .toList();
 
+      // Sort by time_sending (hour, minute, second) - ascending order (oldest first)
+      listeRecent.sort((a, b) => a.time.compareTo(b.time));
+
       update();
     });
   }
@@ -70,6 +73,9 @@ class ChatController extends GetxController {
       listeMessage = value['data']
           .map<MMessage>((e) => MMessage.fromJson(e))
           .toList();
+
+      // Sort by time_sending (hour, minute, second) - ascending order (oldest first)
+      listeMessage.sort((a, b) => a.time.compareTo(b.time));
 
       update();
     });

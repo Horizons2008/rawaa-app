@@ -24,6 +24,7 @@ class ScreenFormation extends StatelessWidget {
       floatingActionButton: Constants.currentUser!.role == "admin"
           ? FloatingActionButton(
               onPressed: () {
+                FormationController().resetForm();
                 Get.to(() => AddFormationScreen());
               },
               child: Icon(Icons.school_rounded),
@@ -42,18 +43,20 @@ class ScreenFormation extends StatelessWidget {
 
                       // Courses list
                       Expanded(
-                        child: ListView.builder(
-                          itemCount: ctrl.formations.length,
-                          itemBuilder: (context, index) {
-                            MFormation course = ctrl.formations[index];
+                        child: ctrl.formations.isEmpty
+                            ? Center(child: Text('Aucune formation trouvée'))
+                            : ListView.builder(
+                                itemCount: ctrl.formations.length,
+                                itemBuilder: (context, index) {
+                                  MFormation course = ctrl.formations[index];
 
-                            return CourseCard(
-                              course: course,
+                                  return CourseCard(
+                                    course: course,
 
-                              // INSERT_YOUR_CODE
-                            );
-                          },
-                        ),
+                                    // INSERT_YOUR_CODE
+                                  );
+                                },
+                              ),
                       ),
                     ],
                   ),
@@ -87,17 +90,20 @@ class CourseCard extends StatelessWidget {
                   Container(
                     height: 160,
                     width: double.infinity,
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(12),
-                        topRight: Radius.circular(12),
-                      ),
-                      image: DecorationImage(
-                        image: NetworkImage(
-                          '${Constants.photoUrl}formation/${course.id}.jpg',
-                        ),
-                        fit: BoxFit.fill,
-                      ),
+                    color: Colors.grey.withAlpha(35),
+                    child: Image.network(
+                      '${Constants.photoUrl}formation/${course.id}.jpeg',
+                      fit: BoxFit.fill,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return Center(child: CircularProgressIndicator());
+                      },
+
+                      errorBuilder: (context, error, stackTrace) {
+                        return Image.asset(
+                          'assets/images/picture_not_found.jpg',
+                        );
+                      },
                     ),
                   ),
                   Positioned(
@@ -270,7 +276,9 @@ class CourseCard extends StatelessWidget {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Constants.currentUser!.role == "client"
+                          // Show purchase button only for paid formations
+                          Constants.currentUser!.role == "client" &&
+                                  course.price > 0
                               ? InkWell(
                                   onTap: () {
                                     // INSERT_YOUR_CODE
@@ -320,143 +328,26 @@ class CourseCard extends StatelessWidget {
                                         ),
                                 )
                               : SizedBox(),
+                          Spacer(),
+                          // Playlist button for clients - show in all cases if videos exist
                           if (Constants.currentUser!.role == 'client' &&
-                              course.dejaAcheter == 'confirmed')
+                              course.playlist.isNotEmpty)
                             TextButton.icon(
                               onPressed: () {
-                                showModalBottomSheet(
-                                  context: context,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(16),
-                                    ),
-                                  ),
-                                  builder: (context) {
-                                    return Container(
-                                      padding: const EdgeInsets.all(16),
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                          0.5,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Center(
-                                            child: Container(
-                                              width: 40,
-                                              height: 4,
-                                              decoration: BoxDecoration(
-                                                color: Colors.grey[300],
-                                                borderRadius:
-                                                    BorderRadius.circular(2),
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(height: 16),
-                                          Text(
-                                            'playlist'.tr,
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 16),
-                                          Expanded(
-                                            child: course.playlist.isEmpty
-                                                ? Center(
-                                                    child: Text(
-                                                      'No videos available',
-                                                    ),
-                                                  )
-                                                : ListView.builder(
-                                                    itemCount:
-                                                        course.playlist.length,
-                                                    itemBuilder: (context, index) {
-                                                      final fileUrl = course
-                                                          .playlist[index];
-                                                      // Extract filename from URL for display
-                                                      final fileName = fileUrl
-                                                          .split('/')
-                                                          .last;
-                                                      return ListTile(
-                                                        leading: const Icon(
-                                                          Icons
-                                                              .play_circle_fill,
-                                                          color: Colors.blue,
-                                                        ),
-                                                        title: Text(fileName),
-                                                        onTap: () {
-                                                          Get.to(
-                                                            () => VideoPlayerScreen(
-                                                              videoUrl:
-                                                                  "${Constants.photoUrl}formation/documents/$fileUrl",
-                                                            ),
-                                                          );
-                                                        },
-                                                      );
-                                                    },
-                                                  ),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                );
+                                _showVideoList(context, course);
                               },
                               icon: const Icon(Icons.playlist_play),
-                              label: Text('playlist'.tr),
+                              label: Text(''),
                               style: TextButton.styleFrom(
                                 foregroundColor: Colors.purple,
                               ),
                             ),
+                          if (Constants.currentUser!.role == 'client' &&
+                              course.playlist.isNotEmpty)
+                            const SizedBox(width: 8),
                           Spacer(),
                           Constants.currentUser!.role == "admin"
-                              ? _buildActionButton(
-                                  'update'.tr,
-                                  Colors.blue,
-                                  () {
-                                    ctrl.editFormation(course);
-                                    Get.to(() => AddFormationScreen());
-                                  },
-                                )
-                              : SizedBox(),
-                          const SizedBox(width: 8),
-                          Constants.currentUser!.role == "admin"
-                              ? _buildActionButton('delete'.tr, Colors.red, () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        backgroundColor: Colors.white,
-
-                                        title: Text('confirm_deletion'.tr),
-                                        content: Text(
-                                          'confirm_delete_formation'.tr,
-                                        ),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: Text('annuler'.tr),
-                                          ),
-                                          TextButton(
-                                            onPressed: () async {
-                                              ctrl.deleteFormation(course);
-                                              // Example: ctrl.deleteFormation(id);
-                                            },
-                                            child: Text(
-                                              'supprimer'.tr,
-                                              style: TextStyle(
-                                                color: Colors.red,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                })
+                              ? _buildAdminActionButtons(context, course, ctrl)
                               : SizedBox(),
                         ],
                       ),
@@ -471,15 +362,740 @@ class CourseCard extends StatelessWidget {
     );
   }
 
+  Widget _buildAdminActionButtons(
+    BuildContext context,
+    MFormation course,
+    FormationController ctrl,
+  ) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // View Videos button
+        if (course.playlist.isNotEmpty)
+          TextButton.icon(
+            onPressed: () {
+              _showVideoList(context, course);
+            },
+            icon: const Icon(Icons.playlist_play),
+            label: Text(''),
+            style: TextButton.styleFrom(foregroundColor: Colors.purple),
+          ),
+        if (course.playlist.isNotEmpty) const SizedBox(width: 8),
+        // Update button
+        _buildActionButton('update'.tr, Colors.blue, () {
+          ctrl.editFormation(course);
+          Get.to(() => AddFormationScreen());
+        }),
+        const SizedBox(width: 8),
+        // Delete button
+        _buildActionButton('delete'.tr, Colors.red, () {
+          showDialog(
+            context: context,
+            builder: (dialogContext) {
+              return AlertDialog(
+                backgroundColor: Colors.white,
+                title: Text('confirm_deletion'.tr),
+                content: Text('confirm_delete_formation'.tr),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(dialogContext).pop();
+                    },
+                    child: Text('annuler'.tr),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      ctrl.deleteFormation(course);
+                      Navigator.of(dialogContext).pop();
+                    },
+                    child: Text(
+                      'supprimer'.tr,
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ),
+                ],
+              );
+            },
+          );
+        }),
+      ],
+    );
+  }
+
   Widget _buildActionButton(String text, Color color, VoidCallback onPressed) {
     return TextButton(
       onPressed: onPressed,
       style: TextButton.styleFrom(
         foregroundColor: color,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
       ),
-      child: Text(text, style: const TextStyle(fontWeight: FontWeight.w500)),
+      child: Text(
+        text,
+        style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 12),
+      ),
+    );
+  }
+
+  void _showPurchaseProcessingDialog(BuildContext context, MFormation course) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          title: Row(
+            children: [
+              Icon(Icons.hourglass_empty, color: Colors.orange),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  'purchase_processing_title'.tr,
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'purchase_processing_message'.tr,
+                style: TextStyle(fontSize: 14),
+              ),
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.blue[50],
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.blue[200]!),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.info_outline, color: Colors.blue[700], size: 20),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'purchase_waiting_info'.tr,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.blue[900],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+              child: Text('ok'.tr, style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showPurchaseRequiredDialog(BuildContext context, MFormation course) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          title: Row(
+            children: [
+              Icon(Icons.lock_outline, color: Colors.orange),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  'formation_paid_title'.tr,
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('formation_paid_message'.tr, style: TextStyle(fontSize: 14)),
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.orange[50],
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.orange[200]!),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.info_outline,
+                      color: Colors.orange[700],
+                      size: 20,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        '${'formation_price'.tr}: ${Constants.currency(course.price)}',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.orange[900],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                'annuler'.tr,
+                style: TextStyle(color: Colors.grey[600]),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                confirmAchat(context, course);
+              },
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+              child: Text('acheter'.tr, style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showVideoList(BuildContext context, MFormation course) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) {
+        return FutureBuilder<dynamic>(
+          future: Constants.reposit.repGetFormationPlaylist(course.id),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Container(
+                width: double.infinity,
+                height: MediaQuery.of(context).size.height * 0.7,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.blue[50],
+                        shape: BoxShape.circle,
+                      ),
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                        strokeWidth: 3,
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    Text(
+                      'loading'.tr,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+
+            if (snapshot.hasError) {
+              return Container(
+                width: double.infinity,
+                height: MediaQuery.of(context).size.height * 0.7,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+                ),
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.red[50],
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.error_outline,
+                        size: 48,
+                        color: Colors.red[600],
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    Text(
+                      'error'.tr,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey[900],
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Text(
+                        snapshot.error.toString(),
+                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+
+            List<String> playlist = [];
+            if (snapshot.hasData && snapshot.data != null) {
+              if (snapshot.data['status'] == 'success') {
+                // Handle different possible response formats
+                if (snapshot.data['playlist'] != null) {
+                  if (snapshot.data['playlist'] is List) {
+                    playlist = List<String>.from(
+                      snapshot.data['playlist'].map((item) {
+                        if (item is String) return item;
+                        if (item is Map && item['path'] != null) {
+                          return item['path'].toString();
+                        }
+                        if (item is Map && item['file_path'] != null) {
+                          return item['file_path'].toString();
+                        }
+                        return item.toString();
+                      }),
+                    );
+                  } else if (snapshot.data['playlist'] is String) {
+                    // If it's a comma-separated string
+                    playlist = snapshot.data['playlist']
+                        .split(',')
+                        .where((item) => item.trim().isNotEmpty)
+                        .toList();
+                  }
+                } else if (snapshot.data['data'] != null) {
+                  if (snapshot.data['data'] is List) {
+                    playlist = List<String>.from(
+                      snapshot.data['data'].map((item) {
+                        if (item is String) return item;
+                        if (item is Map && item['path'] != null) {
+                          return item['path'].toString();
+                        }
+                        if (item is Map && item['file_path'] != null) {
+                          return item['file_path'].toString();
+                        }
+                        return item.toString();
+                      }),
+                    );
+                  }
+                }
+              }
+            }
+
+            return Container(
+              height: MediaQuery.of(context).size.height * 0.85,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+              ),
+              child: Column(
+                children: [
+                  // Modern drag handle
+                  Padding(
+                    padding: const EdgeInsets.only(top: 12, bottom: 8),
+                    child: Center(
+                      child: Container(
+                        width: 40,
+                        height: 4,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(2),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // Modern header with gradient
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(24, 16, 24, 20),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Colors.blue[50]!, Colors.purple[50]!],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(24),
+                        topRight: Radius.circular(24),
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.05),
+                                blurRadius: 8,
+                                offset: Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Icon(
+                            Icons.playlist_play_rounded,
+                            color: Colors.blue[700],
+                            size: 28,
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'playlist'.tr,
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey[900],
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                '${playlist.length} ${playlist.length == 1 ? 'item' : 'items'}',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey[600],
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          icon: Icon(Icons.close_rounded),
+                          color: Colors.grey[600],
+                          style: IconButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            padding: EdgeInsets.all(8),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Video list
+                  Expanded(
+                    child: playlist.isEmpty
+                        ? Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(24),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[100],
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    Icons.video_library_outlined,
+                                    size: 64,
+                                    color: Colors.grey[400],
+                                  ),
+                                ),
+                                const SizedBox(height: 24),
+                                Text(
+                                  'No videos available',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Videos will appear here once added',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey[500],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        : ListView.builder(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 12,
+                            ),
+                            itemCount: playlist.length,
+                            itemBuilder: (context, index) {
+                              final fileUrl = playlist[index];
+                              // Extract filename from URL for display
+                              final fileName = fileUrl.split('/').last;
+
+                              // Check if formation is paid and not purchased/confirmed
+                              bool canPlayVideo = true;
+                              bool isFreeFormation = course.price == 0;
+
+                              if (Constants.currentUser!.role == 'client') {
+                                // If formation is free (price = 0), always allow playback
+                                if (isFreeFormation) {
+                                  canPlayVideo = true;
+                                } else {
+                                  // For paid formations, check purchase status
+                                  bool isNotPurchased =
+                                      course.dejaAcheter == "Acheter";
+                                  bool isWaiting =
+                                      course.dejaAcheter.toLowerCase() ==
+                                          "waitting" ||
+                                      course.dejaAcheter.toLowerCase() ==
+                                          "waiting";
+                                  // Can play if purchased and confirmed (not waiting)
+                                  canPlayVideo = !(isNotPurchased || isWaiting);
+                                }
+                              }
+
+                              return Container(
+                                margin: EdgeInsets.only(bottom: 12),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(
+                                    color: canPlayVideo
+                                        ? Colors.blue[100]!
+                                        : Colors.grey[200]!,
+                                    width: 1.5,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.04),
+                                      blurRadius: 8,
+                                      offset: Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    onTap: () {
+                                      if (canPlayVideo) {
+                                        print(
+                                          'fileUrl: ${Constants.photoUrl}/$fileUrl',
+                                        );
+                                        Get.to(
+                                          () => VideoPlayerScreen(
+                                            videoUrl:
+                                                "${Constants.photoUrl}/$fileUrl",
+                                          ),
+                                        );
+                                      } else {
+                                        // Check if status is waiting or not purchased
+                                        bool isWaiting =
+                                            course.dejaAcheter.toLowerCase() ==
+                                                "waitting" ||
+                                            course.dejaAcheter.toLowerCase() ==
+                                                "waiting";
+                                        if (isWaiting) {
+                                          _showPurchaseProcessingDialog(
+                                            context,
+                                            course,
+                                          );
+                                        } else {
+                                          _showPurchaseRequiredDialog(
+                                            context,
+                                            course,
+                                          );
+                                        }
+                                      }
+                                    },
+                                    borderRadius: BorderRadius.circular(16),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(16),
+                                      child: Row(
+                                        children: [
+                                          // Video number badge
+                                          Container(
+                                            width: 40,
+                                            height: 40,
+                                            decoration: BoxDecoration(
+                                              color: canPlayVideo
+                                                  ? Colors.blue[50]
+                                                  : Colors.grey[100],
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                '${index + 1}',
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: canPlayVideo
+                                                      ? Colors.blue[700]
+                                                      : Colors.grey[600],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 16),
+
+                                          // Video info
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  fileName,
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Colors.grey[900],
+                                                  ),
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                                if (!isFreeFormation &&
+                                                    !canPlayVideo) ...[
+                                                  const SizedBox(height: 4),
+                                                  Row(
+                                                    children: [
+                                                      Icon(
+                                                        course.dejaAcheter
+                                                                        .toLowerCase() ==
+                                                                    "waitting" ||
+                                                                course.dejaAcheter
+                                                                        .toLowerCase() ==
+                                                                    "waiting"
+                                                            ? Icons
+                                                                  .hourglass_empty
+                                                            : Icons.lock,
+                                                        size: 14,
+                                                        color:
+                                                            course.dejaAcheter
+                                                                        .toLowerCase() ==
+                                                                    "waitting" ||
+                                                                course.dejaAcheter
+                                                                        .toLowerCase() ==
+                                                                    "waiting"
+                                                            ? Colors.blue
+                                                            : Colors.orange,
+                                                      ),
+                                                      const SizedBox(width: 4),
+                                                      Expanded(
+                                                        child: Text(
+                                                          course.dejaAcheter
+                                                                          .toLowerCase() ==
+                                                                      "waitting" ||
+                                                                  course.dejaAcheter
+                                                                          .toLowerCase() ==
+                                                                      "waiting"
+                                                              ? 'purchase_processing_message'
+                                                                    .tr
+                                                              : 'video_locked_message'
+                                                                    .tr,
+                                                          style: TextStyle(
+                                                            fontSize: 12,
+                                                            color:
+                                                                course.dejaAcheter
+                                                                            .toLowerCase() ==
+                                                                        "waitting" ||
+                                                                    course.dejaAcheter
+                                                                            .toLowerCase() ==
+                                                                        "waiting"
+                                                                ? Colors
+                                                                      .blue[700]
+                                                                : Colors
+                                                                      .orange[700],
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                          ),
+                                                          maxLines: 1,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ],
+                                            ),
+                                          ),
+
+                                          const SizedBox(width: 12),
+
+                                          // Play/Lock icon
+                                          Container(
+                                            padding: EdgeInsets.all(10),
+                                            decoration: BoxDecoration(
+                                              color: canPlayVideo
+                                                  ? Colors.blue[50]
+                                                  : Colors.grey[100],
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            child: Icon(
+                                              isFreeFormation
+                                                  ? Icons.play_arrow_rounded
+                                                  : (canPlayVideo
+                                                        ? Icons
+                                                              .play_arrow_rounded
+                                                        : Icons.lock_outline),
+                                              color: canPlayVideo
+                                                  ? Colors.blue[700]
+                                                  : Colors.grey[600],
+                                              size: 24,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }
