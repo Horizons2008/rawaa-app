@@ -29,31 +29,39 @@ android {
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 26
-        targetSdk = flutter.targetSdkVersion
-        versionCode = flutter.versionCode
-        versionName = flutter.versionName
+        targetSdk = 35
+        versionCode = 4
+    versionName = "1.0.4"
+    }
+   
+
+   signingConfigs {
+        create("release") {
+            keyAlias = "rawaa_key"
+            keyPassword = "0231986"
+            storeFile = file("D:/rawaa-key.jks")
+            storePassword = "0231986"
+        }
     }
 
     buildTypes {
-        release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
-            isMinifyEnabled = true
-            isShrinkResources = true
+        getByName("release") {
+            signingConfig = signingConfigs.getByName("release")
+            isMinifyEnabled = false
+            isShrinkResources = false
+            // optionnel : proguard
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
         }
-        
     }
 }
 dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
     
     // Google Play Core library for deferred components
-    implementation("com.google.android.play:core:1.10.3")
+   // implementation("com.google.android.play:core:1.10.3")
 }
 
 flutter {
