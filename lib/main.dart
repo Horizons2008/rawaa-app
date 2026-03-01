@@ -20,7 +20,16 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // Initialize Firebase only if not already initialized
+  try {
+    Firebase.app(); // Check if Firebase is already initialized
+  } catch (e) {
+    // Firebase not initialized, initialize it now
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  }
   await FirebaseMessaging.instance.getToken().then((onValue) {
     log("token: $onValue");
   });

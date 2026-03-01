@@ -1,4 +1,3 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'package:flutter/material.dart';
@@ -12,8 +11,8 @@ import 'package:rawaa_app/views/dashboard/dashboard_vendeur.dart';
 import 'package:rawaa_app/views/driver/dashboard_driver.dart';
 
 class CtrlLogin extends GetxController {
-  TextEditingController contUsername = TextEditingController(text: ("admin"));
-  TextEditingController contpassword = TextEditingController(text: "010101");
+  TextEditingController contUsername = TextEditingController(text: (""));
+  TextEditingController contpassword = TextEditingController(text: "");
   GlobalKey<FormState> loginKey = GlobalKey<FormState>();
   String? errorLogin;
   bool showPassword = true;
@@ -38,7 +37,7 @@ class CtrlLogin extends GetxController {
               status = ListeStatus.success;
               errorLogin = null;
 
-              Firebase.initializeApp();
+              // Firebase is already initialized in main.dart, no need to initialize again
               FirebaseMessaging.instance.getToken().then((newToken) {
                 newToken != null
                     ? Constants.reposit

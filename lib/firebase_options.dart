@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -28,15 +25,9 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -50,19 +41,47 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyD6HJJafE40O9bM4Cv3H7j1ZguaeIij1kA',
-    appId: '1:42283865115:android:88167a4e774bd4c07494be',
-    messagingSenderId: '42283865115',
-    projectId: 'rawaa-bd3e1',
-    storageBucket: 'rawaa-bd3e1.firebasestorage.app',
+    apiKey: 'AIzaSyAv8HJWHETrUH-7NEb6d0lxVmdqAR5o5sc',
+    appId: '1:912678992613:android:7aa87368d733fbb958f20c',
+    messagingSenderId: '912678992613',
+    projectId: 'rawaa-52354',
+    storageBucket: 'rawaa-52354.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDlcXTDBSiUEwjPikU4EKZfhYhA7mdOe9I',
-    appId: '1:42283865115:ios:252dbf29897697df7494be',
-    messagingSenderId: '42283865115',
-    projectId: 'rawaa-bd3e1',
-    storageBucket: 'rawaa-bd3e1.firebasestorage.app',
+    apiKey: 'AIzaSyAlEhLv1fiXOkQIj3MketT_cVIQd7W1z4A',
+    appId: '1:912678992613:ios:efe28ed5cafd769558f20c',
+    messagingSenderId: '912678992613',
+    projectId: 'rawaa-52354',
+    storageBucket: 'rawaa-52354.firebasestorage.app',
     iosBundleId: 'com.example.rawaaApp',
   );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyAM4UilG0BDqIHWSrWQY6u5lkjK7l5t4UE',
+    appId: '1:912678992613:web:b54832ca90cede7458f20c',
+    messagingSenderId: '912678992613',
+    projectId: 'rawaa-52354',
+    authDomain: 'rawaa-52354.firebaseapp.com',
+    storageBucket: 'rawaa-52354.firebasestorage.app',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyAlEhLv1fiXOkQIj3MketT_cVIQd7W1z4A',
+    appId: '1:912678992613:ios:efe28ed5cafd769558f20c',
+    messagingSenderId: '912678992613',
+    projectId: 'rawaa-52354',
+    storageBucket: 'rawaa-52354.firebasestorage.app',
+    iosBundleId: 'com.example.rawaaApp',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyAM4UilG0BDqIHWSrWQY6u5lkjK7l5t4UE',
+    appId: '1:912678992613:web:a0f367793c09ee6758f20c',
+    messagingSenderId: '912678992613',
+    projectId: 'rawaa-52354',
+    authDomain: 'rawaa-52354.firebaseapp.com',
+    storageBucket: 'rawaa-52354.firebasestorage.app',
+  );
+
 }

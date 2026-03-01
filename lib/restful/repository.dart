@@ -278,6 +278,10 @@ class Repository {
     return await Constants.ws.get("getproductByCat/$catId", null);
   }
 
+  Future<dynamic> repGetProductsByCategory(int categorieId) async {
+    return await Constants.ws.get("products/by-category/$categorieId", null);
+  }
+
   Future<dynamic> repAddCategorie(int? id, String title, File? image) async {
     var formData;
 

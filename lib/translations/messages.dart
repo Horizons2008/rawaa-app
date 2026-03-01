@@ -36,6 +36,9 @@ class Messages extends Translations {
       'net_payer': 'Net Payer',
       'confirm_cart': 'Confirm Cart',
       'rest': 'Rest',
+      'no_products_found': 'No products found in this category',
+      'error_loading_products': 'Error loading products',
+      'retry': 'Retry',
       // stock
       'title_stock': 'Store',
       'qte': 'Qte',
@@ -507,6 +510,9 @@ class Messages extends Translations {
       //pannier
       'pannier_vide': 'Pannier Vide',
       'votre_pannier_est_vide': 'Votre pannier est vide',
+      'no_products_found': 'Aucun produit trouvé dans cette catégorie',
+      'error_loading_products': 'Erreur lors du chargement des produits',
+      'retry': 'Réessayer',
       'demmarer_achat': 'Démarrer l\'achat',
       //bottom menu
       'home': 'Accueil',
@@ -854,6 +860,9 @@ class Messages extends Translations {
       //pannier
       'pannier_vide': 'السلة فارغة ',
       'votre_pannier_est_vide': 'ليس لديك اي منتجات في السلة',
+      'no_products_found': 'لم يتم العثور على منتجات في هذه الفئة',
+      'error_loading_products': 'خطأ في تحميل المنتجات',
+      'retry': 'إعادة المحاولة',
       'demmarer_achat': 'ابدأ الشراء',
       // bottom menus
       'home': 'الرئيسية',

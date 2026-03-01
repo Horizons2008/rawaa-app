@@ -1,10 +1,10 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rawaa_app/controller/welcome_controller.dart';
+import 'package:rawaa_app/my_widgets/custom_search_bar.dart';
 import 'package:rawaa_app/styles/constants.dart';
 import 'package:rawaa_app/views/client/detail_stock.dart';
+import 'package:rawaa_app/views/client/products_by_category.dart';
 
 class ScreenWelcomClient extends StatelessWidget {
   const ScreenWelcomClient({super.key});
@@ -74,7 +74,7 @@ class ScreenWelcomClient extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 10),
 
                 // Categories section
                 Text(
@@ -89,50 +89,89 @@ class ScreenWelcomClient extends StatelessWidget {
                     separatorBuilder: (c, i) => SizedBox(width: 18),
                     itemBuilder: (context, idx) {
                       final cat = ctrl.listeCat[idx];
-                      return Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: 70,
-                            height: 70,
-                            padding: EdgeInsets.all(2),
-
-                            child: ClipOval(
-                              child: Image.network(
-                                "${Constants.photoUrl}categorie/${cat.id}.jpg",
-                                fit: BoxFit.cover,
-
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Icon(Icons.error);
-                                },
+                      return InkWell(
+                        onTap: () {
+                          Get.to(() => ProductsByCategoryScreen(category: cat));
+                        },
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              width: 70,
+                              height: 70,
+                              padding: EdgeInsets.all(2),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Colors.grey.shade300,
+                                  width: 2,
+                                ),
+                              ),
+                              child: ClipOval(
+                                child: Image.network(
+                                  "${Constants.photoUrl}categorie/${cat.id}.jpg",
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Container(
+                                      color: Colors.grey[200],
+                                      child: Icon(
+                                        Icons.category,
+                                        color: Colors.grey[600],
+                                      ),
+                                    );
+                                  },
+                                ),
                               ),
                             ),
-                          ),
-
-                          SizedBox(height: 7),
-                          Text(
-                            Constants.getTitle(cat.title, Constants.lang),
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14,
+                            SizedBox(height: 7),
+                            Text(
+                              Constants.getTitle(cat.title, Constants.lang),
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                              ),
+                              textAlign: TextAlign.center,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       );
                     },
                   ),
                 ),
-                SizedBox(height: 32),
+                SizedBox(height: 10),
 
                 // Products section
-                Text(
-                  'products'.tr,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'products'.tr,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
                 ),
-                SizedBox(height: 14),
+
+                // Search bar
+                customSearchBar(
+                  ctrl.searchController,
+                  'taper_chercher'.tr,
+                  () {
+                    ctrl.searchController.text = "";
+                    ctrl.filterProducts(ctrl.searchController.text);
+                  },
+                  (val) {
+                    ctrl.filterProducts(val);
+                  },
+                ),
+
                 GridView.builder(
                   shrinkWrap: true,
-                  itemCount: ctrl.listeStock.length,
+                  itemCount: ctrl.filteredStock.length,
                   physics: NeverScrollableScrollPhysics(),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
@@ -141,7 +180,7 @@ class ScreenWelcomClient extends StatelessWidget {
                     mainAxisSpacing: 18,
                   ),
                   itemBuilder: (context, idx) {
-                    final prod = ctrl.listeStock[idx];
+                    final prod = ctrl.filteredStock[idx];
                     return InkWell(
                       onTap: () {
                         ctrl.qte = 1;

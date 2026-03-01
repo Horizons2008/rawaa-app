@@ -37,6 +37,8 @@ class RegistrationController extends GetxController {
   var verificationId = ''.obs;
   var currentLocation = ''.obs;
   var locationPermissionGranted = false.obs;
+  var isPhoneVerified = false.obs;
+  var isVerifyingPhone = false.obs;
 
   // Location coordinates
   var latitude = 0.0.obs;
@@ -358,6 +360,20 @@ class RegistrationController extends GetxController {
     }
   }
 
+  // Format phone number with country code
+  String formatPhoneNumber(String phone) {
+    // Remove all non-digit characters
+    String cleaned = phone.replaceAll(RegExp(r'[^\d]'), '');
+    
+    // If it starts with 0, remove it
+    if (cleaned.startsWith('0')) {
+      cleaned = cleaned.substring(1);
+    }
+    
+    // Add country code +213 for Algeria
+    return '+213$cleaned';
+  }
+
   // Send OTP to phone number
   Future<void> sendOtp() async {
     if (phoneController.text.isEmpty) {
@@ -371,20 +387,41 @@ class RegistrationController extends GetxController {
       return;
     }
 
+    if (phoneController.text.length != 10) {
+      Get.snackbar(
+        'Error',
+        'Phone number must be 10 digits',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
     try {
-      isLoading.value = true;
+      isVerifyingPhone.value = true;
+      String formattedPhone = formatPhoneNumber(phoneController.text);
 
       await _auth.verifyPhoneNumber(
-        phoneNumber: phoneController.text,
+        phoneNumber: formattedPhone,
         verificationCompleted: (PhoneAuthCredential credential) async {
           print("tttttttttttttttt verification completed");
           // Auto-verification completed
           await _auth.signInWithCredential(credential);
           isOtpSent.value = true;
-          isLoading.value = false;
+          isPhoneVerified.value = true;
+          isVerifyingPhone.value = false;
+          Get.snackbar(
+            'Success',
+            'Phone number verified successfully!',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.green,
+            colorText: Colors.white,
+          );
         },
         verificationFailed: (FirebaseAuthException e) {
-          isLoading.value = false;
+          isVerifyingPhone.value = false;
+          isPhoneVerified.value = false;
           print("senttttttttttttttttt verification field ${e.message}");
           Get.snackbar(
             'Verification Failed',
@@ -395,10 +432,16 @@ class RegistrationController extends GetxController {
           );
         },
         codeSent: (String verificationId, int? resendToken) {
-          print("tttttttttttttttt  code sent");
+          print("=========================================");
+          print("OTP CODE SENT:");
+          print("Verification ID: $verificationId");
+          print("Phone Number: ${phoneController.text}");
+          print("Formatted Phone: ${formatPhoneNumber(phoneController.text)}");
+          print("Resend Token: $resendToken");
+          print("=========================================");
           this.verificationId.value = verificationId;
           isOtpSent.value = true;
-          isLoading.value = false;
+          isVerifyingPhone.value = false;
           Get.snackbar(
             'OTP Sent',
             'Verification code sent to ${phoneController.text}',
@@ -406,6 +449,8 @@ class RegistrationController extends GetxController {
             backgroundColor: Colors.green,
             colorText: Colors.white,
           );
+          // Show OTP dialog
+          _showOtpDialog();
         },
         codeAutoRetrievalTimeout: (String verificationId) {
           this.verificationId.value = verificationId;
@@ -413,7 +458,8 @@ class RegistrationController extends GetxController {
         timeout: const Duration(seconds: 60),
       );
     } catch (e) {
-      isLoading.value = false;
+      isVerifyingPhone.value = false;
+      isPhoneVerified.value = false;
       print("senttttttttttttttttt field to send otp $e");
       Get.snackbar(
         'Error',
@@ -423,6 +469,45 @@ class RegistrationController extends GetxController {
         colorText: Colors.white,
       );
     }
+  }
+
+  // Show OTP verification dialog
+  void _showOtpDialog() {
+    Get.dialog(
+      AlertDialog(
+        title: Text('Verify Phone Number'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('Enter the OTP sent to ${phoneController.text}'),
+            SizedBox(height: 16),
+            TextField(
+              controller: otpController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                labelText: 'OTP Code',
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Get.back();
+              otpController.clear();
+            },
+            child: Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              verifyOtp();
+            },
+            child: Text('Verify'),
+          ),
+        ],
+      ),
+    );
   }
 
   // Verify OTP
@@ -438,17 +523,119 @@ class RegistrationController extends GetxController {
       return;
     }
 
+    // Validate verification ID exists
+    if (verificationId.value.isEmpty) {
+      Get.snackbar(
+        'Error',
+        'Verification session expired. Please request a new OTP.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
     try {
       isLoading.value = true;
 
+      // Trim whitespace and get the OTP code
+      String enteredOtp = otpController.text.trim();
+      String formattedPhone = formatPhoneNumber(phoneController.text);
+      
+      // Log for debugging
+      print("=========================================");
+      print("OTP VERIFICATION DEBUG:");
+      print("Entered OTP Code: '$enteredOtp'");
+      print("OTP Code Length: ${enteredOtp.length}");
+      print("Verification ID: ${verificationId.value}");
+      print("Phone Number: ${phoneController.text}");
+      print("Formatted Phone: $formattedPhone");
+      print("=========================================");
+
+      // Sign out any existing user to prevent false positives
+      User? existingUser = _auth.currentUser;
+      if (existingUser != null) {
+        print("Signing out existing user before verification...");
+        await _auth.signOut();
+        await Future.delayed(Duration(milliseconds: 200));
+      }
+
       PhoneAuthCredential credential = PhoneAuthProvider.credential(
         verificationId: verificationId.value,
-        smsCode: otpController.text,
+        smsCode: enteredOtp,
       );
 
-      await _auth.signInWithCredential(credential);
+      print("Attempting to verify with credential...");
+      
+      User? verifiedUser;
+      
+      try {
+        UserCredential userCredential = await _auth.signInWithCredential(credential);
+        verifiedUser = userCredential.user;
+        print("✓ OTP Verification SUCCESS!");
+      } catch (signInError) {
+        // Check if this is the known type casting error
+        String errorStr = signInError.toString();
+        if (errorStr.contains('PigeonUserDetails') || 
+            errorStr.contains('type \'List<Object?>\' is not a subtype')) {
+          print("Known Firebase plugin bug detected, checking user state...");
+          
+          // Wait for Firebase to process
+          await Future.delayed(Duration(milliseconds: 500));
+          
+          // Get current user after error
+          verifiedUser = _auth.currentUser;
+          if (verifiedUser == null) {
+            print("✗ No user signed in after plugin bug");
+            throw FirebaseAuthException(
+              code: 'invalid-verification-code',
+              message: 'Verification failed',
+            );
+          }
+          print("✓ User found after plugin bug - will verify phone number");
+        } else {
+          // Real error - rethrow
+          rethrow;
+        }
+      }
+      
+      // Verify user is signed in
+      if (verifiedUser == null) {
+        throw Exception("User not signed in after verification");
+      }
+      
+      // CRITICAL: Verify phone number matches
+      String? verifiedPhone = verifiedUser.phoneNumber;
+      if (verifiedPhone == null) {
+        await _auth.signOut();
+        throw Exception("Phone number not found in verified user");
+      }
+      
+      // Normalize phone numbers for comparison
+      String normalizedVerified = verifiedPhone.replaceAll(' ', '').replaceAll('-', '');
+      String normalizedExpected = formattedPhone.replaceAll(' ', '').replaceAll('-', '');
+      
+      if (normalizedVerified != normalizedExpected) {
+        print("✗ PHONE NUMBER MISMATCH:");
+        print("  Verified: $normalizedVerified");
+        print("  Expected: $normalizedExpected");
+        await _auth.signOut();
+        throw FirebaseAuthException(
+          code: 'invalid-verification-code',
+          message: 'Phone number does not match',
+        );
+      }
+      
+      print("✓ Final verification - User signed in:");
+      print("  User ID: ${verifiedUser.uid}");
+      print("  Phone: ${verifiedPhone}");
+      print("  Phone matches: ✓");
 
-      // Registration successful
+      // Phone verified successfully
+      isPhoneVerified.value = true;
+      isLoading.value = false;
+      Get.back(); // Close OTP dialog
+      
       Get.snackbar(
         'Success',
         'Phone number verified successfully!',
@@ -456,17 +643,50 @@ class RegistrationController extends GetxController {
         backgroundColor: Colors.green,
         colorText: Colors.white,
       );
-
-      // Navigate to next screen or complete registration
-      // Get.offNamed('/dashboard'); // Uncomment when ready to navigate
     } catch (e) {
       isLoading.value = false;
+      isPhoneVerified.value = false;
+      
+      // Sign out on error to prevent false positives
+      try {
+        User? errorUser = _auth.currentUser;
+        if (errorUser != null) {
+          await _auth.signOut();
+        }
+      } catch (signOutError) {
+        print("Error signing out: $signOutError");
+      }
+      
+      // Detailed error logging
+      print("=========================================");
+      print("OTP VERIFICATION ERROR:");
+      print("Entered OTP: '${otpController.text.trim()}'");
+      print("Error Type: ${e.runtimeType}");
+      print("Error Message: ${e.toString()}");
+      if (e is FirebaseAuthException) {
+        print("Firebase Error Code: ${e.code}");
+        print("Firebase Error Message: ${e.message}");
+      }
+      print("=========================================");
+      
+      String errorMessage = 'Invalid OTP. Please try again.';
+      if (e is FirebaseAuthException) {
+        if (e.code == 'invalid-verification-code') {
+          errorMessage = 'Invalid verification code. Please check the code and try again.';
+        } else if (e.code == 'session-expired') {
+          errorMessage = 'Verification session expired. Please request a new code.';
+        } else {
+          errorMessage = 'Error: ${e.message ?? e.code}';
+        }
+      }
+      
       Get.snackbar(
         'Verification Failed',
-        'Invalid OTP. Please try again.',
+        errorMessage,
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
         colorText: Colors.white,
+        duration: Duration(seconds: 4),
       );
     }
   }

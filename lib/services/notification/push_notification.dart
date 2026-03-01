@@ -30,7 +30,17 @@ class PushNotificationServices {
   static void saveNotification(String? title, String? body) {}
 
   static Future<void> handlerBackground(RemoteMessage message) async {
-    await Firebase.initializeApp();
+    // Initialize Firebase only if not already initialized (background handler runs in separate isolate)
+    try {
+      await Firebase.initializeApp();
+    } catch (e) {
+      // Firebase already initialized, ignore the error
+      if (e.toString().contains('duplicate-app')) {
+        print('Firebase already initialized in background handler');
+      } else {
+        rethrow;
+      }
+    }
     print("BaCKGROUND NOTIFICATION 123................................");
 
     await Hive.initFlutter();

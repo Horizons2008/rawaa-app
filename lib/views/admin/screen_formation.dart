@@ -946,6 +946,45 @@ class CourseCard extends StatelessWidget {
                                       padding: const EdgeInsets.all(16),
                                       child: Row(
                                         children: [
+                                          // Video thumbnail image
+                                          ClipRRect(
+                                            borderRadius: BorderRadius.circular(10),
+                                            child: Container(
+                                              width: 80,
+                                              height: 60,
+                                              color: Colors.grey[200],
+                                              child: Image.network(
+                                                '${Constants.photoUrl}formation/${course.id}_${index + 1}.jpg',
+                                                fit: BoxFit.cover,
+                                                errorBuilder: (context, error, stackTrace) {
+                                                  return Container(
+                                                    color: Colors.grey[300],
+                                                    child: Icon(
+                                                      Icons.video_library,
+                                                      size: 30,
+                                                      color: Colors.grey[600],
+                                                    ),
+                                                  );
+                                                },
+                                                loadingBuilder: (context, child, loadingProgress) {
+                                                  if (loadingProgress == null) return child;
+                                                  return Container(
+                                                    color: Colors.grey[200],
+                                                    child: Center(
+                                                      child: CircularProgressIndicator(
+                                                        strokeWidth: 2,
+                                                        value: loadingProgress.expectedTotalBytes != null
+                                                            ? loadingProgress.cumulativeBytesLoaded /
+                                                                loadingProgress.expectedTotalBytes!
+                                                            : null,
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 12),
                                           // Video number badge
                                           Container(
                                             width: 40,

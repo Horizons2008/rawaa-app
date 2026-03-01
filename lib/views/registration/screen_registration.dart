@@ -85,13 +85,91 @@ class ScreenRegistration extends StatelessWidget {
                           return null;
                         },
                         onChange: (value) {
+                          controller.update();
                           // Trigger async phone validation when user stops typing
                           if (value.isNotEmpty && value.length >= 10) {
-                            if (controller.phoneController.text == value) {
+                            Future.delayed(Duration(milliseconds: 500), () {
+                              if (controller.phoneController.text == value) {
                                 controller.validatePhoneAsync(value);
                               }
-                            
+                            });
+                          } else {
+                            // Reset verification status if phone number changes
+                            controller.isPhoneVerified.value = false;
+                            controller.isOtpSent.value = false;
                           }
+                        },
+                      ),
+                      SpaceV(h: 5),
+                      
+                      // Firebase Phone Verification Button
+                      GetBuilder<RegistrationController>(
+                        builder: (controller) {
+                          final phoneLength = controller.phoneController.text.length;
+                          final showVerifyButton = phoneLength == 10 && !controller.isPhoneVerified.value;
+                          
+                          if (showVerifyButton) {
+                            return Obx(
+                              () => Container(
+                                width: double.infinity,
+                                margin: EdgeInsets.only(bottom: 8),
+                                child: ElevatedButton.icon(
+                                  onPressed: controller.isVerifyingPhone.value
+                                      ? null
+                                      : () {
+                                          controller.sendOtp();
+                                        },
+                                  icon: controller.isVerifyingPhone.value
+                                      ? SizedBox(
+                                          width: 16,
+                                          height: 16,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                          ),
+                                        )
+                                      : Icon(Icons.verified_user),
+                                  label: Text(
+                                    controller.isVerifyingPhone.value
+                                        ? 'Sending OTP...'
+                                        : 'Verify Phone Number',
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.blue,
+                                    foregroundColor: Colors.white,
+                                    padding: EdgeInsets.symmetric(vertical: 12),
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+                          
+                          // Show verified status
+                          if (controller.isPhoneVerified.value) {
+                            return Container(
+                              padding: EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: Colors.green[50],
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(color: Colors.green),
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.check_circle, color: Colors.green, size: 20),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    'Phone number verified',
+                                    style: TextStyle(
+                                      color: Colors.green[700],
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                          
+                          return Container();
                         },
                       ),
                       SpaceV(h: 5),
@@ -268,7 +346,6 @@ class ScreenRegistration extends StatelessWidget {
                         validation: (p0) {
                           if (p0!.isEmpty) {
                             return "champ_obligatoire".tr;
-                            ;
                           } else if (p0.length < 6) {
                             return "Le mot de passe  doit contenir au moins 6 caractères";
                           } else {
