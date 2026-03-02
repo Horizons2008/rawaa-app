@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class MClient {
   late final int id;
   late final int userId;
@@ -23,15 +25,17 @@ class MClient {
 
   //from json
   MClient.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    userId = json['user_id'];
+    id = json['id'] ?? 0;
+    userId = json['user_id'] ?? 0;
 
-    name = json['name'];
-    commune = json['commune']['title'];
-    wilaya = json['wilaya']['title'];
-    phone = json['phone'];
-    status = json['status'];
-    username = json['user']['username'];
+    name = json['name']?.toString() ?? "";
+    commune = json['commune'] != null
+        ? jsonEncode(json['commune']['title'])
+        : "";
+    wilaya = json['wilaya'] != null ? jsonEncode(json['wilaya']['title']) : "";
+    phone = json['phone']?.toString() ?? "";
+    status = json['status']?.toString() ?? "";
+    username = json['user']?['username']?.toString() ?? "";
   }
 
   //to json

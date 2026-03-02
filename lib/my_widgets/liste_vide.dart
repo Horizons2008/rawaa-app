@@ -6,6 +6,6 @@ class ListeVide extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(child: Center(child: Text("liste_vide".tr)));
+    return Center(child: Text("liste_vide".tr));
   }
 }

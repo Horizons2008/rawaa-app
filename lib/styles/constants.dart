@@ -38,10 +38,10 @@ abstract class Constants {
 
   Color secondaryColor = Colors.green.shade400;
 
-  //static final String baseUrl = "http://10.142.248.135:8000";
-  //static final String photoUrl = "http://10.142.248.135:8000/storage/";
-   static final String baseUrl = "https://rawaa-dz.com";
-  static final String photoUrl = "https://rawaa-dz.com/storage/";
+  static final String baseUrl = "http://192.168.1.5:8000";
+  static final String photoUrl = "http://192.168.1.5:8000/storage/";
+  // static final String baseUrl = "https://rawaa-dz.com";
+  // static final String photoUrl = "https://rawaa-dz.com/storage/";
 
   static final String prefixe = "api";
   static WebService ws = WebService();

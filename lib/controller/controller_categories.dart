@@ -46,6 +46,7 @@ class ControllerCategories extends GetxController {
   }
 
   Future<void> fetchCategories() async {
+    print("rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrfetchCategories");
     try {
       status = ListeStatus.loading;
       update();

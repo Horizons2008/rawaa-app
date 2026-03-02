@@ -38,6 +38,7 @@ typeRequest == 1
   void onResponse(Response response, ResponseInterceptorHandler handler) {
     // TODO: implement onResponse
     super.onResponse(response, handler);
+    print("rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrresponse ${response.data}");
   }
 
   void onError(DioException err, ErrorInterceptorHandler handler) {
