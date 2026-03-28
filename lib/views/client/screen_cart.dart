@@ -415,29 +415,44 @@ class ScreenCart extends StatelessWidget {
                     title: Text('title_livraison'.tr),
                     content: Text('content_livraison'.tr),
                     actions: [
-                      TextButton(
-                        style: TextButton.styleFrom(
-                          foregroundColor: Colors.black,
-                          backgroundColor: Colors.grey[200],
-                        ),
-                        onPressed: () {
-                          Navigator.of(Get.overlayContext!).pop();
-                          CartController ctrl = Get.find();
-                          ctrl.sendORder(false);
-                        },
-                        child: Text('cancel_livraison'.tr),
-                      ),
-                      ElevatedButton(
-                        style: TextButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          backgroundColor: Colors.green,
-                        ),
-                        onPressed: () {
-                          Navigator.of(Get.overlayContext!).pop();
-                          CartController ctrl = Get.find();
-                          ctrl.sendORder(true);
-                        },
-                        child: Text('confirm_livraison'.tr),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextButton(
+                              style: TextButton.styleFrom(
+                                foregroundColor: Colors.black,
+                                backgroundColor: Colors.grey[200],
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.of(Get.overlayContext!).pop();
+                                CartController ctrl = Get.find();
+                                ctrl.sendORder(false);
+                              },
+                              child: Text('cancel_livraison'.tr),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: ElevatedButton(
+                              style: TextButton.styleFrom(
+                                foregroundColor: Colors.white,
+                                backgroundColor: Colors.green,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.of(Get.overlayContext!).pop();
+                                CartController ctrl = Get.find();
+                                ctrl.sendORder(true);
+                              },
+                              child: Text('confirm_livraison'.tr),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),

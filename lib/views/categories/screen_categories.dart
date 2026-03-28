@@ -153,7 +153,9 @@ class _ScreenCategorieState extends State<ScreenCategorie> {
               contentPadding: const EdgeInsets.all(20),
               leading: ClipOval(
                 child: Image.network(
-                  "${Constants.photoUrl}categorie/${item.id}.jpg",
+                  item.image != null && item.image!.isNotEmpty
+                      ? "${Constants.photoUrl}categorie/${item.image}"
+                      : "${Constants.photoUrl}categorie/${item.id}.jpg",
                   width: 60,
                   height: 60,
                   fit: BoxFit.cover,
@@ -255,7 +257,10 @@ class _ScreenCategorieState extends State<ScreenCategorie> {
                 top: Radius.circular(15),
               ),
               child: Image.network(
-                "${Constants.photoUrl}categorie/${ctrl.listFilted[index].id}.jpg",
+                ctrl.listFilted[index].image != null &&
+                        ctrl.listFilted[index].image!.isNotEmpty
+                    ? "${Constants.photoUrl}categorie/${ctrl.listFilted[index].image}"
+                    : "${Constants.photoUrl}categorie/${ctrl.listFilted[index].id}.jpg",
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
                   return Container(

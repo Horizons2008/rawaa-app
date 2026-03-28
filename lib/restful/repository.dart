@@ -123,7 +123,11 @@ class Repository {
     return await Constants.ws.post("order", data);
   }
 
-  Future<dynamic> repStoreStock(var data, List<File> imageList) async {
+  Future<dynamic> repStoreStock(
+    var data,
+    List<File> imageList, {
+    File? ficheTechnique,
+  }) async {
     // Create FormData
     FormData formData = FormData();
 
@@ -148,19 +152,39 @@ class Repository {
       }
     }
 
+    if (ficheTechnique != null) {
+      String fileName = ficheTechnique.path.split(RegExp(r'[/\\]')).last;
+      String extension = fileName.split('.').last.toLowerCase();
+      String type = (extension == 'pdf') ? 'pdf' : 'image';
+      String subtype = (extension == 'pdf') ? 'pdf' : extension;
+      if (subtype == 'jpg') subtype = 'jpeg';
+
+      formData.files.add(
+        MapEntry(
+          'fiche_technique',
+          await MultipartFile.fromFile(
+            ficheTechnique.path,
+            filename: fileName,
+            contentType: DioMediaType(type, subtype),
+          ),
+        ),
+      );
+    }
+
     return await Constants.ws.post("stock", formData);
   }
 
   Future<dynamic> repUpdateProfile(var data, File? image) async {
     if (image != null) {
+      String fileName = image.path.split(RegExp(r'[/\\]')).last;
+      String extension = fileName.split('.').last.toLowerCase();
+      String type = (extension == 'png') ? 'png' : 'jpeg';
+
       FormData formData = FormData.fromMap({
         "image": await MultipartFile.fromFile(
           image.path,
-          filename: 'image.jpg', // or get from file
-          contentType: DioMediaType(
-            'image',
-            'jpeg',
-          ), // adjust based on your file type
+          filename: fileName,
+          contentType: DioMediaType('image', type),
         ),
       });
       if (data is Map<String, dynamic>) {
@@ -282,27 +306,30 @@ class Repository {
     return await Constants.ws.get("products/by-category/$categorieId", null);
   }
 
-  Future<dynamic> repAddCategorie(int? id, String title, File? image) async {
-    var formData;
+  Future<dynamic> repGetStockByProduct(int productId) async {
+    return await Constants.ws.get("getstockByProduct/$productId", null);
+  }
 
-    image != null
-        ? {
-            formData = FormData.fromMap({
-              "id": id,
-              "title": title,
-              "image": await MultipartFile.fromFile(
-                image.path,
-                filename: 'image.jpg', // or get from file
-                contentType: DioMediaType(
-                  'image',
-                  'jpeg',
-                ), // adjust based on your file type
-              ),
-            }),
-          }
-        : {
-            formData = {"id": id, "title": title},
-          };
+  Future<dynamic> repAddCategorie(int? id, String title, File? image) async {
+    dynamic formData;
+
+    if (image != null) {
+      String fileName = image.path.split(RegExp(r'[/\\]')).last;
+      String extension = fileName.split('.').last.toLowerCase();
+
+      formData = FormData.fromMap({
+        "id": id,
+        "title": title,
+        "image": await MultipartFile.fromFile(
+          image.path,
+          filename: fileName,
+          contentType: DioMediaType('image', extension),
+        ),
+      });
+    } else {
+      formData = {"id": id, "title": title};
+    }
+
     return await Constants.ws.post("categorie", formData);
   }
 
@@ -314,11 +341,11 @@ class Repository {
     var formData = FormData.fromMap({
       "image": await MultipartFile.fromFile(
         image.path,
-        filename: 'image.jpg', // or get from file
+        filename: image.path.split(RegExp(r'[/\\]')).last,
         contentType: DioMediaType(
           'image',
-          'jpeg',
-        ), // adjust based on your file type
+          image.path.split('.').last.toLowerCase() == 'png' ? 'png' : 'jpeg',
+        ),
       ),
     });
     print("ddddddddddddddddddddddddddddddddate $data");

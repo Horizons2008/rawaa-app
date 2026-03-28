@@ -27,6 +27,7 @@ class MAchat {
   late final String titleFormation;
   late final double price;
   late final String status;
+  late final String? image;
   late final DateTime date;
 
   MAchat({
@@ -51,6 +52,7 @@ class MAchat {
     titleFormation = json['formation']['title'];
     price = double.parse(json['price']);
     status = json['status'];
+    image = json['image'];
     date = DateTime.parse(json['date']);
   }
 }

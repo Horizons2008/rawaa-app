@@ -198,6 +198,71 @@ class AddStock extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 20),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "fiche_technique".tr,
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey[800],
+                  ),
+                ),
+              ),
+              SizedBox(height: 8),
+              GestureDetector(
+                onTap: () => ctrl.pickFicheTechnique(),
+                child: Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[100],
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: ctrl.selectedFicheTechnique != null
+                          ? Colors.green
+                          : Colors.grey.shade400,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        ctrl.selectedFicheTechnique != null
+                            ? Icons.description
+                            : Icons.upload_file,
+                        color: ctrl.selectedFicheTechnique != null
+                            ? Colors.green
+                            : Colors.grey,
+                      ),
+                      SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          ctrl.selectedFicheTechnique != null
+                              ? ctrl.selectedFicheTechnique!.path
+                                    .split('/')
+                                    .last
+                              : "upload_fiche_technique".tr,
+                          style: TextStyle(
+                            color: ctrl.selectedFicheTechnique != null
+                                ? Colors.black
+                                : Colors.grey,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      if (ctrl.selectedFicheTechnique != null)
+                        GestureDetector(
+                          onTap: () {
+                            ctrl.selectedFicheTechnique = null;
+                            ctrl.update();
+                          },
+                          child: Icon(Icons.cancel, color: Colors.red),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: 20),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(

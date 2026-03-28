@@ -51,7 +51,9 @@ class DisplayGrid extends StatelessWidget {
                 child: CircleAvatar(
                   radius: 40,
                   backgroundImage: NetworkImage(
-                    "${Constants.photoUrl}users/${item.userId}.jpg",
+                    item.image != null && item.image!.isNotEmpty
+                        ? "${Constants.photoUrl}users/${item.image}"
+                        : "${Constants.photoUrl}users/${item.userId}.jpg",
                   ),
                   onBackgroundImageError: (exception, stackTrace) {},
                   child: item.username.isNotEmpty

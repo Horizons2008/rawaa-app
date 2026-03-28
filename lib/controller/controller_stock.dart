@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,6 +16,7 @@ class ControllerStock extends GetxController {
   ListeStatus statusProd = ListeStatus.none;
   ListeStatus statusStore = ListeStatus.none;
   File? selectedImage;
+  File? selectedFicheTechnique;
   final ImagePicker _picker = ImagePicker();
 
   List<MStock> listeStock = <MStock>[];
@@ -33,7 +35,7 @@ class ControllerStock extends GetxController {
 
   getCat() async {
     await Constants.reposit.repGetCategorie().then((value) {
-      if (value['status'] == "success12") {
+      if (value['status'] == "success") {
         listeCat = value['data'].map<MCat>((e) => MCat.fromJson(e)).toList();
         update();
       }
@@ -86,6 +88,20 @@ class ControllerStock extends GetxController {
       }
     }
 
+    if (stock.ficheTechniquePath != null &&
+        stock.ficheTechniquePath!.isNotEmpty) {
+      try {
+        var url =
+            "${Constants.photoUrl}stock/fiches/${stock.ficheTechniquePath}";
+        var tempDir = Directory.systemTemp;
+        var tempPath = '${tempDir.path}/${stock.ficheTechniquePath}';
+        await Dio().download(url, tempPath);
+        selectedFicheTechnique = File(tempPath);
+      } catch (e) {
+        print("Error downloading fiche technique: $e");
+      }
+    }
+
     update();
   }
 
@@ -107,6 +123,28 @@ class ControllerStock extends GetxController {
       Get.snackbar(
         'Error',
         'Failed to pick image: ${e.toString()}',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
+  }
+
+  Future<void> pickFicheTechnique() async {
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['pdf', 'jpg', 'jpeg', 'png'],
+      );
+
+      if (result != null) {
+        selectedFicheTechnique = File(result.files.single.path!);
+        update();
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Failed to pick file: ${e.toString()}',
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
         colorText: Colors.white,
@@ -143,6 +181,7 @@ class ControllerStock extends GetxController {
     selectedProd = null;
     selectedCat = null;
     selectedStock = null;
+    selectedFicheTechnique = null;
     priceController.clear();
     qteController.clear();
     descriptionController.clear();
@@ -173,15 +212,19 @@ class ControllerStock extends GetxController {
     update();
 
     try {
-      final value = await Constants.reposit.repStoreStock({
-        "id": selectedStock?.id,
-        "product_id": selectedProd!.id,
-        "vendeur_id": Constants.currentUser!.id,
-        "price": priceController.text,
-        "qte": qteController.text,
-        "promo": "0",
-        "description": descriptionController.text,
-      }, images);
+      final value = await Constants.reposit.repStoreStock(
+        {
+          "id": selectedStock?.id,
+          "product_id": selectedProd!.id,
+          "vendeur_id": Constants.currentUser!.id,
+          "price": priceController.text,
+          "qte": qteController.text,
+          "promo": "0",
+          "description": descriptionController.text,
+        },
+        images,
+        ficheTechnique: selectedFicheTechnique,
+      );
 
       if (value['status'] == "success") {
         statusStore = ListeStatus.success;

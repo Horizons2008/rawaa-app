@@ -10,10 +10,15 @@ class MStock {
   late final String catId;
   late final String vendeurId;
   late final String vendeurName;
+  late final String? vendeurPhone;
+  late final dynamic vendeurWilaya; // JSON map {ar, fr, en} or null
+  late final dynamic vendeurCommune; // JSON map {ar, fr, en} or null
+  late final String? vendeurPicture; // full URL or null
   late final double qte;
   late final double price;
   late final String description;
   late final List<String> images;
+  late final String? ficheTechniquePath;
 
   MStock({
     required this.id,
@@ -25,9 +30,14 @@ class MStock {
 
     required this.vendeurId,
     required this.vendeurName,
+    this.vendeurPhone,
+    this.vendeurWilaya,
+    this.vendeurCommune,
+    this.vendeurPicture,
     required this.qte,
     required this.price,
     required this.images,
+    this.ficheTechniquePath,
   });
 
   MStock.fromJson(Map<String, dynamic> json) {
@@ -38,14 +48,18 @@ class MStock {
     catId = json['categorie_id'].toString();
 
     vendeurId = json['vendeur_id'].toString();
-    vendeurName = json['vendeur_name'];
+    vendeurName = json['vendeur_name'] ?? '';
+    vendeurPhone = json['vendeur_phone'];
+    vendeurWilaya = json['vendeur_wilaya']; // raw map from API
+    vendeurCommune = json['vendeur_commune']; // raw map from API
+    vendeurPicture = json['vendeur_picture'];
     qte = json['qte'] * 1.0;
     price = json['price'] * 1.0;
     description = json['description'];
     images = List<String>.from(
       json['images'].split(',').map((e) => e.trim()).toList(),
     );
-    ;
+    ficheTechniquePath = json['fiche_technique_path'];
   }
 
   Map<String, dynamic> toJson() {

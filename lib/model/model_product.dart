@@ -22,7 +22,7 @@ class MProduct {
 
     title = jsonEncode(json['title']);
     categorieId = json['categorie_id'];
-    categorieTitle = json['categorie_title'].toString();
+    categorieTitle = jsonEncode(json['categorie_title']);
   }
 
   //to json

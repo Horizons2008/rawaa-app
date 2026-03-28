@@ -123,8 +123,9 @@ class PurchaseRequestsScreen extends StatelessWidget {
             onTap: () {
               Get.to(
                 () => ImageEditorScreen(
-                  imageUrl:
-                      "${Constants.photoUrl}recus_payement/${request.id}.jpg",
+                  imageUrl: request.image != null && request.image!.isNotEmpty
+                      ? "${Constants.photoUrl}recus_payement/${request.image}"
+                      : "${Constants.photoUrl}recus_payement/${request.id}.jpg",
                   heroTag: 'receipt_${request.id}',
                 ),
               );
@@ -142,7 +143,9 @@ class PurchaseRequestsScreen extends StatelessWidget {
                   ),
                   image: DecorationImage(
                     image: NetworkImage(
-                      "${Constants.photoUrl}recus_payement/${request.id}.jpg",
+                      request.image != null && request.image!.isNotEmpty
+                          ? "${Constants.photoUrl}recus_payement/${request.image}"
+                          : "${Constants.photoUrl}recus_payement/${request.id}.jpg",
                     ),
                     fit: BoxFit.fill,
                     colorFilter: ColorFilter.mode(

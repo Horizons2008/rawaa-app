@@ -182,6 +182,13 @@ class SettingsController extends GetxController {
           print("response update profile : $value");
           if (value['status'] == 'success') {
             Constants.currentUser?.name = nameController.text;
+            if (value['data'] != null && value['data']['image'] != null) {
+              Constants.currentUser?.image = value['data']['image'];
+            }
+            if (profileImagePath.isNotEmpty) {
+              Constants.profileImageVer =
+                  "?v=${DateTime.now().millisecondsSinceEpoch}";
+            }
             //Hive.box(Constants.boxConfig,
             //        ).put(("current_user")['user'],value['user']);
             Get.back();

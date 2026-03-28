@@ -81,7 +81,10 @@ class AddCategorie extends StatelessWidget {
                           )
                         : selectedCat != null
                         ? Image.network(
-                            '${Constants.photoUrl}categorie/${selectedCat?.id}.jpg',
+                            selectedCat?.image != null &&
+                                    selectedCat!.image!.isNotEmpty
+                                ? '${Constants.photoUrl}categorie/${selectedCat?.image}'
+                                : '${Constants.photoUrl}categorie/${selectedCat?.id}.jpg',
                             errorBuilder: (context, error, stackTrace) {
                               return Center(child: Icon(Icons.error));
                             },

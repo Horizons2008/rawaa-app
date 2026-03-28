@@ -105,7 +105,10 @@ class EditProfileScreen extends StatelessWidget {
                       )
                     : ClipOval(
                         child: Image.network(
-                          "${Constants.photoUrl}/users/${Constants.currentUser!.id}.jpg",
+                          Constants.currentUser!.image != null &&
+                                  Constants.currentUser!.image!.isNotEmpty
+                              ? "${Constants.photoUrl}users/${Constants.currentUser!.image}${Constants.profileImageVer}"
+                              : "${Constants.photoUrl}users/${Constants.currentUser!.id}.jpg${Constants.profileImageVer}",
                           width: 150,
                           height: 150,
 

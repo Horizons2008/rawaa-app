@@ -49,7 +49,7 @@ class ScreenSettings extends StatelessWidget {
                 onTap: () {
                   showModalBottomSheet(
                     context: context,
-                     isScrollControlled: true, 
+                    isScrollControlled: true,
                     builder: (context) {
                       return ChangePassword();
                     },
@@ -100,8 +100,10 @@ class ScreenSettings extends StatelessWidget {
 
             child: ClipOval(
               child: Image.network(
-                "${Constants.photoUrl}/users/${Constants.currentUser!.id}.jpg",
-
+                Constants.currentUser!.image != null &&
+                        Constants.currentUser!.image!.isNotEmpty
+                    ? "${Constants.photoUrl}users/${Constants.currentUser!.image}${Constants.profileImageVer}"
+                    : "${Constants.photoUrl}users/${Constants.currentUser!.id}.jpg${Constants.profileImageVer}",
                 fit: BoxFit.fill,
                 errorBuilder: (context, error, stackTrace) {
                   return const Icon(Icons.person, size: 40, color: Colors.blue);

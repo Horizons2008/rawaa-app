@@ -11,6 +11,7 @@ class MClient {
   late final String wilaya;
 
   late final String status;
+  late final String? image;
 
   MClient({
     required this.id,
@@ -36,6 +37,7 @@ class MClient {
     phone = json['phone']?.toString() ?? "";
     status = json['status']?.toString() ?? "";
     username = json['user']?['username']?.toString() ?? "";
+    image = json['user']?['image']?.toString();
   }
 
   //to json

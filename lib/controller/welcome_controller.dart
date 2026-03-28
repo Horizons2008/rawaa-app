@@ -12,6 +12,8 @@ class WelcomeClientController extends GetxController {
   List<MStock> listeStock = [];
   List<MStock> filteredStock = [];
   List<MProduct> listeProduct = [];
+  List<MProduct> filteredProduct = [];
+  List<MStock> listeStockByProduct = [];
   double qte = 1;
   double total = 0;
   ListeStatus status = ListeStatus.none;
@@ -120,6 +122,7 @@ class WelcomeClientController extends GetxController {
           listeProduct = (dataList as List)
               .map<MProduct>((e) => MProduct.fromJson(e))
               .toList();
+          filteredProduct = List.from(listeProduct);
           status = ListeStatus.success;
         } catch (parseError) {
           print('Error parsing product data: $parseError');
@@ -136,6 +139,42 @@ class WelcomeClientController extends GetxController {
       status = ListeStatus.error;
     } finally {
       isFetching = false;
+      update();
+    }
+  }
+
+  void filterProductsByCategory(String query) {
+    if (query.isEmpty) {
+      filteredProduct = List.from(listeProduct);
+    } else {
+      filteredProduct = listeProduct.where((product) {
+        final title = Constants.getTitle(
+          product.title,
+          Constants.lang,
+        ).toLowerCase();
+        final searchQuery = query.toLowerCase();
+        return title.contains(searchQuery);
+      }).toList();
+    }
+    update();
+  }
+
+  getStockByProduct(int productId) async {
+    status = ListeStatus.loading;
+    update();
+    try {
+      final value = await Constants.reposit.repGetStockByProduct(productId);
+      if (value['status'] == "success") {
+        listeStockByProduct = value['data']
+            .map<MStock>((e) => MStock.fromJson(e))
+            .toList();
+        status = ListeStatus.success;
+      } else {
+        status = ListeStatus.error;
+      }
+    } catch (e) {
+      status = ListeStatus.error;
+    } finally {
       update();
     }
   }

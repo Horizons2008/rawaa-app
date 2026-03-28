@@ -25,18 +25,29 @@ class DisplayListe extends StatelessWidget {
 
                   leading: CircleAvatar(
                     radius: 30,
-                    child: Image.network(
-                      "${Constants.photoUrl}users/${ctrl.listeFilterClietns[index].userId}.jpg",
-                      errorBuilder: (context, error, stackTrace) {
-                        return Text(
-                          ctrl.listeFilterClietns[index].username.substring(
-                            0,
-                            1,
+                    child:
+                        ctrl.listeFilterClietns[index].image != null &&
+                            ctrl.listeFilterClietns[index].image!.isNotEmpty
+                        ? Image.network(
+                            "${Constants.photoUrl}users/${ctrl.listeFilterClietns[index].image}",
+                            errorBuilder: (context, error, stackTrace) {
+                              return Text(
+                                ctrl.listeFilterClietns[index].username
+                                    .substring(0, 1),
+                                style: TextStyle(color: Colors.black),
+                              );
+                            },
+                          )
+                        : Image.network(
+                            "${Constants.photoUrl}users/${ctrl.listeFilterClietns[index].userId}.jpg",
+                            errorBuilder: (context, error, stackTrace) {
+                              return Text(
+                                ctrl.listeFilterClietns[index].username
+                                    .substring(0, 1),
+                                style: TextStyle(color: Colors.black),
+                              );
+                            },
                           ),
-                          style: TextStyle(color: Colors.black),
-                        );
-                      },
-                    ),
                   ),
                 ),
                 Divider(),
@@ -64,6 +75,7 @@ class DisplayListe extends StatelessWidget {
       },
     );
   }
+
   Widget itemFooter(Icon icon, String text) {
     return Row(
       children: [

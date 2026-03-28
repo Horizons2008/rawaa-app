@@ -34,7 +34,9 @@ class DisplayListe extends StatelessWidget {
                   leading: CircleAvatar(
                     radius: 30,
                     backgroundImage: NetworkImage(
-                      "${Constants.photoUrl}users/${item.userId}.jpg",
+                      item.image != null && item.image!.isNotEmpty
+                          ? "${Constants.photoUrl}users/${item.image}"
+                          : "${Constants.photoUrl}users/${item.userId}.jpg",
                     ),
                     onBackgroundImageError: (exception, stackTrace) {},
                     child: item.username.isNotEmpty

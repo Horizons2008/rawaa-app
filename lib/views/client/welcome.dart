@@ -26,7 +26,10 @@ class ScreenWelcomClient extends StatelessWidget {
                   children: [
                     ClipOval(
                       child: Image.network(
-                        "${Constants.photoUrl}users/${Constants.currentUser!.id}.jpg",
+                        Constants.currentUser!.image != null &&
+                                Constants.currentUser!.image!.isNotEmpty
+                            ? "${Constants.photoUrl}users/${Constants.currentUser!.image}${Constants.profileImageVer}"
+                            : "${Constants.photoUrl}users/${Constants.currentUser!.id}.jpg${Constants.profileImageVer}",
 
                         width: 40,
                         height: 40,
@@ -82,7 +85,7 @@ class ScreenWelcomClient extends StatelessWidget {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                 ),
                 SizedBox(
-                  height: 110,
+                  height: 130,
                   child: ListView.separated(
                     scrollDirection: Axis.horizontal,
                     itemCount: ctrl.listeCat.length,
@@ -93,48 +96,53 @@ class ScreenWelcomClient extends StatelessWidget {
                         onTap: () {
                           Get.to(() => ProductsByCategoryScreen(category: cat));
                         },
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Container(
-                              width: 70,
-                              height: 70,
-                              padding: EdgeInsets.all(2),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  color: Colors.grey.shade300,
-                                  width: 2,
+                        child: SizedBox(
+                          width: 75,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                width: 70,
+                                height: 70,
+                                padding: EdgeInsets.all(2),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: Colors.grey.shade300,
+                                    width: 2,
+                                  ),
+                                ),
+                                child: ClipOval(
+                                  child: Image.network(
+                                    cat.image != null && cat.image!.isNotEmpty
+                                        ? "${Constants.photoUrl}categorie/${cat.image}"
+                                        : "${Constants.photoUrl}categorie/${cat.id}.jpg",
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Container(
+                                        color: Colors.grey[200],
+                                        child: Icon(
+                                          Icons.category,
+                                          color: Colors.grey[600],
+                                        ),
+                                      );
+                                    },
+                                  ),
                                 ),
                               ),
-                              child: ClipOval(
-                                child: Image.network(
-                                  "${Constants.photoUrl}categorie/${cat.id}.jpg",
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Container(
-                                      color: Colors.grey[200],
-                                      child: Icon(
-                                        Icons.category,
-                                        color: Colors.grey[600],
-                                      ),
-                                    );
-                                  },
+                              SizedBox(height: 7),
+                              Text(
+                                Constants.getTitle(cat.title, Constants.lang),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14,
                                 ),
+                                textAlign: TextAlign.center,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                            ),
-                            SizedBox(height: 7),
-                            Text(
-                              Constants.getTitle(cat.title, Constants.lang),
-                              style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 14,
-                              ),
-                              textAlign: TextAlign.center,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       );
                     },

@@ -5,11 +5,12 @@ class Muser {
   late String role;
   late String username;
 
+  late String? image;
   String token = "";
 
   Muser({
     required this.id,
-
+    this.image,
     required this.name,
     required this.role,
     required this.username,
@@ -20,7 +21,7 @@ class Muser {
     role = json['role'];
 
     username = json['username'];
-
+    image = json['image'];
     id = json['id'].toString();
   }
 }

@@ -14,14 +14,7 @@ class Intercepteur extends Interceptor {
 
     options.headers["Authorization"] = "Bearer $token";
 
-    /*  int typeRequest = 1;
-typeRequest == 1
-        ? options.headers["Content-Type"] = "multipart/form-data"
-        : options.headers["Content-Type"] = "application/json";*/
-
-    if (options.data is FormData) {
-      options.headers["Content-Type"] = "multipart/form-data";
-    } else {
+    if (!(options.data is FormData)) {
       options.headers["Content-Type"] = "application/json";
     }
 

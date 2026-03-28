@@ -36,6 +36,10 @@ class Messages extends Translations {
       'net_payer': 'Net Payer',
       'confirm_cart': 'Confirm Cart',
       'rest': 'Rest',
+      'title_livraison': 'Reminder',
+      'content_livraison': 'Do you need a delivery service?',
+      'confirm_livraison': 'Need transport',
+      'cancel_livraison': 'No thanks',
       'no_products_found': 'No products found in this category',
       'error_loading_products': 'Error loading products',
       'retry': 'Retry',
@@ -52,6 +56,9 @@ class Messages extends Translations {
       'select_product': 'Select Product',
       'description': 'Description',
       'image_product': 'Image of Product',
+      'fiche_technique': 'Technical Sheet',
+      'upload_fiche_technique': 'Tap to upload technical sheet (PDF or image)',
+      'edit_stock': 'Edit Stock',
 
       // global
       'taper_chercher': 'Tape To Search',
@@ -380,9 +387,8 @@ class Messages extends Translations {
       'confirm_cart': 'Confirmer le pannier',
       //dialog livraison
       'title_livraison': 'Rappel',
-      'content_livraison':
-          'Vous pouvez demander un service de livraison via l\'application',
-      'confirm_livraison': 'Demander le service de livraison',
+      'content_livraison': 'Avez-vous besoin d\'un service de transport ?',
+      'confirm_livraison': 'besoins transport',
       'cancel_livraison': 'Non merci',
 
       // stock
@@ -398,6 +404,10 @@ class Messages extends Translations {
       'select_product': 'Select Product',
       'description': 'Description',
       'image_product': 'Images de Produit',
+      'fiche_technique': 'Fiche Technique',
+      'upload_fiche_technique':
+          'Appuyer pour importer la fiche technique (PDF ou image)',
+      'edit_stock': 'Modifier Stock',
       // global
       'taper_chercher': 'Tapez pour Rechercher',
       'grid_view': 'Vue Grille',
@@ -724,8 +734,8 @@ class Messages extends Translations {
       'confirm_cart': 'تأكيد السلة',
       //dialog livraison
       'title_livraison': 'تنبيه',
-      'content_livraison': 'يمكنك طلب خدمة التوصيل عبر التطبيق',
-      'confirm_livraison': 'طلب التوصيل',
+      'content_livraison': 'هل تحتاج إلى خدمة توصيل؟',
+      'confirm_livraison': 'حاجة للنقل',
       'cancel_livraison': 'لا شكرا',
 
       // stock
@@ -741,6 +751,9 @@ class Messages extends Translations {
       'select_product': 'إختر المنتج',
       'description': 'وصف المنتج',
       'image_product': 'صور المنتج',
+      'fiche_technique': 'الملف التقني',
+      'upload_fiche_technique': 'اضغط لرفع الملف التقني (PDF أو صورة)',
+      'edit_stock': 'تعديل المخزون',
       // global
       'taper_chercher': 'للبحث اضغط هنا',
       'grid_view': 'عرض الشبكة',
